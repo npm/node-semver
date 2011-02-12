@@ -23,8 +23,9 @@ As a command-line utility:
 
     Multiple versions or ranges may be supplied.
 
-    Program exits successfully if all versions satisfy all
-    ranges and are valid, and prints all satisfying versions.
+    Program exits successfully if any versions satisfy all
+    ranges and is valid, and prints all satisfying versions.
+
     If no versions are valid, or ranges are not satisfied,
     then exits failure.
 
