@@ -3,4 +3,5 @@
 , "description" : "The semantic version parser used by npm."
 , "main" : "semver.js"
 , "scripts" : { "test" : "node semver.js" }
+, "repository" : "git://github.com/isaacs/node-semver.git"
 , "bin" : { "semver" : "./bin/semver" } }
