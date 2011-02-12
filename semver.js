@@ -183,7 +183,9 @@ function compare (v1, v2) {
 function lt (v1, v2) { return gt(v2, v1) }
 
 // return v1 > v2
-function num (v) { return parseInt((v||"0").replace(/[^0-9]+/g, ''), 10) }
+function num (v) {
+  return v === undefined ? -1 : parseInt((v||"0").replace(/[^0-9]+/g, ''), 10)
+}
 function gt (v1, v2) {
   v1 = exports.parse(v1)
   v2 = exports.parse(v2)
@@ -198,7 +200,7 @@ function gt (v1, v2) {
   // no tag is > than any tag, or use lexicographical order.
   var tag1 = v1[5] || ""
     , tag2 = v2[5] || ""
-  return tag2 && (!tag1 || tag1 > tag2)
+  return !!tag2 && (!tag1 || tag1 > tag2)
 }
 
 if (module === require.main) {  // tests below
