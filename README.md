@@ -30,3 +30,56 @@ As a command-line utility:
 
     Versions are printed in ascending order, so supplying
     multiple versions to the utility will just sort them.
+
+## Versions
+
+A version is the following things, in this order:
+
+* a number (Major)
+* a period
+* a number (minor)
+* a period
+* a number (patch)
+* OPTIONAL: a hyphen, followed by a number (build)
+* OPTIONAL: a collection of pretty much any non-whitespace characters
+  (tag)
+
+A leading `"="` or `"v"` character is stripped off and ignored.
+
+## Comparisons
+
+The ordering of versions is done using the following algorithm, given
+two versions and asked to find the greater of the two:
+
+* If the majors are numerically different, then take the one
+  with a bigger major number. `2.3.4 > 1.3.4`
+* If the minors are numerically different, then take the one
+  with the bigger minor number. `2.3.4 > 2.2.4`
+* If the patches are numerically different, then take the one with the
+  bigger patch number. `2.3.4 > 2.3.3`
+* If only one of them has a build number, then take the one with the
+  build number.  `2.3.4-0 > 2.3.4`
+* If they both have build numbers, and the build numbers are numerically
+  different, then take the one with the bigger build number.
+  `2.3.4-10 > 2.3.4-9`
+* If only one of them has a tag, then take the one without the tag.
+  `2.3.4 > 2.3.4-beta`
+* If they both have tags, then take the one with the lexicographically
+  larger tag.  `2.3.4-beta > 2.3.4-alpha`
+* At this point, they're equal.
+
+## Ranges
+
+The following range styles are supported:
+
+* `>1.2.3` Greater than a specific version.
+* `<1.2.3` Less than
+* `1.2.3 - 2.3.4` := `>=1.2.3 <=2.3.4`
+* `~1.2.3` := `>=1.2.3 <1.3.0`
+* `~1.2` := `>=1.2.0 <2.0.0`
+* `~1` := `>=1.0.0 <2.0.0`
+* `1.2.x` := `>=1.2.0 <1.3.0`
+* `1.x` := `>=1.0.0 <2.0.0`
+
+Ranges can be joined with either a space (which implies "and") or a
+`||` (which implies "or").
