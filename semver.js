@@ -59,7 +59,7 @@ var starExpression = /(<|>)?=?\s*\*/g
   , compTrimReplace = "$1$3"
 
 function toComparators (range) {
-  return range.trim()
+  return (range || "").trim()
     .replace(expressions.parseRange, exports.rangeReplace)
     .split(/\s+/)
       .map(replaceSpermies)
