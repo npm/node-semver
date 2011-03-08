@@ -126,12 +126,15 @@ function replaceSpermies (version) {
     if (!M || M.toLowerCase() === "x") {
       return "*"
     }
+    // ~1 == >=1.0.0 <2.0.0
     if (!m || m.toLowerCase() === "x") {
       return ">="+M+".0.0 <"+(+M+1)+".0.0"
     }
+    // ~1.2 == >=1.2.0 <1.3.0
     if (!p || p.toLowerCase() === "x") {
       return ">="+M+"."+m+".0 <"+M+"."+(+m+1)+".0"
     }
+    // ~1.2.3 == >=1.2.3 <1.3.0
     return ">="+M+"."+m+"."+p+" <"+M+"."+(+m+1)+".0"
   })
 }
