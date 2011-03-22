@@ -103,10 +103,10 @@ function replaceXRange (version) {
       return "*" // allow any
     }
     if (!m || m.toLowerCase() === "x") {
-      return ">="+M+".0.0 <"+(+M+1)+".0.0"
+      return ">="+M+".0.0a <"+(+M+1)+".0.0"
     }
     if (!p || p.toLowerCase() === "x") {
-      return ">="+M+"."+m+".0 <"+M+"."+(+m+1)+".0"
+      return ">="+M+"."+m+".0a <"+M+"."+(+m+1)+".0"
     }
     return v // impossible?
   })
@@ -289,6 +289,7 @@ var assert = require("assert")
   , ["<1", "1.0.0beta"]
   , [">=1", "1.0.0"]
   , ["<1.2", "1.1.1"]
+  , ["1", "1.0.0beta"]
   ].forEach(function (v) {
     assert.ok(satisfies(v[1], v[0]), v[0]+" satisfied by "+v[1])
   })
@@ -326,7 +327,6 @@ var assert = require("assert")
   , ["~1", "0.2.3"] // >=1.0.0 <2.0.0
   , ["~>1", "2.2.3"]
   , ["~1.0", "1.1.0"] // >=1.0.0 <1.1.0
-  , [">=1", "1.0.0beta"]
   , ["<1", "1.0.0"]
   , [">=1.2", "1.1.1"]
   ].forEach(function (v) {
