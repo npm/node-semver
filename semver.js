@@ -8,8 +8,9 @@ var semver = "[v=]*([0-9]+)"                // major
            + "\\.([0-9]+)"                  // patch
            + "(-[0-9]+-?)?"                 // build
            + "([a-zA-Z-][a-zA-Z0-9-\.:]*)?" // tag
-  , exprComparator = "^((<|>)?=?)("+semver+")$|^$"
-  , xRange = "((?:<|>)?=?)([0-9]+|x|X)(?:\\.([0-9]+|x|X)(?:\\.([0-9]+|x|X))?)?"
+  , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
+  , xRangePlain = "([0-9]+|x|X)(?:\\.([0-9]+|x|X)(?:\\.([0-9]+|x|X))?)?"
+  , xRange = "((?:<|>)?=?)?\\s*" + xRangePlain
   , exprSpermy = "(?:~>?)"+xRange
   , expressions = exports.expressions =
     { parse : new RegExp("^\\s*"+semver+"\\s*$")
@@ -55,19 +56,25 @@ function validPackage (version) {
 // ">1.0.2 <2.0.0" like 1.0.3 - 1.9999.9999
 var starExpression = /(<|>)?=?\s*\*/g
   , starReplace = ""
-  , compTrimExpression = new RegExp("((<|>)?=?)\\s*("+semver+")", "g")
+  , compTrimExpression = new RegExp("((<|>)?=?)\\s*("
+                                    +semver+"|"+xRangePlain+")", "g")
   , compTrimReplace = "$1$3"
 
 function toComparators (range) {
-  return (range || "").trim()
+  var ret = (range || "").trim()
     .replace(expressions.parseRange, exports.rangeReplace)
-    .split(/\s+/)
-      .map(replaceSpermies)
-      .map(replaceXRanges)
-    .join(" ")
     .replace(compTrimExpression, compTrimReplace)
-    .replace(starExpression, starReplace)
+    .split(/\s+/)
+    .join(" ")
     .split("||")
+    .map(function (orchunk) {
+      return orchunk
+        .split(" ")
+        .map(replaceXRanges)
+        .map(replaceSpermies)
+        .map(replaceStars)
+        .join(" ").trim()
+    })
     .map(function (orchunk) {
       return orchunk
         .trim()
@@ -75,6 +82,12 @@ function toComparators (range) {
         .filter(function (c) { return c.match(expressions.validComparator) })
     })
     .filter(function (c) { return c.length })
+  //console.error("comparators", range, ret)
+  return ret
+}
+
+function replaceStars (stars) {
+  return stars.replace(starExpression, starReplace)
 }
 
 // "2.x","2.x.x" --> ">=2.0.0 <2.1"
@@ -90,25 +103,23 @@ function replaceXRange (version) {
     var anyX = !M || M.toLowerCase() === "x"
                || !m || m.toLowerCase() === "x"
                || !p || p.toLowerCase() === "x"
+      , ret = v
 
     if (gtlt && anyX) {
       // just replace x'es with zeroes
       ;(!M || M.toLowerCase() === "x") && (M = 0)
       ;(!m || m.toLowerCase() === "x") && (m = 0)
       ;(!p || p.toLowerCase() === "x") && (p = 0)
-      return gtlt + M+"."+m+"."+p
+      ret = gtlt + M+"."+m+"."+p
+    } else if (!M || M.toLowerCase() === "x") {
+      ret = "*" // allow any
+    } else if (!m || m.toLowerCase() === "x") {
+      ret = ">="+M+".0.0a <"+(+M+1)+".0.0"
+    } else if (!p || p.toLowerCase() === "x") {
+      ret = ">="+M+"."+m+".0a <"+M+"."+(+m+1)+".0"
     }
-
-    if (!M || M.toLowerCase() === "x") {
-      return "*" // allow any
-    }
-    if (!m || m.toLowerCase() === "x") {
-      return ">="+M+".0.0a <"+(+M+1)+".0.0"
-    }
-    if (!p || p.toLowerCase() === "x") {
-      return ">="+M+"."+m+".0a <"+M+"."+(+m+1)+".0"
-    }
-    return v // impossible?
+    //console.error("parseXRange", [].slice.call(arguments), ret)
+    return ret
   })
 }
 
@@ -285,10 +296,15 @@ var assert = require("assert")
   , ["~>3.2.1", "3.2.2"] // >=3.2.1 <3.3.0
   , ["~1", "1.2.3"] // >=1.0.0 <2.0.0
   , ["~>1", "1.2.3"]
+  , ["~> 1", "1.2.3"]
   , ["~1.0", "1.0.2"] // >=1.0.0 <1.1.0
+  , ["~ 1.0", "1.0.2"]
   , ["<1", "1.0.0beta"]
+  , ["< 1", "1.0.0beta"]
   , [">=1", "1.0.0"]
+  , [">= 1", "1.0.0"]
   , ["<1.2", "1.1.1"]
+  , ["< 1.2", "1.1.1"]
   , ["1", "1.0.0beta"]
   ].forEach(function (v) {
     assert.ok(satisfies(v[1], v[0]), v[0]+" satisfied by "+v[1])
