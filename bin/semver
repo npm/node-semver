@@ -21,9 +21,11 @@ function main () {
       case "-v": case "--version":
         versions.push(argv.shift())
         break
-      case "-r" : case "--range":
+      case "-r": case "--range":
         range.push(argv.shift())
         break
+      case "-h": case "--help": case "-?":
+        return help()
       default:
         versions.push(a)
         break
