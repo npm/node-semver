@@ -334,9 +334,15 @@ var assert = require("assert")
     var v0 = v[0]
       , v1 = v[1]
     assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
-    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
-    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
-    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
+    assert.ok(!neq(v0, v1), "!neq('"+v0+"', '"+v1+"')")
+    assert.ok(cmp(v0, "==", v1), "cmp("+v0+"=="+v1+")")
+    assert.ok(!cmp(v0, "!=", v1), "!cmp("+v0+"!="+v1+")")
+    assert.ok(!cmp(v0, "===", v1), "!cmp("+v0+"==="+v1+")")
+    assert.ok(cmp(v0, "!==", v1), "cmp("+v0+"!=="+v1+")")
+    assert.ok(!gt(v0, v1), "!gt('"+v0+"', '"+v1+"')")
+    assert.ok(gte(v0, v1), "gte('"+v0+"', '"+v1+"')")
+    assert.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
+    assert.ok(lte(v0, v1), "lte('"+v0+"', '"+v1+"')")
   })
 
 
