@@ -3,7 +3,7 @@
 // This implementation is a *hair* less strict in that it allows
 // v1.2.3 things, and also tags that don't begin with a char.
 
-var semver = "[v=]*([0-9]+)"                // major
+var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
            + "\\.([0-9]+)"                  // minor
            + "\\.([0-9]+)"                  // patch
            + "(-[0-9]+-?)?"                 // build
@@ -30,7 +30,13 @@ exports.clean = clean
 exports.compare = compare
 exports.satisfies = satisfies
 exports.gt = gt
+exports.gte = gte
 exports.lt = lt
+exports.lte = lte
+exports.eq = eq
+exports.neq = neq
+exports.cmp = cmp
+
 exports.valid = valid
 exports.validPackage = validPackage
 exports.validRange = validRange
@@ -41,9 +47,11 @@ function clean (ver) {
   if (!v) return v
   return [v[1]||'', v[2]||'', v[3]||''].join(".") + (v[4]||'') + (v[5]||'')
 }
+
 function valid (version) {
   return exports.parse(version) && version.trim().replace(/^[v=]+/, '')
 }
+
 function validPackage (version) {
   return version.match(expressions.parsePackage) && version.trim()
 }
@@ -97,6 +105,7 @@ function replaceXRanges (ranges) {
                .map(replaceXRange)
                .join(" ")
 }
+
 function replaceXRange (version) {
   return version.trim().replace(expressions.parseXRange,
                                 function (v, gtlt, M, m, p) {
@@ -191,10 +200,32 @@ function satisfies (version, range) {
 
 // return v1 > v2 ? 1 : -1
 function compare (v1, v2) {
-  return v1 === v2 ? 0 : gt(v1, v2) ? 1 : -1
+  var g = gt(v1, v2)
+  return g === null ? 0 : g ? 1 : -1
+}
+
+function rcompare (v1, v2) {
+  return compare(v2, v1)
 }
 
 function lt (v1, v2) { return gt(v2, v1) }
+function gte (v1, v2) { return !lt(v1, v2) }
+function lte (v1, v2) { return !gt(v1, v2) }
+function eq (v1, v2) { return gt(v1, v2) === null }
+function neq (v1, v2) { return gt(v1, v2) !== null }
+function cmp (v1, c, v2) {
+  switch (c) {
+    case ">": return gt(v1, v2)
+    case "<": return lt(v1, v2)
+    case ">=": return gte(v1, v2)
+    case "<=": return lte(v1, v2)
+    case "==": return eq(v1, v2)
+    case "!=": return neq(v1, v2)
+    case "===": return v1 === v2
+    case "!==": return v1 !== v2
+    default: throw new Error("Y U NO USE VALID COMPARATOR!? "+c)
+  }
+}
 
 // return v1 > v2
 function num (v) {
@@ -214,7 +245,13 @@ function gt (v1, v2) {
   // no tag is > than any tag, or use lexicographical order.
   var tag1 = v1[5] || ""
     , tag2 = v2[5] || ""
-  return !!tag2 && (!tag1 || tag1 > tag2)
+
+  // kludge: null means they were equal.  falsey, and detectable.
+  // embarrassingly overclever, though, I know.
+  return tag1 === tag2 ? null
+         : !tag1 ? true
+         : !tag2 ? false
+         : tag1 > tag2
 }
 
 if (module === require.main) {  // tests below
@@ -243,11 +280,63 @@ var assert = require("assert")
   , ["1.2.3-4-foo", "1.2.3"]
   , ["1.2.3-5", "1.2.3-5-foo"]
   , ["1.2.3-5", "1.2.3-4"]
+  , ["1.2.3-5-foo", "1.2.3-5-Foo"]
   ].forEach(function (v) {
-    assert.ok(gt(v[0], v[1]), "gt('"+v[0]+"', '"+v[1]+"')")
-    assert.ok(lt(v[1], v[0]), "lt('"+v[1]+"', '"+v[0]+"')")
-    assert.ok(!gt(v[1], v[0]), "!gt('"+v[1]+"', '"+v[0]+"')")
-    assert.ok(!lt(v[0], v[1]), "!lt('"+v[0]+"', '"+v[1]+"')")
+    var v0 = v[0]
+      , v1 = v[1]
+    assert.ok(gt(v0, v1), "gt('"+v0+"', '"+v1+"')")
+    assert.ok(lt(v1, v0), "lt('"+v1+"', '"+v0+"')")
+    assert.ok(!gt(v1, v0), "!gt('"+v1+"', '"+v0+"')")
+    assert.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
+    assert.ok(eq(v0, v0), "eq('"+v0+"', '"+v0+"')")
+    assert.ok(eq(v1, v1), "eq('"+v1+"', '"+v1+"')")
+    assert.ok(neq(v0, v1), "neq('"+v0+"', '"+v1+"')")
+    assert.ok(cmp(v1, "==", v1), "cmp("+v1+"=="+v1+")")
+    assert.ok(cmp(v0, ">=", v1), "cmp("+v0+"<="+v1+")")
+    assert.ok(cmp(v1, "<=", v0), "cmp("+v1+">="+v0+")")
+    assert.ok(cmp(v0, "!=", v1), "cmp("+v0+"!="+v1+")")
+  })
+
+// equality tests
+; [ ["1.2.3", "v1.2.3"]
+  , ["1.2.3", "=1.2.3"]
+  , ["1.2.3", "v 1.2.3"]
+  , ["1.2.3", "= 1.2.3"]
+  , ["1.2.3", " v1.2.3"]
+  , ["1.2.3", " =1.2.3"]
+  , ["1.2.3", " v 1.2.3"]
+  , ["1.2.3", " = 1.2.3"]
+  , ["1.2.3-0", "v1.2.3-0"]
+  , ["1.2.3-0", "=1.2.3-0"]
+  , ["1.2.3-0", "v 1.2.3-0"]
+  , ["1.2.3-0", "= 1.2.3-0"]
+  , ["1.2.3-0", " v1.2.3-0"]
+  , ["1.2.3-0", " =1.2.3-0"]
+  , ["1.2.3-0", " v 1.2.3-0"]
+  , ["1.2.3-0", " = 1.2.3-0"]
+  , ["1.2.3-01", "v1.2.3-1"]
+  , ["1.2.3-01", "=1.2.3-1"]
+  , ["1.2.3-01", "v 1.2.3-1"]
+  , ["1.2.3-01", "= 1.2.3-1"]
+  , ["1.2.3-01", " v1.2.3-1"]
+  , ["1.2.3-01", " =1.2.3-1"]
+  , ["1.2.3-01", " v 1.2.3-1"]
+  , ["1.2.3-01", " = 1.2.3-1"]
+  , ["1.2.3beta", "v1.2.3beta"]
+  , ["1.2.3beta", "=1.2.3beta"]
+  , ["1.2.3beta", "v 1.2.3beta"]
+  , ["1.2.3beta", "= 1.2.3beta"]
+  , ["1.2.3beta", " v1.2.3beta"]
+  , ["1.2.3beta", " =1.2.3beta"]
+  , ["1.2.3beta", " v 1.2.3beta"]
+  , ["1.2.3beta", " = 1.2.3beta"]
+  ].forEach(function (v) {
+    var v0 = v[0]
+      , v1 = v[1]
+    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
+    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
+    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
+    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
   })
 
 
