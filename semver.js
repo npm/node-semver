@@ -255,8 +255,13 @@ function gt (v1, v2) {
 }
 
 if (module === require.main) {  // tests below
-var assert = require("assert")
 
+var tap = require("tap")
+  , test = tap.test
+
+tap.plan(4)
+
+test("comparison tests", function (t) {
 ; [ ["0.0.0", "0.0.0foo"]
   , ["0.0.1", "0.0.0"]
   , ["1.0.0", "0.9.9"]
@@ -284,20 +289,22 @@ var assert = require("assert")
   ].forEach(function (v) {
     var v0 = v[0]
       , v1 = v[1]
-    assert.ok(gt(v0, v1), "gt('"+v0+"', '"+v1+"')")
-    assert.ok(lt(v1, v0), "lt('"+v1+"', '"+v0+"')")
-    assert.ok(!gt(v1, v0), "!gt('"+v1+"', '"+v0+"')")
-    assert.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
-    assert.ok(eq(v0, v0), "eq('"+v0+"', '"+v0+"')")
-    assert.ok(eq(v1, v1), "eq('"+v1+"', '"+v1+"')")
-    assert.ok(neq(v0, v1), "neq('"+v0+"', '"+v1+"')")
-    assert.ok(cmp(v1, "==", v1), "cmp("+v1+"=="+v1+")")
-    assert.ok(cmp(v0, ">=", v1), "cmp("+v0+"<="+v1+")")
-    assert.ok(cmp(v1, "<=", v0), "cmp("+v1+">="+v0+")")
-    assert.ok(cmp(v0, "!=", v1), "cmp("+v0+"!="+v1+")")
+    t.ok(gt(v0, v1), "gt('"+v0+"', '"+v1+"')")
+    t.ok(lt(v1, v0), "lt('"+v1+"', '"+v0+"')")
+    t.ok(!gt(v1, v0), "!gt('"+v1+"', '"+v0+"')")
+    t.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
+    t.ok(eq(v0, v0), "eq('"+v0+"', '"+v0+"')")
+    t.ok(eq(v1, v1), "eq('"+v1+"', '"+v1+"')")
+    t.ok(neq(v0, v1), "neq('"+v0+"', '"+v1+"')")
+    t.ok(cmp(v1, "==", v1), "cmp("+v1+"=="+v1+")")
+    t.ok(cmp(v0, ">=", v1), "cmp("+v0+"<="+v1+")")
+    t.ok(cmp(v1, "<=", v0), "cmp("+v1+">="+v0+")")
+    t.ok(cmp(v0, "!=", v1), "cmp("+v0+"!="+v1+")")
   })
+  t.end()
+})
 
-// equality tests
+test("equality tests", function (t) {
 ; [ ["1.2.3", "v1.2.3"]
   , ["1.2.3", "=1.2.3"]
   , ["1.2.3", "v 1.2.3"]
@@ -333,19 +340,22 @@ var assert = require("assert")
   ].forEach(function (v) {
     var v0 = v[0]
       , v1 = v[1]
-    assert.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
-    assert.ok(!neq(v0, v1), "!neq('"+v0+"', '"+v1+"')")
-    assert.ok(cmp(v0, "==", v1), "cmp("+v0+"=="+v1+")")
-    assert.ok(!cmp(v0, "!=", v1), "!cmp("+v0+"!="+v1+")")
-    assert.ok(!cmp(v0, "===", v1), "!cmp("+v0+"==="+v1+")")
-    assert.ok(cmp(v0, "!==", v1), "cmp("+v0+"!=="+v1+")")
-    assert.ok(!gt(v0, v1), "!gt('"+v0+"', '"+v1+"')")
-    assert.ok(gte(v0, v1), "gte('"+v0+"', '"+v1+"')")
-    assert.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
-    assert.ok(lte(v0, v1), "lte('"+v0+"', '"+v1+"')")
+    t.ok(eq(v0, v1), "eq('"+v0+"', '"+v1+"')")
+    t.ok(!neq(v0, v1), "!neq('"+v0+"', '"+v1+"')")
+    t.ok(cmp(v0, "==", v1), "cmp("+v0+"=="+v1+")")
+    t.ok(!cmp(v0, "!=", v1), "!cmp("+v0+"!="+v1+")")
+    t.ok(!cmp(v0, "===", v1), "!cmp("+v0+"==="+v1+")")
+    t.ok(cmp(v0, "!==", v1), "cmp("+v0+"!=="+v1+")")
+    t.ok(!gt(v0, v1), "!gt('"+v0+"', '"+v1+"')")
+    t.ok(gte(v0, v1), "gte('"+v0+"', '"+v1+"')")
+    t.ok(!lt(v0, v1), "!lt('"+v0+"', '"+v1+"')")
+    t.ok(lte(v0, v1), "lte('"+v0+"', '"+v1+"')")
   })
+  t.end()
+})
 
 
+test("range tests", function (t) {
 ; [ ["1.0.0 - 2.0.0", "1.2.3"]
   , ["1.0.0", "1.0.0"]
   , [">=*", "0.2.4"]
@@ -402,11 +412,12 @@ var assert = require("assert")
   , ["< 1.2", "1.1.1"]
   , ["1", "1.0.0beta"]
   ].forEach(function (v) {
-    assert.ok(satisfies(v[1], v[0]), v[0]+" satisfied by "+v[1])
+    t.ok(satisfies(v[1], v[0]), v[0]+" satisfied by "+v[1])
   })
+  t.end()
+})
 
-
-// negative tests
+test("negative range tests", function (t) {
 ; [ ["1.0.0 - 2.0.0", "2.2.3"]
   , ["1.0.0", "1.0.1"]
   , [">=1.0.0", "0.0.0"]
@@ -441,7 +452,9 @@ var assert = require("assert")
   , ["<1", "1.0.0"]
   , [">=1.2", "1.1.1"]
   ].forEach(function (v) {
-    assert.ok(!satisfies(v[1], v[0]), v[0]+" not satisfied by "+v[1])
+    t.ok(!satisfies(v[1], v[0]), v[0]+" not satisfied by "+v[1])
   })
+  t.end()
+})
 
 }
