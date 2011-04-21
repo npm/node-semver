@@ -1,7 +1,8 @@
 { "name" : "semver"
-, "version" : "1.0.3"
+, "version" : "1.0.4"
 , "description" : "The semantic version parser used by npm."
 , "main" : "semver.js"
 , "scripts" : { "test" : "node semver.js" }
+, "devDependencies": { "tap" : "0.x" }
 , "repository" : "git://github.com/isaacs/node-semver.git"
 , "bin" : { "semver" : "./bin/semver" } }
