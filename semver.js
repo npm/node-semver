@@ -123,9 +123,12 @@ function replaceXRange (version) {
     } else if (!M || M.toLowerCase() === "x") {
       ret = "*" // allow any
     } else if (!m || m.toLowerCase() === "x") {
-      ret = ">="+M+".0.0a <"+(+M+1)+".0.0"
+      // append "-" onto the version, otherwise
+      // "1.x.x" matches "2.0.0beta", since the tag
+      // *lowers* the version value
+      ret = ">="+M+".0.0- <"+(+M+1)+".0.0-"
     } else if (!p || p.toLowerCase() === "x") {
-      ret = ">="+M+"."+m+".0a <"+M+"."+(+m+1)+".0"
+      ret = ">="+M+"."+m+".0- <"+M+"."+(+m+1)+".0-"
     }
     //console.error("parseXRange", [].slice.call(arguments), ret)
     return ret
@@ -451,6 +454,7 @@ test("negative range tests", function (t) {
   , ["~1.0", "1.1.0"] // >=1.0.0 <1.1.0
   , ["<1", "1.0.0"]
   , [">=1.2", "1.1.1"]
+  , ["1", "2.0.0beta"]
   ].forEach(function (v) {
     t.ok(!satisfies(v[1], v[0]), v[0]+" not satisfied by "+v[1])
   })
