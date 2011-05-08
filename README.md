@@ -88,6 +88,8 @@ Ranges can be joined with either a space (which implies "and") or a
 ## Functions
 
 * valid(v): Return the parsed version, or null if it's not valid.
+* inc(v, release): Return the version incremented by the release type
+  (major, minor, patch, or build), or null if it's not valid.
 
 ### Comparison
 

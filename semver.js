@@ -36,16 +36,22 @@ exports.lte = lte
 exports.eq = eq
 exports.neq = neq
 exports.cmp = cmp
+exports.inc = inc
 
 exports.valid = valid
 exports.validPackage = validPackage
 exports.validRange = validRange
 exports.maxSatisfying = maxSatisfying
 
-function clean (ver) {
-  v = exports.parse(ver)
-  if (!v) return v
+function stringify (version) {
+  var v = version
   return [v[1]||'', v[2]||'', v[3]||''].join(".") + (v[4]||'') + (v[5]||'')
+}
+
+function clean (version) {
+  version = exports.parse(version)
+  if (!version) return version
+  return stringify(version)
 }
 
 function valid (version) {
@@ -257,12 +263,37 @@ function gt (v1, v2) {
          : tag1 > tag2
 }
 
+function inc (version, release) {
+  version = exports.parse(version)
+  if (!version) return null
+
+  var parsedIndexLookup =
+    { 'major': 1
+    , 'minor': 2
+    , 'patch': 3
+    , 'build': 4 }
+  var incIndex = parsedIndexLookup[release]
+  if (incIndex === undefined) return null
+
+  var current = num(version[incIndex])
+  version[incIndex] = current === -1 ? 1 : current + 1
+
+  for (var i = incIndex + 1; i < 5; i ++) {
+    if (num(version[i]) !== -1) version[i] = "0"
+  }
+
+  if (version[4]) version[4] = "-" + version[4]
+  version[5] = ""
+
+  return stringify(version)
+}
+
 if (module === require.main) {  // tests below
 
 var tap = require("tap")
   , test = tap.test
 
-tap.plan(4)
+tap.plan(5)
 
 test("comparison tests", function (t) {
 ; [ ["0.0.0", "0.0.0foo"]
@@ -458,6 +489,29 @@ test("negative range tests", function (t) {
   ].forEach(function (v) {
     t.ok(!satisfies(v[1], v[0]), v[0]+" not satisfied by "+v[1])
   })
+  t.end()
+})
+
+test("increment versions test", function (t) {
+; [ [ "1.2.3",   "major", "2.0.0"   ]
+  , [ "1.2.3",   "minor", "1.3.0"   ]
+  , [ "1.2.3",   "patch", "1.2.4"   ]
+  , [ "1.2.3",   "build", "1.2.3-1" ]
+  , [ "1.2.3-4", "build", "1.2.3-5" ]
+
+  , [ "1.2.3tag",    "major", "2.0.0"   ]
+  , [ "1.2.3-tag",   "major", "2.0.0"   ]
+  , [ "1.2.3tag",    "build", "1.2.3-1" ]
+  , [ "1.2.3-tag",   "build", "1.2.3-1" ]
+  , [ "1.2.3-4-tag", "build", "1.2.3-5" ]
+  , [ "1.2.3-4tag",  "build", "1.2.3-5" ]
+
+  , [ "1.2.3", "fake",  null ]
+  , [ "fake",  "major", null ]
+  ].forEach(function (v) {
+    t.equal(inc(v[0], v[1]), v[2], "inc("+v[0]+", "+v[1]+") === "+v[2])
+  })
+
   t.end()
 })
 
