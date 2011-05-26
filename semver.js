@@ -295,7 +295,7 @@ var tap = require("tap")
 
 tap.plan(5)
 
-test("comparison tests", function (t) {
+test("\ncomparison tests", function (t) {
 ; [ ["0.0.0", "0.0.0foo"]
   , ["0.0.1", "0.0.0"]
   , ["1.0.0", "0.9.9"]
@@ -338,7 +338,7 @@ test("comparison tests", function (t) {
   t.end()
 })
 
-test("equality tests", function (t) {
+test("\nequality tests", function (t) {
 ; [ ["1.2.3", "v1.2.3"]
   , ["1.2.3", "=1.2.3"]
   , ["1.2.3", "v 1.2.3"]
@@ -389,7 +389,7 @@ test("equality tests", function (t) {
 })
 
 
-test("range tests", function (t) {
+test("\nrange tests", function (t) {
 ; [ ["1.0.0 - 2.0.0", "1.2.3"]
   , ["1.0.0", "1.0.0"]
   , [">=*", "0.2.4"]
@@ -451,7 +451,7 @@ test("range tests", function (t) {
   t.end()
 })
 
-test("negative range tests", function (t) {
+test("\nnegative range tests", function (t) {
 ; [ ["1.0.0 - 2.0.0", "2.2.3"]
   , ["1.0.0", "1.0.1"]
   , [">=1.0.0", "0.0.0"]
@@ -492,7 +492,7 @@ test("negative range tests", function (t) {
   t.end()
 })
 
-test("increment versions test", function (t) {
+test("\nincrement versions test", function (t) {
 ; [ [ "1.2.3",   "major", "2.0.0"   ]
   , [ "1.2.3",   "minor", "1.3.0"   ]
   , [ "1.2.3",   "patch", "1.2.4"   ]
