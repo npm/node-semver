@@ -22,7 +22,9 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
     , parseSpermy : new RegExp("^"+exprSpermy+"$")
     }
 Object.getOwnPropertyNames(expressions).forEach(function (i) {
-  exports[i] = function (str) { return (str || "").match(expressions[i]) }
+  exports[i] = function (str) {
+    return ("" + (str || "")).match(expressions[i])
+  }
 })
 
 exports.rangeReplace = ">=$1 <=$7"
@@ -55,10 +57,12 @@ function clean (version) {
 }
 
 function valid (version) {
+  if (typeof version !== "string") return null
   return exports.parse(version) && version.trim().replace(/^[v=]+/, '')
 }
 
 function validPackage (version) {
+  if (typeof version !== "string") return null
   return version.match(expressions.parsePackage) && version.trim()
 }
 
