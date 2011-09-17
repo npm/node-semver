@@ -9,7 +9,9 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
            + "(-[0-9]+-?)?"                 // build
            + "([a-zA-Z-][a-zA-Z0-9-\.:]*)?" // tag
   , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
-  , xRangePlain = "[v=]*([0-9]+|x|X)(?:\\.([0-9]+|x|X)(?:\\.([0-9]+|x|X))?)?"
+  , xRangePlain = "[v=]*([0-9]+|x|X|\\*)"
+                + "(?:\\.([0-9]+|x|X|\\*)"
+                + "(?:\\.([0-9]+|x|X|\\*))?)?"
   , xRange = "((?:<|>)?=?)?\\s*" + xRangePlain
   , exprSpermy = "(?:~>?)"+xRange
   , expressions = exports.expressions =
@@ -21,6 +23,7 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
     , parseXRange : new RegExp("^"+xRange+"$")
     , parseSpermy : new RegExp("^"+exprSpermy+"$")
     }
+
 Object.getOwnPropertyNames(expressions).forEach(function (i) {
   exports[i] = function (str) {
     return ("" + (str || "")).match(expressions[i])
@@ -100,7 +103,6 @@ function toComparators (range) {
         .filter(function (c) { return c.match(expressions.validComparator) })
     })
     .filter(function (c) { return c.length })
-  //console.error("comparators", range, ret)
   return ret
 }
 
@@ -119,25 +121,25 @@ function replaceXRanges (ranges) {
 function replaceXRange (version) {
   return version.trim().replace(expressions.parseXRange,
                                 function (v, gtlt, M, m, p) {
-    var anyX = !M || M.toLowerCase() === "x"
-               || !m || m.toLowerCase() === "x"
-               || !p || p.toLowerCase() === "x"
+    var anyX = !M || M.toLowerCase() === "x" || M === "*"
+               || !m || m.toLowerCase() === "x" || m === "*"
+               || !p || p.toLowerCase() === "x" || p === "*"
       , ret = v
 
     if (gtlt && anyX) {
       // just replace x'es with zeroes
-      ;(!M || M.toLowerCase() === "x") && (M = 0)
-      ;(!m || m.toLowerCase() === "x") && (m = 0)
-      ;(!p || p.toLowerCase() === "x") && (p = 0)
+      ;(!M || M === "*" || M.toLowerCase() === "x") && (M = 0)
+      ;(!m || m === "*" || m.toLowerCase() === "x") && (m = 0)
+      ;(!p || p === "*" || p.toLowerCase() === "x") && (p = 0)
       ret = gtlt + M+"."+m+"."+p
-    } else if (!M || M.toLowerCase() === "x") {
+    } else if (!M || M === "*" || M.toLowerCase() === "x") {
       ret = "*" // allow any
-    } else if (!m || m.toLowerCase() === "x") {
+    } else if (!m || m === "*" || m.toLowerCase() === "x") {
       // append "-" onto the version, otherwise
       // "1.x.x" matches "2.0.0beta", since the tag
       // *lowers* the version value
       ret = ">="+M+".0.0- <"+(+M+1)+".0.0-"
-    } else if (!p || p.toLowerCase() === "x") {
+    } else if (!p || p === "*" || p.toLowerCase() === "x") {
       ret = ">="+M+"."+m+".0- <"+M+"."+(+m+1)+".0-"
     }
     //console.error("parseXRange", [].slice.call(arguments), ret)
@@ -432,6 +434,11 @@ test("\nrange tests", function (t) {
   , ["1.2.x || 2.x", "2.1.3"]
   , ["1.2.x || 2.x", "1.2.3"]
   , ["x", "1.2.3"]
+  , ["2.*.*", "2.1.3"]
+  , ["1.2.*", "1.2.3"]
+  , ["1.2.* || 2.*", "2.1.3"]
+  , ["1.2.* || 2.*", "1.2.3"]
+  , ["*", "1.2.3"]
   , ["2", "2.1.2"]
   , ["2.3", "2.3.1"]
   , ["~2.4", "2.4.0"] // >=2.4.0 <2.5.0
@@ -478,6 +485,11 @@ test("\nnegative range tests", function (t) {
   , ["1.2.x", "1.3.3"]
   , ["1.2.x || 2.x", "3.1.3"]
   , ["1.2.x || 2.x", "1.1.3"]
+  , ["2.*.*", "1.1.3"]
+  , ["2.*.*", "3.1.3"]
+  , ["1.2.*", "1.3.3"]
+  , ["1.2.* || 2.*", "3.1.3"]
+  , ["1.2.* || 2.*", "1.1.3"]
   , ["2", "1.1.2"]
   , ["2.3", "2.4.1"]
   , ["~2.4", "2.5.0"] // >=2.4.0 <2.5.0
