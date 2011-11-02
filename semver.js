@@ -48,6 +48,9 @@ exports.validPackage = validPackage
 exports.validRange = validRange
 exports.maxSatisfying = maxSatisfying
 
+exports.replaceStars = replaceStars
+exports.toComparators = toComparators
+
 function stringify (version) {
   var v = version
   return [v[1]||'', v[2]||'', v[3]||''].join(".") + (v[4]||'') + (v[5]||'')
