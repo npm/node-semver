@@ -1,5 +1,5 @@
 { "name" : "semver"
-, "version" : "1.0.10"
+, "version" : "1.0.11"
 , "description" : "The semantic version parser used by npm."
 , "main" : "semver.js"
 , "scripts" : { "test" : "tap test.js" }
