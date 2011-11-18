@@ -11,7 +11,8 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
   , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
   , xRangePlain = "[v=]*([0-9]+|x|X|\\*)"
                 + "(?:\\.([0-9]+|x|X|\\*)"
-                + "(?:\\.([0-9]+|x|X|\\*))?)?"
+                + "(?:\\.([0-9]+|x|X|\\*)"
+                + "([a-zA-Z-][a-zA-Z0-9-\.:]*)?)?)?"
   , xRange = "((?:<|>)?=?)?\\s*" + xRangePlain
   , exprSpermy = "(?:~>?)"+xRange
   , expressions = exports.expressions =
@@ -23,6 +24,7 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
     , parseXRange : new RegExp("^"+xRange+"$")
     , parseSpermy : new RegExp("^"+exprSpermy+"$")
     }
+
 
 Object.getOwnPropertyNames(expressions).forEach(function (i) {
   exports[i] = function (str) {
@@ -123,7 +125,7 @@ function replaceXRanges (ranges) {
 
 function replaceXRange (version) {
   return version.trim().replace(expressions.parseXRange,
-                                function (v, gtlt, M, m, p) {
+                                function (v, gtlt, M, m, p, t) {
     var anyX = !M || M.toLowerCase() === "x" || M === "*"
                || !m || m.toLowerCase() === "x" || m === "*"
                || !p || p.toLowerCase() === "x" || p === "*"
@@ -134,7 +136,7 @@ function replaceXRange (version) {
       ;(!M || M === "*" || M.toLowerCase() === "x") && (M = 0)
       ;(!m || m === "*" || m.toLowerCase() === "x") && (m = 0)
       ;(!p || p === "*" || p.toLowerCase() === "x") && (p = 0)
-      ret = gtlt + M+"."+m+"."+p
+      ret = gtlt + M+"."+m+"."+p+"-"
     } else if (!M || M === "*" || M.toLowerCase() === "x") {
       ret = "*" // allow any
     } else if (!m || m === "*" || m.toLowerCase() === "x") {
@@ -158,7 +160,7 @@ function replaceXRange (version) {
 // ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
 function replaceSpermies (version) {
   return version.trim().replace(expressions.parseSpermy,
-                                function (v, gtlt, M, m, p) {
+                                function (v, gtlt, M, m, p, t) {
     if (gtlt) throw new Error(
       "Using '"+gtlt+"' with ~ makes no sense. Don't do it.")
 
@@ -174,7 +176,8 @@ function replaceSpermies (version) {
       return ">="+M+"."+m+".0- <"+M+"."+(+m+1)+".0-"
     }
     // ~1.2.3 == >=1.2.3- <1.3.0-
-    return ">="+M+"."+m+"."+p+"- <"+M+"."+(+m+1)+".0-"
+    t = t || "-"
+    return ">="+M+"."+m+"."+p+t+" <"+M+"."+(+m+1)+".0-"
   })
 }
 
