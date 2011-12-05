@@ -1,3 +1,4 @@
+;(function (exports) { // nothing in here is node-specific.
 
 // See http://semver.org/
 // This implementation is a *hair* less strict in that it allows
@@ -300,4 +301,4 @@ function inc (version, release) {
 
   return stringify(version)
 }
-
+})(typeof exports === "object" ? exports : semver = {})
