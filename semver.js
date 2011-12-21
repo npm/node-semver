@@ -36,6 +36,7 @@ Object.getOwnPropertyNames(expressions).forEach(function (i) {
 exports.rangeReplace = ">=$1 <=$7"
 exports.clean = clean
 exports.compare = compare
+exports.rcompare = rcompare
 exports.satisfies = satisfies
 exports.gt = gt
 exports.gte = gte
