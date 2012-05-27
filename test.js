@@ -171,6 +171,11 @@ test("\nrange tests", function (t) {
   , ["1", "1.0.0beta"]
   , ["~v0.5.4-pre", "0.5.5"]
   , ["~v0.5.4-pre", "0.5.4"]
+  , ["=0.7.x", "0.7.2"]
+  , [">=0.7.x", "0.7.2"]
+  , ["=0.7.x", "0.7.0-asdf"]
+  , [">=0.7.x", "0.7.0-asdf"]
+  , ["<=0.7.x", "0.6.2"]
   ].forEach(function (v) {
     t.ok(satisfies(v[1], v[0]), v[0]+" satisfied by "+v[1])
   })
@@ -220,6 +225,9 @@ test("\nnegative range tests", function (t) {
   , ["~v0.5.4-beta", "0.5.4-alpha"]
   , ["<1", "1.0.0beta"]
   , ["< 1", "1.0.0beta"]
+  , ["=0.7.x", "0.8.2"]
+  , [">=0.7.x", "0.6.2"]
+  , ["<=0.7.x", "0.7.2"]
   ].forEach(function (v) {
     t.ok(!satisfies(v[1], v[0]), v[0]+" not satisfied by "+v[1])
   })
