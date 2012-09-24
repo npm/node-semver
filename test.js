@@ -41,6 +41,7 @@ test("\ncomparison tests", function (t) {
   , ["1.2.3-5", "1.2.3-5-foo"]
   , ["1.2.3-5", "1.2.3-4"]
   , ["1.2.3-5-foo", "1.2.3-5-Foo"]
+  , ["3.0.0", "2.7.2+"]
   ].forEach(function (v) {
     var v0 = v[0]
       , v1 = v[1]
