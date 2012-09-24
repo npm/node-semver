@@ -8,7 +8,7 @@ var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
            + "\\.([0-9]+)"                  // minor
            + "\\.([0-9]+)"                  // patch
            + "(-[0-9]+-?)?"                 // build
-           + "([a-zA-Z-][a-zA-Z0-9-\.:]*)?" // tag
+           + "([a-zA-Z-+][a-zA-Z0-9-\.:]*)?" // tag
   , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
   , xRangePlain = "[v=]*([0-9]+|x|X|\\*)"
                 + "(?:\\.([0-9]+|x|X|\\*)"
