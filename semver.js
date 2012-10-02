@@ -4,7 +4,7 @@
 // This implementation is a *hair* less strict in that it allows
 // v1.2.3 things, and also tags that don't begin with a char.
 
-var semver = "\\s*[v=]*\\s*([0-9]+)"                // major
+var semver = "\\s*[v=]*\\s*([0-9]+)"        // major
            + "\\.([0-9]+)"                  // minor
            + "\\.([0-9]+)"                  // patch
            + "(-[0-9]+-?)?"                 // build
