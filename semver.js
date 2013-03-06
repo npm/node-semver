@@ -192,12 +192,12 @@ function validRange (range) {
        : c.map(function (c) { return c.join(" ") }).join("||")
 }
 
-// returns the highest satisfying version in the list, or undefined
+// returns the highest satisfying version in the list, or null
 function maxSatisfying (versions, range) {
   return versions
     .filter(function (v) { return satisfies(v, range) })
     .sort(compare)
-    .pop()
+    .pop() || null
 }
 function satisfies (version, range) {
   version = valid(version)
