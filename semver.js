@@ -5,8 +5,8 @@
 // v1.2.3 things, and also tags that don't begin with a char.
 
 var semver = "\\s*[v=]*\\s*([0-9]+)"        // major
-           + "\\.([0-9]+)"                  // minor
-           + "\\.([0-9]+)"                  // patch
+           + "(?:\\.([0-9]+))?"             // minor
+           + "(?:\\.([0-9]+))?"             // patch
            + "(-[0-9]+-?)?"                 // build
            + "([a-zA-Z-+][a-zA-Z0-9-\.:]*)?" // tag
   , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
@@ -59,6 +59,14 @@ exports.toComparators = toComparators
 function stringify (version) {
   var v = version
   return [v[1]||'', v[2]||'', v[3]||''].join(".") + (v[4]||'') + (v[5]||'')
+}
+
+// Accepts a parse result and ensures v1.2 => 1.2.0
+function zeroify (match) {
+  for (var i = 0; i < 5; i++) {
+    if (match[i] === undefined) match[i] = '0'
+  }
+  return match
 }
 
 function clean (version) {
@@ -257,8 +265,8 @@ function num (v) {
   return v === undefined ? -1 : parseInt((v||"0").replace(/[^0-9]+/g, ''), 10)
 }
 function gt (v1, v2) {
-  v1 = exports.parse(v1)
-  v2 = exports.parse(v2)
+  v1 = zeroify(exports.parse(v1))
+  v2 = zeroify(exports.parse(v2))
   if (!v1 || !v2) return false
 
   for (var i = 1; i < 5; i ++) {
