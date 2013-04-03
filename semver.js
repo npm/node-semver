@@ -298,7 +298,8 @@ function inc (version, release) {
     if (num(version[i]) !== -1) version[i] = "0"
   }
 
-  if (version[4]) version[4] = "-" + version[4]
+  if (version[4] === "0") version[4] = ""
+  else if (version[4]) version[4] = "-" + version[4]
   version[5] = ""
 
   return stringify(version)
