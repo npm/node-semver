@@ -1,4 +1,4 @@
-;(function (exports) { // nothing in here is node-specific.
+;(function (exports, root) { // nothing in here is node-specific.
 
 // See http://semver.org/
 // This implementation is a *hair* less strict in that it allows
@@ -303,4 +303,8 @@ function inc (version, release) {
 
   return stringify(version)
 }
-})(typeof exports === "object" ? exports : semver = {})
+if (typeof define === "function" && define.amd) 
+  define(exports);
+else if (typeof exports !== "object")
+  root.semver = exports;
+})(typeof exports === "object" ? exports : {}, this);
