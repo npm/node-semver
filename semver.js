@@ -1,306 +1,276 @@
-;(function (exports) { // nothing in here is node-specific.
+;(function(exports) {
 
-// See http://semver.org/
-// This implementation is a *hair* less strict in that it allows
-// v1.2.3 things, and also tags that don't begin with a char.
+// export the class if we are in a Node-like system.
+if (typeof module === 'object' && module.exports === exports)
+  exports = module.exports = SemVer;
 
-var semver = "\\s*[v=]*\\s*([0-9]+)"        // major
-           + "\\.([0-9]+)"                  // minor
-           + "\\.([0-9]+)"                  // patch
-           + "(-[0-9]+-?)?"                 // build
-           + "([a-zA-Z-+][a-zA-Z0-9-\.:]*)?" // tag
-  , exprComparator = "^((<|>)?=?)\s*("+semver+")$|^$"
-  , xRangePlain = "[v=]*([0-9]+|x|X|\\*)"
-                + "(?:\\.([0-9]+|x|X|\\*)"
-                + "(?:\\.([0-9]+|x|X|\\*)"
-                + "([a-zA-Z-][a-zA-Z0-9-\.:]*)?)?)?"
-  , xRange = "((?:<|>)=?)?\\s*" + xRangePlain
-  , exprLoneSpermy = "(?:~>?)"
-  , exprSpermy = exprLoneSpermy + xRange
-  , expressions = exports.expressions =
-    { parse : new RegExp("^\\s*"+semver+"\\s*$")
-    , parsePackage : new RegExp("^\\s*([^\/]+)[-@](" +semver+")\\s*$")
-    , parseRange : new RegExp(
-        "^\\s*(" + semver + ")\\s+-\\s+(" + semver + ")\\s*$")
-    , validComparator : new RegExp("^"+exprComparator+"$")
-    , parseXRange : new RegExp("^"+xRange+"$")
-    , parseSpermy : new RegExp("^"+exprSpermy+"$")
-    }
+var debug;
+if (typeof process === 'object' &&
+    process.env &&
+    process.env.NODE_DEBUG &&
+    /\bsemver\b/i.test(process.env.NODE_DEBUG))
+  debug = function() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    args.unshift('SEMVER');
+    console.log.apply(console, args);
+  };
+else
+  debug = function() {};
+
+// Note: this is the semver.org version of the spec that it implements
+// Not necessarily the package version of this code.
+exports.SEMVER_SPEC_VERSION = '2.0.0';
+
+var src = exports.src = {};
+
+// The following Regular Expressions can be used for tokenizing,
+// validating, and parsing SemVer version strings.
+
+// ## Numeric Identifier
+// A single `0`, or a non-zero digit followed by zero or more digits.
+
+src.numericIdentifier = '0|[1-9]\\d*';
 
 
-Object.getOwnPropertyNames(expressions).forEach(function (i) {
-  exports[i] = function (str) {
-    return ("" + (str || "")).match(expressions[i])
-  }
-})
+// ## Non-numeric Identifier
+// Zero or more digits, followed by a letter or hyphen, and then zero or
+// more letters, digits, or hyphens.
 
-exports.rangeReplace = ">=$1 <=$7"
-exports.clean = clean
-exports.compare = compare
-exports.rcompare = rcompare
-exports.satisfies = satisfies
-exports.gt = gt
-exports.gte = gte
-exports.lt = lt
-exports.lte = lte
-exports.eq = eq
-exports.neq = neq
-exports.cmp = cmp
-exports.inc = inc
+src.nonNumericIdentifier = '\\d*[a-zA-Z-][a-zA-Z0-9-]*';
 
-exports.valid = valid
-exports.validPackage = validPackage
-exports.validRange = validRange
-exports.maxSatisfying = maxSatisfying
 
-exports.replaceStars = replaceStars
-exports.toComparators = toComparators
+// ## Main Version
+// Three dot-separated numeric identifiers.
 
-function stringify (version) {
-  var v = version
-  return [v[1]||'', v[2]||'', v[3]||''].join(".") + (v[4]||'') + (v[5]||'')
+src.mainVersion = '(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)';
+
+
+// ## Pre-release Version Identifier
+// A numeric identifier, or a non-numeric identifier.
+
+src.prereleaseIdentifier = '(?:0|[1-9]\\d*|\\d*[a-zA-Z-][a-zA-Z0-9-]*)';
+
+
+// ## Pre-release Version
+// Hyphen, followed by one or more dot-separated pre-release version identifiers.
+
+src.prerelease = '(?:-(' + src.prereleaseIdentifier +
+                  '(?:\\.' + src.prereleaseIdentifier + ')*))';
+
+// ## Build Metadata Identifier
+// Any combination of digits, letters, or hyphens.
+
+src.buildIdentifier = '[0-9A-Za-z-]+';
+
+
+// ## Build Metadata
+// Plus sign, followed by one or more period-separated build metadata
+// identifiers.
+
+src.build = '(?:\\+(' + src.buildIdentifier +
+            '(?:\\.' + src.buildIdentifier + ')*))';
+
+
+// ## Full Version String
+// A main version, followed optionally by a pre-release version and
+// build metadata.
+
+// Note that the only major, minor, patch, and pre-release sections of
+// the version string are capturing groups.  The build metadata is not a
+// capturing group, because it should not ever be used in version
+// comparison.
+
+src.full = '^' + src.mainVersion +
+           src.prerelease + '?' +
+           src.build + '?' +
+           '$';
+
+// like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
+src.loose = '^' + '[v=\\s]*' + src.mainVersion +
+             '(?:' + src.prerelease + ')?' +
+             '(?:' + src.build + ')?' +
+             '$';
+
+var re = exports.re = {};
+for (var i in src) {
+  debug(i, src[i]);
+  exports.re[i] = new RegExp(src[i]);
 }
 
-function clean (version) {
-  version = exports.parse(version)
-  if (!version) return version
-  return stringify(version)
+exports.parse = parse;
+
+function parse(version) {
+  if (!re.loose.test(version))
+    return null;
+  return new SemVer(version);
 }
 
-function valid (version) {
-  if (typeof version !== "string") return null
-  return exports.parse(version) && version.trim().replace(/^[v=]+/, '')
+exports.clean = clean;
+function clean(version) {
+  return new SemVer(version).version;
 }
 
-function validPackage (version) {
-  if (typeof version !== "string") return null
-  return version.match(expressions.parsePackage) && version.trim()
+exports.SemVer = SemVer;
+
+function SemVer(version) {
+  if (version instanceof SemVer)
+    return version;
+
+  if (!(this instanceof SemVer))
+    return new SemVer(version);
+
+  var m = version.match(exports.re.loose);
+
+  if (!m)
+    throw new TypeError('Invalid Version: ' + version);
+
+  this.raw = version;
+  this.major = m[1];
+  this.minor = m[2];
+  this.patch = m[3];
+  this.prerelease = m[4] ? m[4].split('.') : [];
+  this.build = m[5] ? m[5].split('.') : [];
+  this.main = [m[1], m[2], m[3]].join('.');
+  this.version = this.main;
+  if (this.prerelease.length)
+    this.version += '-' + this.prerelease.join('.');
 }
 
-// range can be one of:
-// "1.0.3 - 2.0.0" range, inclusive, like ">=1.0.3 <=2.0.0"
-// ">1.0.2" like 1.0.3 - 9999.9999.9999
-// ">=1.0.2" like 1.0.2 - 9999.9999.9999
-// "<2.0.0" like 0.0.0 - 1.9999.9999
-// ">1.0.2 <2.0.0" like 1.0.3 - 1.9999.9999
-var starExpression = /(<|>)?=?\s*\*/g
-  , starReplace = ""
-  , compTrimExpression = new RegExp("((<|>)?=|<|>)\\s*("
-                                    +semver+"|"+xRangePlain+")", "g")
-  , compTrimReplace = "$1$3"
+SemVer.prototype.compare = function(other) {
+  if (!(other instanceof SemVer))
+    other = new SemVer(other);
 
-function toComparators (range) {
-  var ret = (range || "").trim()
-    .replace(expressions.parseRange, exports.rangeReplace)
-    .replace(compTrimExpression, compTrimReplace)
-    .split(/\s+/)
-    .join(" ")
-    .split("||")
-    .map(function (orchunk) {
-      return orchunk
-        .replace(new RegExp("(" + exprLoneSpermy + ")\\s+"), "$1")
-        .split(" ")
-        .map(replaceXRanges)
-        .map(replaceSpermies)
-        .map(replaceStars)
-        .join(" ").trim()
-    })
-    .map(function (orchunk) {
-      return orchunk
-        .trim()
-        .split(/\s+/)
-        .filter(function (c) { return c.match(expressions.validComparator) })
-    })
-    .filter(function (c) { return c.length })
-  return ret
-}
+  return this.compareMain(other) || this.comparePre(other);
+};
 
-function replaceStars (stars) {
-  return stars.trim().replace(starExpression, starReplace)
-}
+SemVer.prototype.compareMain = function(other) {
+  if (!(other instanceof SemVer))
+    other = new SemVer(other);
 
-// "2.x","2.x.x" --> ">=2.0.0- <2.1.0-"
-// "2.3.x" --> ">=2.3.0- <2.4.0-"
-function replaceXRanges (ranges) {
-  return ranges.split(/\s+/)
-               .map(replaceXRange)
-               .join(" ")
-}
+  return compareIdentifiers(this.major, other.major) ||
+         compareIdentifiers(this.minor, other.minor) ||
+         compareIdentifiers(this.patch, other.patch);
+};
 
-function replaceXRange (version) {
-  return version.trim().replace(expressions.parseXRange,
-                                function (v, gtlt, M, m, p, t) {
-    var anyX = !M || M.toLowerCase() === "x" || M === "*"
-               || !m || m.toLowerCase() === "x" || m === "*"
-               || !p || p.toLowerCase() === "x" || p === "*"
-      , ret = v
+SemVer.prototype.comparePre = function(other) {
+  if (!(other instanceof SemVer))
+    other = new SemVer(other);
 
-    if (gtlt && anyX) {
-      // just replace x'es with zeroes
-      ;(!M || M === "*" || M.toLowerCase() === "x") && (M = 0)
-      ;(!m || m === "*" || m.toLowerCase() === "x") && (m = 0)
-      ;(!p || p === "*" || p.toLowerCase() === "x") && (p = 0)
-      ret = gtlt + M+"."+m+"."+p+"-"
-    } else if (!M || M === "*" || M.toLowerCase() === "x") {
-      ret = "*" // allow any
-    } else if (!m || m === "*" || m.toLowerCase() === "x") {
-      // append "-" onto the version, otherwise
-      // "1.x.x" matches "2.0.0beta", since the tag
-      // *lowers* the version value
-      ret = ">="+M+".0.0- <"+(+M+1)+".0.0-"
-    } else if (!p || p === "*" || p.toLowerCase() === "x") {
-      ret = ">="+M+"."+m+".0- <"+M+"."+(+m+1)+".0-"
-    }
-    return ret
-  })
-}
+  // NOT having a prerelease is > having one
+  if (this.prerelease.length && !other.prerelease.length)
+    return -1;
+  else if (!this.prerelease.length && other.prerelease.length)
+    return 1;
+  else if (!this.prerelease.lenth && !other.prerelease.length)
+    return 0;
 
-// ~, ~> --> * (any, kinda silly)
-// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
-// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0
-// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
-// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
-// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
-function replaceSpermies (version) {
-  return version.trim().replace(expressions.parseSpermy,
-                                function (v, gtlt, M, m, p, t) {
-    if (gtlt) throw new Error(
-      "Using '"+gtlt+"' with ~ makes no sense. Don't do it.")
+  var i = 0;
+  do {
+    var a = this.prerelease[i];
+    var b = other.prerelease[i];
+    debug('prerelease compare', i, a, b);
+    if (a === undefined && b === undefined)
+      return 0;
+    else if (b === undefined)
+      return 1;
+    else if (a === undefined)
+      return -1;
+    else if (a === b)
+      continue;
+    else
+      return compareIdentifiers(a, b);
+  } while (++i);
+};
 
-    if (!M || M.toLowerCase() === "x") {
-      return ""
-    }
-    // ~1 == >=1.0.0- <2.0.0-
-    if (!m || m.toLowerCase() === "x") {
-      return ">="+M+".0.0- <"+(+M+1)+".0.0-"
-    }
-    // ~1.2 == >=1.2.0- <1.3.0-
-    if (!p || p.toLowerCase() === "x") {
-      return ">="+M+"."+m+".0- <"+M+"."+(+m+1)+".0-"
-    }
-    // ~1.2.3 == >=1.2.3- <1.3.0-
-    t = t || "-"
-    return ">="+M+"."+m+"."+p+t+" <"+M+"."+(+m+1)+".0-"
-  })
-}
+exports.compareIdentifiers = compareIdentifiers;
 
-function validRange (range) {
-  range = replaceStars(range)
-  var c = toComparators(range)
-  return (c.length === 0)
-       ? null
-       : c.map(function (c) { return c.join(" ") }).join("||")
-}
+var numeric = /^[0-9]+$/;
+function compareIdentifiers(a, b) {
+  var anum = numeric.test(a);
+  var bnum = numeric.test(b);
 
-// returns the highest satisfying version in the list, or null
-function maxSatisfying (versions, range) {
-  return versions
-    .filter(function (v) { return satisfies(v, range) })
-    .sort(compare)
-    .pop() || null
-}
-function satisfies (version, range) {
-  version = valid(version)
-  if (!version) return false
-  range = toComparators(range)
-  for (var i = 0, l = range.length ; i < l ; i ++) {
-    var ok = false
-    for (var j = 0, ll = range[i].length ; j < ll ; j ++) {
-      var r = range[i][j]
-        , gtlt = r.charAt(0) === ">" ? gt
-               : r.charAt(0) === "<" ? lt
-               : false
-        , eq = r.charAt(!!gtlt) === "="
-        , sub = (!!eq) + (!!gtlt)
-      if (!gtlt) eq = true
-      r = r.substr(sub)
-      r = (r === "") ? r : valid(r)
-      ok = (r === "") || (eq && r === version) || (gtlt && gtlt(version, r))
-      if (!ok) break
-    }
-    if (ok) return true
-  }
-  return false
-}
-
-// return v1 > v2 ? 1 : -1
-function compare (v1, v2) {
-  var g = gt(v1, v2)
-  return g === null ? 0 : g ? 1 : -1
-}
-
-function rcompare (v1, v2) {
-  return compare(v2, v1)
-}
-
-function lt (v1, v2) { return gt(v2, v1) }
-function gte (v1, v2) { return !lt(v1, v2) }
-function lte (v1, v2) { return !gt(v1, v2) }
-function eq (v1, v2) { return gt(v1, v2) === null }
-function neq (v1, v2) { return gt(v1, v2) !== null }
-function cmp (v1, c, v2) {
-  switch (c) {
-    case ">": return gt(v1, v2)
-    case "<": return lt(v1, v2)
-    case ">=": return gte(v1, v2)
-    case "<=": return lte(v1, v2)
-    case "==": return eq(v1, v2)
-    case "!=": return neq(v1, v2)
-    case "===": return v1 === v2
-    case "!==": return v1 !== v2
-    default: throw new Error("Y U NO USE VALID COMPARATOR!? "+c)
-  }
-}
-
-// return v1 > v2
-function num (v) {
-  return v === undefined ? -1 : parseInt((v||"0").replace(/[^0-9]+/g, ''), 10)
-}
-function gt (v1, v2) {
-  v1 = exports.parse(v1)
-  v2 = exports.parse(v2)
-  if (!v1 || !v2) return false
-
-  for (var i = 1; i < 5; i ++) {
-    v1[i] = num(v1[i])
-    v2[i] = num(v2[i])
-    if (v1[i] > v2[i]) return true
-    else if (v1[i] !== v2[i]) return false
-  }
-  // no tag is > than any tag, or use lexicographical order.
-  var tag1 = v1[5] || ""
-    , tag2 = v2[5] || ""
-
-  // kludge: null means they were equal.  falsey, and detectable.
-  // embarrassingly overclever, though, I know.
-  return tag1 === tag2 ? null
-         : !tag1 ? true
-         : !tag2 ? false
-         : tag1 > tag2
-}
-
-function inc (version, release) {
-  version = exports.parse(version)
-  if (!version) return null
-
-  var parsedIndexLookup =
-    { 'major': 1
-    , 'minor': 2
-    , 'patch': 3
-    , 'build': 4 }
-  var incIndex = parsedIndexLookup[release]
-  if (incIndex === undefined) return null
-
-  var current = num(version[incIndex])
-  version[incIndex] = current === -1 ? 1 : current + 1
-
-  for (var i = incIndex + 1; i < 5; i ++) {
-    if (num(version[i]) !== -1) version[i] = "0"
+  if (anum && bnum) {
+    a = +a;
+    b = +b;
   }
 
-  if (version[4]) version[4] = "-" + version[4]
-  version[5] = ""
-
-  return stringify(version)
+  return (anum && !bnum) ? -1
+       : (bnum && !anum) ? 1
+       : a < b ? -1
+       : a > b ? 1
+       : 0;
 }
-})(typeof exports === "object" ? exports : semver = {})
+
+exports.rcompareIdentifiers = rcompareIdentifiers;
+function rcompareIdentifiers(a, b) {
+  return compareIdentifiers(b, a);
+}
+
+exports.compare = compare;
+function compare(a, b) {
+  return new SemVer(a).compare(b);
+}
+
+exports.rcompare = rcompare;
+function rcompare(a, b) {
+  return compare(b, a);
+}
+
+exports.sort = sort;
+function sort(list) {
+  return list.sort(exports.compare);
+}
+
+exports.rsort = rsort;
+function rsort(list) {
+  return list.sort(exports.rcompare);
+}
+
+exports.gt = gt;
+function gt(a, b) {
+  return compare(a, b) > 0;
+}
+
+exports.lt = lt;
+function lt(a, b) {
+  return compare(a, b) < 0;
+}
+
+exports.eq = eq;
+function eq(a, b) {
+  return compare(a, b) === 0;
+}
+
+exports.neq = neq;
+function neq(a, b) {
+  return compare(a, b) !== 0;
+}
+
+exports.gte = gte;
+function gte(a, b) {
+  return compare(a, b) >= 0;
+}
+
+exports.lte = lte;
+function lte(a, b) {
+  return compare(a, b) <= 0;
+}
+
+exports.cmp = cmp;
+function cmp(a, op, b) {
+  var ret;
+  switch(op) {
+    case '===': ret = a === b; break;
+    case '!==': ret = a !== b; break;
+    case '==': ret = eq(a, b); break;
+    case '!=': ret = neq(a, b); break;
+    case '>': ret = gt(a, b); break;
+    case '>=': ret = gte(a, b); break;
+    case '<': ret = lt(a, b); break;
+    case '<=': ret = lte(a, b); break;
+    default: throw new TypeError('Invalid operator: ' + op);
+  }
+  return ret;
+}
+
+})(typeof exports === 'object' ? exports : semver = {});
