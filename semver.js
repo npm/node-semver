@@ -97,8 +97,7 @@ for (var i in src) {
   exports.re[i] = new RegExp(src[i]);
 }
 
-exports.parse = parse;
-
+exports.valid = exports.parse = parse;
 function parse(version) {
   if (!re.loose.test(version))
     return null;
