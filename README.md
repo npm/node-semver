@@ -54,7 +54,7 @@ The following range styles are supported:
   not satisfy this range, but `2.3.0-beta` will.
 * `<=1.2.3` Less than or equal to.  In this case, prerelease versions
   ARE allowed, so `1.2.3-beta` would satisfy.
-* `1.2.3 - 2.3.4` := `>=1.2.3-0 <=2.3.4-0`
+* `1.2.3 - 2.3.4` := `>=1.2.3 <=2.3.4`
 * `~1.2.3` := `>=1.2.3-0 <1.3.0-0`  "Reasonably close to 1.2.3".  When
   using tilde operators, prerelease versions are supported as well,
   but a prerelease of the next significant digit will NOT be
