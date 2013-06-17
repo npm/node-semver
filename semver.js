@@ -781,4 +781,11 @@
     }
   }
 
-})(typeof exports === 'object' ? exports : semver = {});
+  if (typeof define === "function" && define.amd) 
+    define(exports);
+
+})(
+  typeof exports === 'object' ? exports :
+  typeof define === 'function' && define.amd ? {} :
+  semver = {}
+);
