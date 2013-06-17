@@ -70,6 +70,13 @@ Ranges can be joined with either a space (which implies "and") or a
 
 ## Functions
 
+All methods and classes take a final `loose` boolean argument that, if
+true, will be more forgiving about not-quite-valid semver strings.
+The resulting output will always be 100% strict, of course.
+
+Strict-mode Comparators and Ranges will be strict about the SemVer
+strings that they parse.
+
 * valid(v): Return the parsed version, or null if it's not valid.
 * inc(v, release): Return the version incremented by the release type
   (major, minor, patch, or build), or null if it's not valid.
