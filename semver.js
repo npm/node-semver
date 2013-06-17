@@ -164,11 +164,15 @@
   // Note that these all use the loose form, because they'll be
   // checked against either the strict or loose comparator form
   // later.
-  src.hyphenRange = '^\\s*(' + loose + ')' +
+  src.hyphenRange = '^\\s*(' + src.xRangePlain + ')' +
                     '\\s+-\\s+' +
-                    '(' + loose + ')' +
+                    '(' + src.xRangePlain + ')' +
                     '\\s*$';
-  var hyphenReplace = '>=$1 <=$7';
+
+  src.hyphenRangeLoose = '^\\s*(' + src.xRangePlainLoose + ')' +
+                         '\\s+-\\s+' +
+                         '(' + src.xRangePlainLoose + ')' +
+                         '\\s*$';
 
   // Star ranges basically just allow anything at all.
   src.star = '(<|>)?=?\\s*\\*';
@@ -531,7 +535,8 @@
     range = range.trim();
     debug('range', range, loose);
     // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-    range = range.replace(re.hyphenRange, hyphenReplace);
+    var hr = loose ? re.hyphenRangeLoose : re.hyphenRange;
+    range = range.replace(hr, hyphenReplace);
     debug('hyphen replace', range);
     // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
     range = range.replace(re.comparatorTrim, comparatorTrimReplace);
@@ -686,6 +691,39 @@
     // Looseness is ignored here.  star is always as loose as it gets!
     return comp.trim().replace(re.star, '');
   }
+
+  // This function is passed to string.replace(re.hyphenRange)
+  // M, m, patch, prerelease, build
+  // 1.2 - 3.4.5 => >=1.2.0-0 <=3.4.5
+  // 1.2.3 - 3.4 => >=1.2.0-0 <3.5.0-0 Any 3.4.x will do
+  // 1.2 - 3.4 => >=1.2.0-0 <3.5.0-0
+  function hyphenReplace($0,
+                         from, fM, fm, fp, fpr, fb,
+                         to, tM, tm, tp, tpr, tb) {
+
+    if (isX(fM))
+      from = '';
+    else if (isX(fm))
+      from = '>=' + fM + '.0.0-0';
+    else if (isX(fp))
+      from = '>=' + fM + '.' + fm + '.0-0';
+    else
+      from = '>=' + from;
+
+    if (isX(tM))
+      to = '';
+    else if (isX(tm))
+      to = '<' + (+tM + 1) + '.0.0-0';
+    else if (isX(tp))
+      to = '<' + tM + '.' + (+tm + 1) + '.0-0';
+    else if (tpr)
+      to = '<=' + tM + '.' + tm + '.' + tp + '-' + tpr;
+    else
+      to = '<=' + to;
+
+    return (from + ' ' + to).trim();
+  }
+
 
   // if ANY of the sets match ALL of its comparators, then pass
   Range.prototype.test = function(version) {
