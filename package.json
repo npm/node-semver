@@ -3,11 +3,15 @@
   "version": "2.0.0-alpha",
   "description": "The semantic version parser used by npm.",
   "main": "semver.js",
+  "browser": "semver.browser.js",
+  "min": "semver.min.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tap test/*.js",
+    "prepublish": "bash build.sh"
   },
   "devDependencies": {
-    "tap": "0.x >=0.0.4"
+    "tap": "0.x >=0.0.4",
+    "uglify-js": "~2.3.6"
   },
   "license": "BSD",
   "repository": "git://github.com/isaacs/node-semver.git",
