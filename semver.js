@@ -665,6 +665,24 @@
         if (xp)
           p = 0;
 
+        if (gtlt === '>') {
+          // >1 => >=2.0.0-0
+          // >1.2 => >=1.3.0-0
+          // >1.2.3 => >= 1.2.4-0
+          gtlt = '>=';
+          if (xM) {
+            // no change
+          } else if (xm) {
+            M = +M + 1;
+            m = 0;
+            p = 0;
+          } else if (xp) {
+            m = +m + 1;
+            p = 0;
+          }
+        }
+
+
         ret = gtlt + M + '.' + m + '.' + p + '-0';
       } else if (xM) {
         // allow any
