@@ -105,7 +105,8 @@ test('\nequality tests', function(t) {
     ['1.2.3-beta+build', ' = 1.2.3-beta+otherbuild', true],
     ['1.2.3+build', ' = 1.2.3+otherbuild', true],
     ['1.2.3-beta+build', '1.2.3-beta+otherbuild'],
-    ['1.2.3+build', '1.2.3+otherbuild']
+    ['1.2.3+build', '1.2.3+otherbuild'],
+    ['  v1.2.3+build', '1.2.3+otherbuild']
   ].forEach(function(v) {
     var v0 = v[0];
     var v1 = v[1];

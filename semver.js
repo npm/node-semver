@@ -244,7 +244,7 @@ function SemVer(version, loose) {
 
   debug('SemVer', version, loose);
   this.loose = loose;
-  var m = version.match(loose ? re[LOOSE] : re[FULL]);
+  var m = version.trim().match(loose ? re[LOOSE] : re[FULL]);
 
   if (!m)
     throw new TypeError('Invalid Version: ' + version);
