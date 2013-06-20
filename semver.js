@@ -217,11 +217,18 @@ for (var i = 0; i < R; i++) {
     re[i] = new RegExp(src[i]);
 }
 
-exports.valid = exports.parse = parse;
+exports.parse = parse;
 function parse(version, loose) {
   var r = loose ? re[LOOSE] : re[FULL];
   return (r.test(version)) ? new SemVer(version, loose) : null;
 }
+
+exports.valid = valid;
+function valid(version, loose) {
+  var v = parse(version, loose);
+  return v ? v.version : false;
+}
+
 
 exports.clean = clean;
 function clean(version, loose) {
