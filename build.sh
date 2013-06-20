@@ -2,7 +2,7 @@
 
 ( cat head.js
   cat semver.js \
-    | egrep -v '^\/\* nomin \*\/' \
+    | egrep -v '^ *\/\* nomin \*\/' \
     | perl -pi -e 's/debug\([^\)]+\)//g'
   cat foot.js ) > semver.browser.js
 
