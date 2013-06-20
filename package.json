@@ -7,7 +7,7 @@
   "min": "semver.min.js",
   "scripts": {
     "test": "tap test/*.js",
-    "prepublish": "bash build.sh"
+    "prepublish": "make"
   },
   "devDependencies": {
     "tap": "0.x >=0.0.4",
