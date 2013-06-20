@@ -349,6 +349,21 @@ SemVer.prototype.inc = function(release) {
       this.patch++;
       this.prerelease = [];
       break;
+    case 'prerelease':
+      if (this.prerelease.length === 0)
+        this.prerelease = [0];
+      else {
+        var i = this.prerelease.length;
+        while (--i >= 0) {
+          if (typeof this.prerelease[i] === 'number') {
+            this.prerelease[i]++;
+            i = -2;
+          }
+        }
+        if (i === -1) // didn't increment anything
+          this.prerelease.push(0);
+      }
+      break;
 
     default:
       throw new Error('invalid increment argument: ' + release);
