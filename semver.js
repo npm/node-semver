@@ -226,7 +226,7 @@ function parse(version, loose) {
 exports.valid = valid;
 function valid(version, loose) {
   var v = parse(version, loose);
-  return v ? v.version : false;
+  return v ? v.version : null;
 }
 
 
@@ -784,6 +784,8 @@ function hyphenReplace($0,
 
 // if ANY of the sets match ALL of its comparators, then pass
 Range.prototype.test = function(version) {
+  if (!version)
+    return false;
   for (var i = 0; i < this.set.length; i++) {
     if (testSet(this.set[i], version))
       return true;
