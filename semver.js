@@ -805,9 +805,11 @@ function maxSatisfying(versions, range, loose) {
 }
 
 exports.validRange = validRange;
-function validRange(range) {
+function validRange(range, loose) {
   try {
-    return new Range(range).range;
+    // Return '*' instead of '' so that truthiness works.
+    // This will throw if it's invalid anyway
+    return new Range(range, loose).range || '*';
   } catch (er) {
     return null;
   }
