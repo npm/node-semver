@@ -267,7 +267,9 @@ test('\nnegative range tests', function(t) {
     ['<=0.7.x', '0.7.2'],
     ['<1.2.3', '1.2.3-beta'],
     ['=1.2.3', '1.2.3-beta'],
-    ['>1.2', '1.2.8']
+    ['>1.2', '1.2.8'],
+    // invalid ranges never satisfied!
+    ['blerg', '1.2.3']
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];

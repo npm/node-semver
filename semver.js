@@ -823,7 +823,12 @@ function testSet(set, version) {
 
 exports.satisfies = satisfies;
 function satisfies(version, range, loose) {
-  return new Range(range, loose).test(version);
+  try {
+    range = new Range(range, loose);
+  } catch (er) {
+    return false;
+  }
+  return range.test(version);
 }
 
 exports.maxSatisfying = maxSatisfying;
