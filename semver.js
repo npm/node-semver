@@ -280,7 +280,7 @@ SemVer.prototype.inspect = function() {
 };
 
 SemVer.prototype.toString = function() {
-  return this.value;
+  return this.version;
 };
 
 SemVer.prototype.compare = function(other) {
