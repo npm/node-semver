@@ -395,6 +395,11 @@ function compare(a, b, loose) {
   return new SemVer(a, loose).compare(b);
 }
 
+exports.compareLoose = compareLoose;
+function compareLoose(a, b) {
+  return compare(a, b, true);
+}
+
 exports.rcompare = rcompare;
 function rcompare(a, b, loose) {
   return compare(b, a, loose);
