@@ -457,7 +457,7 @@ test('\ncomparators test', function(t) {
 });
 
 test('\nstrict vs loose version numbers', function(t) {
-  [['v1.2.3', '1.2.3'],
+  [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
     ['   =1.2.3', '1.2.3'],

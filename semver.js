@@ -107,7 +107,7 @@ src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
 // comparison.
 
 var FULL = R++;
-var FULLPLAIN = src[MAINVERSION] +
+var FULLPLAIN = 'v?' + src[MAINVERSION] +
                 src[PRERELEASE] + '?' +
                 src[BUILD] + '?';
 
@@ -117,8 +117,8 @@ src[FULL] = '^' + FULLPLAIN + '$';
 // also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
 // common in the npm registry.
 var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
-                 '(?:' + src[PRERELEASELOOSE] + ')?' +
-                 '(?:' + src[BUILD] + ')?';
+                 src[PRERELEASELOOSE] + '?' +
+                 src[BUILD] + '?';
 
 var LOOSE = R++;
 src[LOOSE] = '^' + LOOSEPLAIN + '$';
