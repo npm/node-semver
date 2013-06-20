@@ -643,6 +643,7 @@ function replaceTilde(comp, loose) {
   var r = loose ? re[TILDELOOSE] : re[TILDE];
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('tilde', comp, _, M, m, p, pr);
+    var ret;
 
     if (isX(M))
       ret = '';
