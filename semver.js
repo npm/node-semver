@@ -3,18 +3,18 @@ if (typeof module === 'object' && module.exports === exports)
   exports = module.exports = SemVer;
 
 // The debug function is excluded entirely from the minified version.
-/* nomin */var debug;
-/* nomin */if (typeof process === 'object' &&
-/* nomin */    process.env &&
-/* nomin */    process.env.NODE_DEBUG &&
-/* nomin */    /\bsemver\b/i.test(process.env.NODE_DEBUG))
-/* nomin */  debug = function() {
-/* nomin */    var args = Array.prototype.slice.call(arguments, 0);
-/* nomin */    args.unshift('SEMVER');
-/* nomin */    console.log.apply(console, args);
-/* nomin */  };
-/* nomin */else
-/* nomin */  debug = function() {};
+/* nomin */ var debug;
+/* nomin */ if (typeof process === 'object' &&
+    /* nomin */ process.env &&
+    /* nomin */ process.env.NODE_DEBUG &&
+    /* nomin */ /\bsemver\b/i.test(process.env.NODE_DEBUG))
+  /* nomin */ debug = function() {
+    /* nomin */ var args = Array.prototype.slice.call(arguments, 0);
+    /* nomin */ args.unshift('SEMVER');
+    /* nomin */ console.log.apply(console, args);
+    /* nomin */ };
+/* nomin */ else
+  /* nomin */ debug = function() {};
 
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.
@@ -33,7 +33,7 @@ var R = 0;
 
 var NUMERICIDENTIFIER = R++;
 src[NUMERICIDENTIFIER] = '0|[1-9]\\d*';
-var NUMERICIDENTIFIERLOOSE = R++
+var NUMERICIDENTIFIERLOOSE = R++;
 src[NUMERICIDENTIFIERLOOSE] = '[0-9]+';
 
 
@@ -219,7 +219,7 @@ for (var i = 0; i < R; i++) {
 
 exports.valid = exports.parse = parse;
 function parse(version, loose) {
-  var r = loose ? re[LOOSE] : re[FULL]
+  var r = loose ? re[LOOSE] : re[FULL];
   return (r.test(version)) ? new SemVer(version, loose) : null;
 }
 
@@ -621,7 +621,7 @@ function parseComparator(comp, loose) {
   comp = replaceStars(comp, loose);
   debug('stars', comp);
   return comp;
-};
+}
 
 function isX(id) {
   return !id || id.toLowerCase() === 'x' || id === '*';
@@ -816,5 +816,5 @@ function validRange(range, loose) {
 }
 
 // Use the define() function if we're in AMD land
-if (typeof define === "function" && define.amd)
+if (typeof define === 'function' && define.amd)
   define(exports);
