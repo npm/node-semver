@@ -161,8 +161,8 @@ var LONETILDE = R++;
 src[LONETILDE] = '(?:~>?)';
 
 var TILDETRIM = R++;
-src[TILDETRIM] = src[LONETILDE] + '\s+';
-var tildeTrimReplace = '$1';
+src[TILDETRIM] = src[LONETILDE] + '\\s+';
+var tildeTrimReplace = '~';
 
 var TILDE = R++;
 src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$';
