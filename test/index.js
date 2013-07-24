@@ -269,7 +269,8 @@ test('\nnegative range tests', function(t) {
     ['=1.2.3', '1.2.3-beta'],
     ['>1.2', '1.2.8'],
     // invalid ranges never satisfied!
-    ['blerg', '1.2.3']
+    ['blerg', '1.2.3'],
+    ['git+https://user:password0123@github.com/foo', '123.0.0', true]
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];

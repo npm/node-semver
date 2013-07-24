@@ -180,13 +180,12 @@ src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$';
 // An expression to strip any whitespace between the gtlt and the thing
 // it modifies, so that `> 1.2.3` ==> `>1.2.3`
 var COMPARATORTRIM = R++;
-src[COMPARATORTRIM] = src[GTLT] +
+src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
                       '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')';
 
 // this one has to use the /g flag
 re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g');
-
-var comparatorTrimReplace = '$1$2 ';
+var comparatorTrimReplace = '$1$2$3';
 
 
 // Something like `1.2.3 - 1.2.4`
@@ -598,7 +597,7 @@ Range.prototype.parseRange = function(range) {
   debug('hyphen replace', range);
   // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
   range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace);
-  debug('comparator trim', range);
+  debug('comparator trim', range, re[COMPARATORTRIM]);
 
   // `~ 1.2.3` => `~1.2.3`
   range = range.replace(re[TILDETRIM], tildeTrimReplace);
