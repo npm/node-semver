@@ -65,9 +65,11 @@ The following range styles are supported:
   prerelease) will be supported up to, but not including, the next
   major version (or its prereleases). `1.5.1` will satisfy `^1.2.3`,
   while `1.2.2` and `2.0.0-beta` will not.
-* `^0.1.3` := `=0.1.3` Since 0.x versions are special in semver and
-  not guaranteed to be compatible in any way with each other, they are
-  handled as exact matches by the caret operator.
+* `^0.1.3` := `>=0.1.3-0 <0.2.0-0` "Compatible with 0.1.3". 0.x.x versions are
+  special: the first non-zero component indicates potentially breaking changes,
+  meaning the caret operator matches any version with the same first non-zero
+  component starting at the specified version.
+* `^0.0.2` := `=0.0.2` "Only the version 0.0.2 is considered compatible"
 * `~1.2` := `>=1.2.0-0 <1.3.0-0` "Any version starting with 1.2"
 * `^1.2` := `>=1.2.0-0 <2.0.0-0` "Any version compatible with 1.2"
 * `1.2.x` := `>=1.2.0-0 <1.3.0-0` "Any version starting with 1.2"
