@@ -212,7 +212,8 @@ test('\nrange tests', function(t) {
     ['^1.2.3', '1.2.3-beta'],
     ['^0.1.2', '0.1.2'],
     ['^0.1', '0.1.2'],
-    ['^1.2', '1.4.2']
+    ['^1.2', '1.4.2'],
+    ['^1.2 ^1', '1.4.2']
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
@@ -402,7 +403,8 @@ test('\nvalid range test', function(t) {
     ['>01.02.03', '>1.2.3', true],
     ['>01.02.03', null],
     ['~1.2.3beta', '>=1.2.3-beta <1.3.0-0', true],
-    ['~1.2.3beta', null]
+    ['~1.2.3beta', null],
+    ['^ 1.2 ^ 1', '>=1.2.0-0 <2.0.0-0 >=1.0.0-0 <2.0.0-0']
   ].forEach(function(v) {
     var pre = v[0];
     var wanted = v[1];

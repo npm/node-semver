@@ -161,8 +161,9 @@ var LONETILDE = R++;
 src[LONETILDE] = '(?:~>?)';
 
 var TILDETRIM = R++;
-src[TILDETRIM] = src[LONETILDE] + '\\s+';
-var tildeTrimReplace = '~';
+src[TILDETRIM] = '(\\s*)' + src[LONETILDE] + '\\s+';
+re[TILDETRIM] = new RegExp(src[TILDETRIM], 'g');
+var tildeTrimReplace = '$1~';
 
 var TILDE = R++;
 src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$';
@@ -175,8 +176,9 @@ var LONECARET = R++;
 src[LONECARET] = '(?:\\^)';
 
 var CARETTRIM = R++;
-src[CARETTRIM] = src[LONECARET] + '\s+';
-var caretTrimReplace = '$1';
+src[CARETTRIM] = '(\\s*)' + src[LONECARET] + '\\s+';
+re[CARETTRIM] = new RegExp(src[CARETTRIM], 'g');
+var caretTrimReplace = '$1^';
 
 var CARET = R++;
 src[CARET] = '^' + src[LONECARET] + src[XRANGEPLAIN] + '$';
