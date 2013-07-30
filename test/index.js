@@ -213,7 +213,9 @@ test('\nrange tests', function(t) {
     ['^0.1.2', '0.1.2'],
     ['^0.1', '0.1.2'],
     ['^1.2', '1.4.2'],
-    ['^1.2 ^1', '1.4.2']
+    ['^1.2 ^1', '1.4.2'],
+    ['^1.2', '1.2.0-pre'],
+    ['^1.2.3', '1.2.3-pre']
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
@@ -279,7 +281,8 @@ test('\nnegative range tests', function(t) {
     ['^1.2', '1.1.9'],
     // invalid ranges never satisfied!
     ['blerg', '1.2.3'],
-    ['git+https://user:password0123@github.com/foo', '123.0.0', true]
+    ['git+https://user:password0123@github.com/foo', '123.0.0', true],
+    ['^1.2.3', '2.0.0-pre']
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
