@@ -1,6 +1,8 @@
 // export the class if we are in a Node-like system.
 if (typeof module === 'object' && module.exports === exports)
   exports = module.exports = SemVer;
+else if (typeof exports === 'undefined')
+  exports = {};
 
 // The debug function is excluded entirely from the minified version.
 /* nomin */ var debug;
