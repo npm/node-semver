@@ -803,7 +803,7 @@ function replaceXRange(comp, loose) {
           m = 0;
           p = 0;
         } else if (xp) {
-          m = +m + 1;
+          !loose && (m = +m + 1);
           p = 0;
         }
       }
