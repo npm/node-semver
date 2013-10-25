@@ -736,26 +736,35 @@ function replaceCaret(comp, loose) {
       ret = '';
     else if (isX(m))
       ret = '>=' + M + '.0.0-0 <' + (+M + 1) + '.0.0-0';
-    else if (isX(p))
-      if (M === '0') ret = '>=' + M + '.' + m + '.0-0 <' + M + '.' + (+m + 1) + '.0-0';
-      else ret = '>=' + M + '.' + m + '.0-0 <' + (+M + 1) + '.0.0-0';
-    else if (pr) {
+    else if (isX(p)) {
+      if (M === '0')
+        ret = '>=' + M + '.' + m + '.0-0 <' + M + '.' + (+m + 1) + '.0-0';
+      else
+        ret = '>=' + M + '.' + m + '.0-0 <' + (+M + 1) + '.0.0-0';
+    } else if (pr) {
       debug('replaceCaret pr', pr);
       if (pr.charAt(0) !== '-')
         pr = '-' + pr;
-      if (M === '0')
-        if (m === '0') ret = '=' + M + '.' + m + '.' + p + pr;
-        else ret = '>=' + M + '.' + m + '.' + p + pr +
-                   ' <' + M + '.' + (+m + 1) + '.0-0';
-      else ret = '>=' + M + '.' + m + '.' + p + pr +
-                 ' <' + (+M + 1) + '.0.0-0';
-    } else
-      if (M === '0')
-        if (m === '0') ret = '=' + M + '.' + m + '.' + p;
-        else ret = '>=' + M + '.' + m + '.' + p + '-0' +
-                   ' <' + M + '.' + (+m + 1) + '.0-0';
-      else ret = '>=' + M + '.' + m + '.' + p + '-0' +
-                 ' <' + (+M + 1) + '.0.0-0';
+      if (M === '0') {
+        if (m === '0')
+          ret = '=' + M + '.' + m + '.' + p + pr;
+        else
+          ret = '>=' + M + '.' + m + '.' + p + pr +
+                ' <' + M + '.' + (+m + 1) + '.0-0';
+      } else
+        ret = '>=' + M + '.' + m + '.' + p + pr +
+              ' <' + (+M + 1) + '.0.0-0';
+    } else {
+      if (M === '0') {
+        if (m === '0')
+          ret = '=' + M + '.' + m + '.' + p;
+        else
+          ret = '>=' + M + '.' + m + '.' + p + '-0' +
+                ' <' + M + '.' + (+m + 1) + '.0-0';
+      } else
+        ret = '>=' + M + '.' + m + '.' + p + '-0' +
+              ' <' + (+M + 1) + '.0.0-0';
+    }
 
     debug('caret return', ret);
     return ret;
