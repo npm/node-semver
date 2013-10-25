@@ -927,17 +927,50 @@ function validRange(range, loose) {
   }
 }
 
+// Determine if version is less than all the versions possible in the range
+exports.ltr = ltr;
+function ltr(version, range, loose) {
+  return outside(version, range, 'lo', loose);
+}
+
 // Determine if version is greater than all the versions possible in the range.
 exports.gtr = gtr;
 function gtr(version, range, loose) {
+  return outside(version, range, 'hi', loose);
+}
 
+exports.outside = outside;
+function outside(version, range, hilo, loose) {
   version = new SemVer(version, loose);
   range = new Range(range, loose);
 
-  // If it satisifes the range it is not greater
+  var gtfn, ltefn, comp, ecomp;
+  switch (hilo) {
+    case '>':
+      gtfn = gt;
+      ltefn = lte;
+      ltfn = lt;
+      comp = '>';
+      ecomp = '>=';
+      break;
+    case '<':
+      gtfn = lt;
+      ltefn = gte;
+      ltfn = gt;
+      comp = '<';
+      ecomp = '<=';
+      break;
+    default:
+      throw new TypeError('Must provide a hilo val of "<" or ">"');
+  }
+
+  // If it satisifes the range it is not outside
   if (satisfies(version, range, loose)) {
     return false;
   }
+
+  // From now on, variable terms are as if we're in "gtr" mode.
+  // but note that everything is flipped for the "ltr" function.
 
   for (var i = 0; i < range.set.length; ++i) {
     var comparators = range.set[i];
@@ -948,24 +981,25 @@ function gtr(version, range, loose) {
     comparators.forEach(function(comparator) {
       high = high || comparator;
       low = low || comparator;
-      if (gt(comparator.semver, high.semver, loose)) {
+      if (gtfn(comparator.semver, high.semver, loose)) {
         high = comparator;
-      } else if (lt(comparator.semver, low.semver, loose)) {
+      } else if (ltfn(comparator.semver, low.semver, loose)) {
         low = comparator;
       }
     });
 
-    // If the highest version comparator has a gt/gte operator then our version
-    // isn't higher than it
-    if (high.operator === '>' || high.operator === '>=') {
+    // If the edge version comparator has a operator then our version
+    // isn't outside it
+    if (high.operator === comp || high.operator === ecomp) {
       return false;
     }
 
-    // If the lowest version comparator has a gt/gte operator and our version
+    // If the lowest version comparator has an operator and our version
     // is less than it then it isn't higher than the range
-    if ((!low.operator || low.operator === '>') && lte(version, low.semver)) {
+    if ((!low.operator || low.operator === comp) &&
+        ltefn(version, low.semver)) {
       return false;
-    } else if (low.operator === '>=' && lt(version, low.semver)) {
+    } else if (low.operator === ecomp && ltfn(version, low.semver)) {
       return false;
     }
   }
