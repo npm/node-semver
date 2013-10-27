@@ -930,13 +930,13 @@ function validRange(range, loose) {
 // Determine if version is less than all the versions possible in the range
 exports.ltr = ltr;
 function ltr(version, range, loose) {
-  return outside(version, range, 'lo', loose);
+  return outside(version, range, '<', loose);
 }
 
 // Determine if version is greater than all the versions possible in the range.
 exports.gtr = gtr;
 function gtr(version, range, loose) {
-  return outside(version, range, 'hi', loose);
+  return outside(version, range, '>', loose);
 }
 
 exports.outside = outside;
@@ -944,7 +944,7 @@ function outside(version, range, hilo, loose) {
   version = new SemVer(version, loose);
   range = new Range(range, loose);
 
-  var gtfn, ltefn, comp, ecomp;
+  var gtfn, ltefn, ltfn, comp, ecomp;
   switch (hilo) {
     case '>':
       gtfn = gt;
