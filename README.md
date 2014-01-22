@@ -117,9 +117,9 @@ strings that they parse.
 ### Ranges
 
 * validRange(range): Return the valid range or null if it's not valid
-* satisfies(version, range): Return true if the version satisfies the
+* satisfies(version, range, stableOnly): Return true if the version satisfies the
   range.
-* maxSatisfying(versions, range): Return the highest version in the list
+* maxSatisfying(versions, range, stableOnly): Return the highest version in the list
   that satisfies the range, or null if none of them do.
 * gtr(version, range): Return true if version is greater than all the
   versions possible in the range.
