@@ -362,7 +362,8 @@ SemVer.prototype.inc = function(release) {
       this.minor++;
       this.patch = -1;
     case 'patch':
-      this.patch++;
+      if (this.prerelease.length === 0)
+        this.patch++;
       this.prerelease = [];
       break;
     case 'prerelease':
