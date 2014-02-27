@@ -353,6 +353,19 @@ SemVer.prototype.comparePre = function(other) {
 
 SemVer.prototype.inc = function(release) {
   switch (release) {
+    case 'premajor':
+      this.inc('major');
+      this.inc('pre');
+      break;
+    case 'preminor':
+      this.inc('minor');
+      this.inc('pre');
+      break;
+    case 'prerelease':
+      if (this.prerelease.length === 0)
+        this.inc('patch');
+      this.inc('pre');
+      break;
     case 'major':
       this.major++;
       this.minor = -1;
@@ -370,7 +383,7 @@ SemVer.prototype.inc = function(release) {
         this.patch++;
       this.prerelease = [];
       break;
-    case 'prerelease':
+    case 'pre':
       if (this.prerelease.length === 0)
         this.prerelease = [0];
       else {
