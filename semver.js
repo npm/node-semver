@@ -358,8 +358,14 @@ SemVer.prototype.inc = function(release) {
       this.minor = -1;
     case 'minor':
       this.minor++;
-      this.patch = -1;
+      this.patch = 0;
+      this.prerelease = [];
+      break;
     case 'patch':
+      // If this is not a pre-release version, it will increment the patch.
+      // If it is a pre-release it will bump up to the same patch version.
+      // 1.2.0-5 patches to 1.2.0
+      // 1.2.0 patches to 1.2.1
       if (this.prerelease.length === 0)
         this.patch++;
       this.prerelease = [];

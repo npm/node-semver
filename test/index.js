@@ -302,6 +302,7 @@ test('\nincrement versions test', function(t) {
     ['1.2.3tag', 'major', '2.0.0', true],
     ['1.2.3-tag', 'major', '2.0.0'],
     ['1.2.3', 'fake', null],
+    ['1.2.0-0', 'patch', '1.2.0'],
     ['fake', 'major', null],
     ['1.2.3', 'prerelease', '1.2.3-0'],
     ['1.2.3-0', 'prerelease', '1.2.3-1'],
