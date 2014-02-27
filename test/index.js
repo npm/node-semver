@@ -306,11 +306,11 @@ test('\nincrement versions test', function(t) {
     ['fake', 'major', null],
     ['1.2.3-4', 'major', '2.0.0'],
     ['1.2.3-4', 'minor', '1.3.0'],
-    ['1.2.3-4', 'patch', '1.2.4'],
+    ['1.2.3-4', 'patch', '1.2.3'],
     ['1.2.3-alpha.0.beta', 'major', '2.0.0'],
     ['1.2.3-alpha.0.beta', 'minor', '1.3.0'],
-    ['1.2.3-alpha.0.beta', 'patch', '1.2.4'],
-    ['1.2.3', 'prerelease', '1.2.3-0'],
+    ['1.2.3-alpha.0.beta', 'patch', '1.2.3'],
+    ['1.2.4', 'prerelease', '1.2.5-0'],
     ['1.2.3-0', 'prerelease', '1.2.3-1'],
     ['1.2.3-alpha.0', 'prerelease', '1.2.3-alpha.1'],
     ['1.2.3-alpha.1', 'prerelease', '1.2.3-alpha.2'],
@@ -326,7 +326,13 @@ test('\nincrement versions test', function(t) {
     ['1.2.3-alpha.10.beta.2', 'prerelease', '1.2.3-alpha.10.beta.3'],
     ['1.2.3-alpha.9.beta', 'prerelease', '1.2.3-alpha.10.beta'],
     ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.11.beta'],
-    ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta']
+    ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta'],
+    ['1.2.0', 'preminor', '1.3.0-0'],
+    ['1.2.0', 'premajor', '2.0.0-0'],
+    ['1.2.0', 'preminor', '1.3.0-0'],
+    ['1.2.0', 'premajor', '2.0.0-0']
+
+
   ].forEach(function(v) {
     var pre = v[0];
     var what = v[1];
