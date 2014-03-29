@@ -73,9 +73,14 @@ The following range styles are supported:
 * `~1.2` := `>=1.2.0-0 <1.3.0-0` "Any version starting with 1.2"
 * `^1.2` := `>=1.2.0-0 <2.0.0-0` "Any version compatible with 1.2"
 * `1.2.x` := `>=1.2.0-0 <1.3.0-0` "Any version starting with 1.2"
+* `1.2.*` Same as `1.2.x`.
 * `~1` := `>=1.0.0-0 <2.0.0-0` "Any version starting with 1"
 * `^1` := `>=1.0.0-0 <2.0.0-0` "Any version compatible with 1"
 * `1.x` := `>=1.0.0-0 <2.0.0-0` "Any version starting with 1"
+* `1.*` Same as `1.x`.
+* `*` Any version whatsoever.
+* `x` Same as `*`.
+* `""` (just an empty string) Same as `*`.
 
 
 Ranges can be joined with either a space (which implies "and") or a
