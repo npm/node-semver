@@ -302,8 +302,9 @@ test('\nincrement versions test', function(t) {
     ['1.2.3tag', 'major', '2.0.0', true],
     ['1.2.3-tag', 'major', '2.0.0'],
     ['1.2.3', 'fake', null],
+    ['1.2.0-0', 'patch', '1.2.0'],
     ['fake', 'major', null],
-    ['1.2.3', 'prerelease', '1.2.3-0'],
+    ['1.2.4', 'prerelease', '1.2.5-0'],
     ['1.2.3-0', 'prerelease', '1.2.3-1'],
     ['1.2.3-alpha.0', 'prerelease', '1.2.3-alpha.1'],
     ['1.2.3-alpha.1', 'prerelease', '1.2.3-alpha.2'],
@@ -319,7 +320,13 @@ test('\nincrement versions test', function(t) {
     ['1.2.3-alpha.10.beta.2', 'prerelease', '1.2.3-alpha.10.beta.3'],
     ['1.2.3-alpha.9.beta', 'prerelease', '1.2.3-alpha.10.beta'],
     ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.11.beta'],
-    ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta']
+    ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta'],
+    ['1.2.0', 'preminor', '1.3.0-0'],
+    ['1.2.0', 'premajor', '2.0.0-0'],
+    ['1.2.0', 'preminor', '1.3.0-0'],
+    ['1.2.0', 'premajor', '2.0.0-0']
+
+
   ].forEach(function(v) {
     var pre = v[0];
     var what = v[1];
