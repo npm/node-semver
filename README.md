@@ -43,9 +43,10 @@ A leading `"="` or `"v"` character is stripped off and ignored.
 
 The following range styles are supported:
 
-* `1.2.3` A specific version.  When nothing else will do.  Note that
-  build metadata is still ignored, so `1.2.3+build2012` will satisfy
-  this range.
+* `1.2.3` A specific version.  When nothing else will do.  Must be a full
+  version number, with major, minor, and patch versions specified.
+  Note that build metadata is still ignored, so `1.2.3+build2012` will
+  satisfy this range.
 * `>1.2.3` Greater than a specific version.
 * `<1.2.3` Less than a specific version.  If there is no prerelease
   tag on the version range, then no prerelease version will be allowed
@@ -74,10 +75,12 @@ The following range styles are supported:
 * `^1.2` := `>=1.2.0-0 <2.0.0-0` "Any version compatible with 1.2"
 * `1.2.x` := `>=1.2.0-0 <1.3.0-0` "Any version starting with 1.2"
 * `1.2.*` Same as `1.2.x`.
+* `1.2` Same as `1.2.x`.
 * `~1` := `>=1.0.0-0 <2.0.0-0` "Any version starting with 1"
 * `^1` := `>=1.0.0-0 <2.0.0-0` "Any version compatible with 1"
 * `1.x` := `>=1.0.0-0 <2.0.0-0` "Any version starting with 1"
 * `1.*` Same as `1.x`.
+* `1` Same as `1.x`.
 * `*` Any version whatsoever.
 * `x` Same as `*`.
 * `""` (just an empty string) Same as `*`.
