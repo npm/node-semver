@@ -393,6 +393,8 @@ SemVer.prototype.inc = function(release) {
         this.patch++;
       this.prerelease = [];
       break;
+    // This probably shouldn't be used publically.
+    // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
     case 'pre':
       if (this.prerelease.length === 0)
         this.prerelease = [0];
