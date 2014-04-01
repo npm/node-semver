@@ -96,8 +96,16 @@ Strict-mode Comparators and Ranges will be strict about the SemVer
 strings that they parse.
 
 * `valid(v)`: Return the parsed version, or null if it's not valid.
-* `inc(v, release)`: Return the version incremented by the release type
-  (`major`, `minor`, `patch`, or `prerelease`), or null if it's not valid.
+* `inc(v, release)`: Return the version incremented by the release
+  type (`major`,   `premajor`, `minor`, `preminor`, `patch`,
+  `prepatch`, or `prerelease`), or null if it's not valid
+  * `premajor` in one call will bump the version up to the next major
+    version and down to a prerelease of that major version.
+    `preminor`, and `prepatch` work the same way.
+  * If called from a non-prerelease version, the `prerelease` will work the
+    same as `prepatch`. It increments the patch version, then makes a
+    prerelease. If the input version is already a prerelease it simply
+    increments it.
 
 ### Comparison
 

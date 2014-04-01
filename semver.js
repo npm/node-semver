@@ -353,6 +353,8 @@ SemVer.prototype.comparePre = function(other) {
   } while (++i);
 };
 
+// preminor will bump the version up to the next minor release, and immediately
+// down to pre-release. premajor and prepatch work the same way.
 SemVer.prototype.inc = function(release) {
   switch (release) {
     case 'premajor':
@@ -363,6 +365,12 @@ SemVer.prototype.inc = function(release) {
       this.inc('minor');
       this.inc('pre');
       break;
+    case 'prepatch':
+      this.inc('patch');
+      this.inc('pre');
+      break;
+    // If the input is a non-prerelease version, this acts the same as
+    // prepatch.
     case 'prerelease':
       if (this.prerelease.length === 0)
         this.inc('patch');
