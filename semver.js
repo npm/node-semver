@@ -330,7 +330,7 @@ SemVer.prototype.comparePre = function(other) {
     return -1;
   else if (!this.prerelease.length && other.prerelease.length)
     return 1;
-  else if (!this.prerelease.lenth && !other.prerelease.length)
+  else if (!this.prerelease.length && !other.prerelease.length)
     return 0;
 
   var i = 0;
