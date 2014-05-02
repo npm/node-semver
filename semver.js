@@ -258,6 +258,8 @@ function SemVer(version, loose) {
       return version;
     else
       version = version.version;
+  } else if (typeof version !== 'string') {
+    throw new TypeError('Invalid Version: ' + version);
   }
 
   if (!(this instanceof SemVer))
