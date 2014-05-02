@@ -506,6 +506,21 @@ test('\ncomparators test', function(t) {
   t.end();
 });
 
+test('\ninvalid version numbers', function(t) {
+  ['1.2.3.4',
+   'NOT VALID',
+   1.2,
+   null,
+   'Infinity.NaN.Infinity'
+  ].forEach(function(v) {
+    t.throws(function() {
+      new SemVer(v);
+    }, {name:'TypeError', message:'Invalid Version: ' + v});
+  });
+
+  t.end();
+});
+
 test('\nstrict vs loose version numbers', function(t) {
   [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
