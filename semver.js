@@ -366,6 +366,9 @@ SemVer.prototype.inc = function(release) {
       this.inc('pre');
       break;
     case 'prepatch':
+      // If this is already a prerelease, it will bump to the next version
+      if (this.prerelease.length > 0)
+        this.inc('patch');
       this.inc('patch');
       this.inc('pre');
       break;
