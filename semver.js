@@ -369,7 +369,7 @@ SemVer.prototype.inc = function(release) {
       // If this is already a prerelease, it will bump to the next version
       // drop any prereleases that might already exist, since they are not
       // relevant at this point.
-      this.prerelease.length = 0
+      this.prerelease.length = 0;
       this.inc('patch');
       this.inc('pre');
       break;
@@ -770,6 +770,11 @@ function replaceCaret(comp, loose) {
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('caret', comp, _, M, m, p, pr);
     var ret;
+    if (pr) {
+      if (pr.charAt(0) !== '-')
+        pr = '-' + pr;
+    } else
+      pr = '';
 
     if (isX(M))
       ret = '';
@@ -780,30 +785,14 @@ function replaceCaret(comp, loose) {
         ret = '>=' + M + '.' + m + '.0-0 <' + M + '.' + (+m + 1) + '.0-0';
       else
         ret = '>=' + M + '.' + m + '.0-0 <' + (+M + 1) + '.0.0-0';
-    } else if (pr) {
-      debug('replaceCaret pr', pr);
-      if (pr.charAt(0) !== '-')
-        pr = '-' + pr;
-      if (M === '0') {
-        if (m === '0')
-          ret = '=' + M + '.' + m + '.' + p + pr;
-        else
-          ret = '>=' + M + '.' + m + '.' + p + pr +
-                ' <' + M + '.' + (+m + 1) + '.0-0';
-      } else
-        ret = '>=' + M + '.' + m + '.' + p + pr +
-              ' <' + (+M + 1) + '.0.0-0';
-    } else {
-      if (M === '0') {
-        if (m === '0')
-          ret = '=' + M + '.' + m + '.' + p;
-        else
-          ret = '>=' + M + '.' + m + '.' + p + '-0' +
-                ' <' + M + '.' + (+m + 1) + '.0-0';
-      } else
-        ret = '>=' + M + '.' + m + '.' + p + '-0' +
-              ' <' + (+M + 1) + '.0.0-0';
-    }
+    } else if (M === '0')
+      ret = '=' + M + '.' + m + '.' + p + pr;
+    else if (pr)
+      ret = '>=' + M + '.' + m + '.' + p + pr +
+            ' <' + (+M + 1) + '.0.0-0';
+    else
+      ret = '>=' + M + '.' + m + '.' + p + '-0' +
+            ' <' + (+M + 1) + '.0.0-0';
 
     debug('caret return', ret);
     return ret;
