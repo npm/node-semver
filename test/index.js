@@ -334,7 +334,9 @@ test('\nincrement versions test', function(t) {
     ['1.2.0', 'preminor', '1.3.0-0'],
     ['1.2.0-1', 'preminor', '1.3.0-0'],
     ['1.2.0', 'premajor', '2.0.0-0'],
-    ['1.2.0-1', 'premajor', '2.0.0-0']
+    ['1.2.0-1', 'premajor', '2.0.0-0'],
+    ['1.2.0-1', 'minor', '1.2.0'],
+    ['1.0.0-1', 'major', '1.0.0']
 
 
   ].forEach(function(v) {
