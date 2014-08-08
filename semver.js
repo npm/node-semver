@@ -358,11 +358,16 @@ SemVer.prototype.comparePre = function(other) {
 SemVer.prototype.inc = function(release) {
   switch (release) {
     case 'premajor':
-      this.inc('major');
+      this.prerelease.length = 0;
+      this.patch = 0;
+      this.minor = 0;
+      this.major++;
       this.inc('pre');
       break;
     case 'preminor':
-      this.inc('minor');
+      this.prerelease.length = 0;
+      this.patch = 0;
+      this.minor++;
       this.inc('pre');
       break;
     case 'prepatch':
@@ -380,11 +385,25 @@ SemVer.prototype.inc = function(release) {
         this.inc('patch');
       this.inc('pre');
       break;
+      
     case 'major':
-      this.major++;
-      this.minor = -1;
+      // If this is a pre-major version, bump up to the same major version.
+      // Otherwise increment major.
+      // 1.0.0-5 bumps to 1.0.0
+      // 1.1.0 bumps to 2.0.0
+      if ( this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0 )
+        this.major++;
+      this.minor = 0;
+      this.patch = 0;
+      this.prerelease = [];
+      break;
     case 'minor':
-      this.minor++;
+      // If this is a pre-minor version, bump up to the same minor version.
+      // Otherwise increment minor.
+      // 1.2.0-5 bumps to 1.2.0
+      // 1.2.1 bumps to 1.3.0
+      if ( this.patch !== 0 || this.prerelease.length === 0 )
+        this.minor++;
       this.patch = 0;
       this.prerelease = [];
       break;
