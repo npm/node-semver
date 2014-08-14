@@ -359,14 +359,14 @@ SemVer.prototype.inc = function(release) {
   switch (release) {
     case 'premajor':
       this.prerelease.length = 0;
-      this.path = 0;
+      this.patch = 0;
       this.minor = 0;
       this.major++;
       this.inc('pre');
       break;
     case 'preminor':
       this.prerelease.length = 0;
-      this.path = 0;
+      this.patch = 0;
       this.minor++;
       this.inc('pre');
       break;
