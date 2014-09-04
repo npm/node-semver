@@ -246,7 +246,7 @@ function valid(version, loose) {
 
 exports.clean = clean;
 function clean(version, loose) {
-  var s = parse(version.trim().replace(/^[=v]+/, ""), loose);
+  var s = parse(version.trim().replace(/^[=v]+/, ''), loose);
   return s ? s.version : null;
 }
 
@@ -385,13 +385,13 @@ SemVer.prototype.inc = function(release) {
         this.inc('patch');
       this.inc('pre');
       break;
-      
+
     case 'major':
       // If this is a pre-major version, bump up to the same major version.
       // Otherwise increment major.
       // 1.0.0-5 bumps to 1.0.0
       // 1.1.0 bumps to 2.0.0
-      if ( this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0 )
+      if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0)
         this.major++;
       this.minor = 0;
       this.patch = 0;
@@ -402,7 +402,7 @@ SemVer.prototype.inc = function(release) {
       // Otherwise increment minor.
       // 1.2.0-5 bumps to 1.2.0
       // 1.2.1 bumps to 1.3.0
-      if ( this.patch !== 0 || this.prerelease.length === 0 )
+      if (this.patch !== 0 || this.prerelease.length === 0)
         this.minor++;
       this.patch = 0;
       this.prerelease = [];
