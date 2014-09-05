@@ -537,8 +537,16 @@ exports.cmp = cmp;
 function cmp(a, op, b, loose) {
   var ret;
   switch (op) {
-    case '===': ret = a === b; break;
-    case '!==': ret = a !== b; break;
+    case '===':
+      if (typeof a === 'object') a = a.version;
+      if (typeof b === 'object') b = b.version;
+      ret = a === b;
+      break;
+    case '!==':
+      if (typeof a === 'object') a = a.version;
+      if (typeof b === 'object') b = b.version;
+      ret = a !== b;
+      break;
     case '': case '=': case '==': ret = eq(a, b, loose); break;
     case '!=': ret = neq(a, b, loose); break;
     case '>': ret = gt(a, b, loose); break;
