@@ -948,6 +948,10 @@ function hyphenReplace($0,
 Range.prototype.test = function(version) {
   if (!version)
     return false;
+
+  if (typeof version === 'string')
+    version = new SemVer(version, this.loose);
+
   for (var i = 0; i < this.set.length; i++) {
     if (testSet(this.set[i], version))
       return true;
