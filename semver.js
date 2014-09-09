@@ -138,15 +138,17 @@ var XRANGEPLAIN = R++;
 src[XRANGEPLAIN] = '[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
                    '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
                    '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
-                   '(?:(' + src[PRERELEASE] + ')' +
-                   ')?)?)?';
+                   '(?:' + src[PRERELEASE] + ')?' +
+                   src[BUILD] + '?' +
+                   ')?)?';
 
 var XRANGEPLAINLOOSE = R++;
 src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
                         '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
                         '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                        '(?:(' + src[PRERELEASELOOSE] + ')' +
-                        ')?)?)?';
+                        '(?:' + src[PRERELEASELOOSE] + ')?' +
+                        src[BUILD] + '?' +
+                        ')?)?';
 
 var XRANGE = R++;
 src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$';

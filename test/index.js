@@ -132,6 +132,15 @@ test('\nrange tests', function(t) {
   // [range, version]
   // version should be included by range
   [['1.0.0 - 2.0.0', '1.2.3'],
+    ['^1.2.3+build', '1.2.3'],
+    ['^1.2.3+build', '1.3.0'],
+    ['1.2.3-pre+asdf - 2.4.3-pre+asdf', '1.2.3'],
+    ['1.2.3pre+asdf - 2.4.3-pre+asdf', '1.2.3', true],
+    ['1.2.3-pre+asdf - 2.4.3pre+asdf', '1.2.3', true],
+    ['1.2.3pre+asdf - 2.4.3pre+asdf', '1.2.3', true],
+    ['1.2.3-pre+asdf - 2.4.3-pre+asdf', '1.2.3-pre.2'],
+    ['1.2.3-pre+asdf - 2.4.3-pre+asdf', '2.4.3-alpha'],
+    ['1.2.3+asdf - 2.4.3+asdf', '1.2.3'],
     ['1.0.0', '1.0.0'],
     ['>=*', '0.2.4'],
     ['', '1.0.0'],
@@ -226,6 +235,10 @@ test('\nnegative range tests', function(t) {
   // [range, version]
   // version should not be included by range
   [['1.0.0 - 2.0.0', '2.2.3'],
+    ['1.2.3+asdf - 2.4.3+asdf', '1.2.3-pre.2'],
+    ['1.2.3+asdf - 2.4.3+asdf', '2.4.3-alpha'],
+    ['^1.2.3+build', '2.0.0'],
+    ['^1.2.3+build', '1.2.0'],
     ['^1.2.3', '1.2.3-pre'],
     ['^1.2', '1.2.0-pre'],
     ['>1.2', '1.3.0-beta'],
