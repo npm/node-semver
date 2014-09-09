@@ -3,3 +3,4 @@ semver.min.js.gz
 semver.browser.js
 semver.browser.js.gz
 /node_modules
+.*.swp
