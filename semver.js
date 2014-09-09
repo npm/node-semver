@@ -807,7 +807,8 @@ function replaceCaret(comp, loose) {
         pr = '-' + pr;
       if (M === '0') {
         if (m === '0')
-          ret = '=' + M + '.' + m + '.' + p + pr;
+          ret = '>=' + M + '.' + m + '.' + p + pr +
+                ' <' + M + '.' + m + '.' + (+p + 1);
         else
           ret = '>=' + M + '.' + m + '.' + p + pr +
                 ' <' + M + '.' + (+m + 1) + '.0';
@@ -818,7 +819,8 @@ function replaceCaret(comp, loose) {
       debug('no pr');
       if (M === '0') {
         if (m === '0')
-          ret = '=' + M + '.' + m + '.' + p;
+          ret = '>=' + M + '.' + m + '.' + p +
+                ' <' + M + '.' + m + '.' + (+p + 1);
         else
           ret = '>=' + M + '.' + m + '.' + p +
                 ' <' + M + '.' + (+m + 1) + '.0';
