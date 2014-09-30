@@ -856,10 +856,16 @@ function replaceXRange(comp, loose) {
     if (gtlt === '=' && anyX)
       gtlt = '';
 
-    if (gtlt && anyX) {
+    if (xM) {
+      if (gtlt === '>' || gtlt === '<') {
+        // nothing is allowed
+        ret = '<0.0.0';
+      } else {
+        // nothing is forbidden
+        ret = '*';
+      }
+    } else if (gtlt && anyX) {
       // replace X with 0
-      if (xM)
-        M = 0;
       if (xm)
         m = 0;
       if (xp)
@@ -870,9 +876,7 @@ function replaceXRange(comp, loose) {
         // >1.2 => >=1.3.0
         // >1.2.3 => >= 1.2.4
         gtlt = '>=';
-        if (xM) {
-          // no change
-        } else if (xm) {
+        if (xm) {
           M = +M + 1;
           m = 0;
           p = 0;
@@ -880,13 +884,17 @@ function replaceXRange(comp, loose) {
           m = +m + 1;
           p = 0;
         }
+      } else if (gtlt === '<=') {
+        // <=0.7.x is actually <0.8.0, since any 0.7.x should
+        // pass.  Similarly, <=7.x is actually <8.0.0, etc.
+        gtlt = '<'
+        if (xm)
+          M = +M + 1
+        else
+          m = +m + 1
       }
 
-
       ret = gtlt + M + '.' + m + '.' + p;
-    } else if (xM) {
-      // allow any
-      ret = '*';
     } else if (xm) {
       ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
     } else if (xp) {
