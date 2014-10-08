@@ -355,35 +355,35 @@ SemVer.prototype.comparePre = function(other) {
 
 // preminor will bump the version up to the next minor release, and immediately
 // down to pre-release. premajor and prepatch work the same way.
-SemVer.prototype.inc = function(release) {
+SemVer.prototype.inc = function(release, identifier) {
   switch (release) {
     case 'premajor':
       this.prerelease.length = 0;
       this.patch = 0;
       this.minor = 0;
       this.major++;
-      this.inc('pre');
+      this.inc('pre', identifier);
       break;
     case 'preminor':
       this.prerelease.length = 0;
       this.patch = 0;
       this.minor++;
-      this.inc('pre');
+      this.inc('pre', identifier);
       break;
     case 'prepatch':
       // If this is already a prerelease, it will bump to the next version
       // drop any prereleases that might already exist, since they are not
       // relevant at this point.
       this.prerelease.length = 0;
-      this.inc('patch');
-      this.inc('pre');
+      this.inc('patch', identifier);
+      this.inc('pre', identifier);
       break;
     // If the input is a non-prerelease version, this acts the same as
     // prepatch.
     case 'prerelease':
       if (this.prerelease.length === 0)
-        this.inc('patch');
-      this.inc('pre');
+        this.inc('patch', identifier);
+      this.inc('pre', identifier);
       break;
 
     case 'major':
@@ -432,6 +432,12 @@ SemVer.prototype.inc = function(release) {
         if (i === -1) // didn't increment anything
           this.prerelease.push(0);
       }
+      if (identifier) {
+        if (typeof(this.prerelease[0]) === 'string')
+          this.prerelease[0] = identifier;
+        else
+          this.prerelease.unshift(identifier);
+      }
       break;
 
     default:
@@ -442,9 +448,9 @@ SemVer.prototype.inc = function(release) {
 };
 
 exports.inc = inc;
-function inc(version, release, loose) {
+function inc(version, release, loose, identifier) {
   try {
-    return new SemVer(version, loose).inc(release).version;
+    return new SemVer(version, loose).inc(release, identifier).version;
   } catch (er) {
     return null;
   }
