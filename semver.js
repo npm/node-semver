@@ -449,6 +449,11 @@ SemVer.prototype.inc = function(release, identifier) {
 
 exports.inc = inc;
 function inc(version, release, loose, identifier) {
+  if (typeof(loose) === 'string') {
+    identifier = loose;
+    loose = undefined;
+  }
+
   try {
     return new SemVer(version, loose).inc(release, identifier).version;
   } catch (er) {
