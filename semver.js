@@ -433,10 +433,13 @@ SemVer.prototype.inc = function(release, identifier) {
           this.prerelease.push(0);
       }
       if (identifier) {
-        if (typeof(this.prerelease[0]) === 'string')
-          this.prerelease[0] = identifier;
-        else
-          this.prerelease.unshift(identifier);
+        // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
+        // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
+        if (this.prerelease[0] === identifier) {
+          if (isNaN(this.prerelease[1]))
+            this.prerelease[1] = 0;
+        } else
+          this.prerelease = [identifier, 0];
       }
       break;
 
