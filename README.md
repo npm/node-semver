@@ -101,7 +101,7 @@ the user is indicating that they are aware of the risk.  However, it
 is still not appropriate to assume that they have opted into taking a
 similar risk on the *next* set of prerelease versions.
 
-#### Prerlease Identifiers
+#### Prerelease Identifiers
 
 The method `.inc` takes an additional `identifier` string argument that
 will append a the value of the string as a prerelease identifier:
