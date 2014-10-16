@@ -104,7 +104,7 @@ similar risk on the *next* set of prerelease versions.
 #### Prerelease Identifiers
 
 The method `.inc` takes an additional `identifier` string argument that
-will append a the value of the string as a prerelease identifier:
+will append the value of the string as a prerelease identifier:
 
 ````javascript
 > semver.inc('1.2.3', 'pre', 'beta')
