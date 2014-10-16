@@ -16,7 +16,7 @@ As a command-line utility:
 
     $ semver -h
 
-    Usage: semver <version> [<version> [...]] [-r <range> | -i <inc> | -d <dec>]
+    Usage: semver <version> [<version> [...]] [-r <range> | -i <inc> | --preid <identifier> | -l]
     Test if version(s) satisfy the supplied range(s), and sort them.
 
     Multiple versions or ranges may be supplied, unless increment
@@ -100,6 +100,30 @@ alpha/beta/rc versions.  By including a prerelease tag in the range,
 the user is indicating that they are aware of the risk.  However, it
 is still not appropriate to assume that they have opted into taking a
 similar risk on the *next* set of prerelease versions.
+
+#### Prerlease Identifiers
+
+The method `.inc` takes an additional `identifier` string argument that
+will append a the value of the string as a prerelease identifier:
+
+````javascript
+> semver.inc('1.2.3', 'pre', 'beta')
+'1.2.4-beta.0'
+```
+
+command-line example:
+
+```shell
+$ semver 1.2.3 -i prerelease --preid beta
+1.2.4-beta.0
+```
+
+Which then can be used to increment further:
+
+```shell
+$ semver 1.2.4-beta.0 -i prerelease
+1.2.4-beta.1
+```
 
 ### Advanced Range Syntax
 
