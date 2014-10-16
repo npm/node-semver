@@ -16,12 +16,12 @@ As a command-line utility:
 
     $ semver -h
 
-    Usage: semver <version> [<version> [...]] [-r <range> | -i <inc> | --preid <identifier> | -l]
+    Usage: semver <version> [<version> [...]] [-r <range> | -i <inc> | --preid <identifier> | -l | -rv]
     Test if version(s) satisfy the supplied range(s), and sort them.
 
     Multiple versions or ranges may be supplied, unless increment
-    or decrement options are specified.  In that case, only a single
-    version may be used, and it is incremented by the specified level
+    option is specified.  In that case, only a single version may
+    be used, and it is incremented by the specified level
 
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
