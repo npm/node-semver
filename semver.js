@@ -417,7 +417,7 @@ SemVer.prototype.inc = function(release, identifier) {
       this.prerelease = [];
       break;
     // This probably shouldn't be used publicly.
-    // 1.0.0 "pre" would become 1.0.0 which is the wrong direction.
+    // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
     case 'pre':
       if (this.prerelease.length === 0)
         this.prerelease = [0];
@@ -437,7 +437,7 @@ SemVer.prototype.inc = function(release, identifier) {
         // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
         if (this.prerelease[0] === identifier) {
           if (isNaN(this.prerelease[1]))
-            this.prerelease[1] = 0;
+            this.prerelease = [identifier, 0];
         } else
           this.prerelease = [identifier, 0];
       }

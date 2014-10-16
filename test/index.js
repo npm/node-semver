@@ -394,15 +394,18 @@ test('\nincrement versions test', function(t) {
     ['1.2.0', 'premajor', '2.0.0-dev.0', 'dev'],
     ['1.2.3-1', 'premajor', '2.0.0-dev.0', 'dev'],
     ['1.2.0-1', 'minor', '1.2.0', 'dev'],
-    ['1.0.0-1', 'major', '1.0.0', 'dev']
+    ['1.0.0-1', 'major', '1.0.0', 'dev'],
+    ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev']
+
   ].forEach(function(v) {
     var pre = v[0];
     var what = v[1];
     var wanted = v[2];
     var loose = v[3];
-    var identifier = v[4];
-    var found = inc(pre, what, loose, identifier);
-    t.equal(found, wanted, 'inc(' + pre + ', ' + what + ') === ' + wanted);
+    var id = v[4];
+    var found = inc(pre, what, loose, id);
+    var cmd = 'inc(' + pre + ', ' + what + ', ' + id + ')';
+    t.equal(found, wanted, cmd + ' === ' + wanted);
   });
 
   t.end();
