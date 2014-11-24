@@ -271,7 +271,7 @@ strings that they parse.
   in descending order when passed to `Array.sort()`.
 * `diff(v1, v2)`: Returns difference between two versions by the release type
   (`major`, `premajor`, `minor`, `preminor`, `patch`, `prepatch`, or `prerelease`),
-  or null if it's not valid.
+  or null if the versions are the same.
 
 
 ### Ranges
