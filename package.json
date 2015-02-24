@@ -14,7 +14,7 @@
     "uglify-js": "~2.3.6"
   },
   "license": "BSD",
-  "repository": "git://github.com/isaacs/node-semver.git",
+  "repository": "git://github.com/npm/node-semver.git",
   "bin": {
     "semver": "./bin/semver"
   }
