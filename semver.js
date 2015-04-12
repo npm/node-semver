@@ -1170,6 +1170,9 @@ function outside(version, range, hilo, loose) {
     var low = null;
 
     comparators.forEach(function(comparator) {
+      if (comparator.semver === ANY) {
+        comparator = new Comparator('>=0.0.0')
+      }
       high = high || comparator;
       low = low || comparator;
       if (gtfn(comparator.semver, high.semver, loose)) {
