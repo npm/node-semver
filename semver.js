@@ -1070,7 +1070,7 @@ function testSet(set, version) {
     for (var i = 0; i < set.length; i++) {
       debug(set[i].semver);
       if (set[i].semver === ANY)
-        return true;
+        continue;
 
       if (set[i].semver.prerelease.length > 0) {
         var allowed = set[i].semver;
