@@ -13,7 +13,7 @@
     "tap": "0.x >=0.0.4",
     "uglify-js": "~2.3.6"
   },
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "repository": "git://github.com/npm/node-semver.git",
   "bin": {
     "semver": "./bin/semver"
