@@ -4,3 +4,5 @@ semver.browser.js
 semver.browser.js.gz
 /node_modules
 .*.swp
+coverage/
+.nyc_output/
