@@ -7,7 +7,7 @@
     "test": "tap test/*.js"
   },
   "devDependencies": {
-    "tap": "^1.3.4"
+    "tap": "^2.0.0"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
