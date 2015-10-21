@@ -107,7 +107,7 @@ The method `.inc` takes an additional `identifier` string argument that
 will append the value of the string as a prerelease identifier:
 
 ```javascript
-> semver.inc('1.2.3', 'pre', 'beta')
+> semver.inc('1.2.3', 'prerelease', 'beta')
 '1.2.4-beta.0'
 ```
 
