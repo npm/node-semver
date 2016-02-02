@@ -561,6 +561,11 @@ function patch(a, loose) {
   return new SemVer(a, loose).patch;
 }
 
+exports.prerelease = prerelease;
+function prerelease(a, loose) {
+  return new SemVer(a, loose).prerelease;
+}
+
 exports.compare = compare;
 function compare(a, b, loose) {
   return new SemVer(a, loose).compare(b);
