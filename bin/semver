@@ -16,10 +16,29 @@ var argv = process.argv.slice(2)
   , semver = require("../semver")
   , reverse = false
 
-main()
+preMain()
 
-function main () {
-  if (!argv.length) return help()
+function preMain() {
+  if (!process.stdin.isTTY) {
+    process.stdin.setEncoding('utf8');
+
+    process.stdin.on('readable', function() {
+      var chunk = process.stdin.read();
+      if (chunk !== null) {
+        versions = versions.concat(chunk.split(/\s/));
+      }
+    });
+
+    process.stdin.on('end', () => {
+      main(versions.length !== 0);
+    });
+  } else {
+    main(false);
+  }
+}
+
+function main (piped) {
+  if (!argv.length && !piped) return help()
   while (argv.length) {
     var a = argv.shift()
     var i = a.indexOf('=')
@@ -56,6 +75,7 @@ function main () {
         break
       case "-h": case "--help": case "-?":
         return help()
+        break
       default:
         versions.push(a)
         break
