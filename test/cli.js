@@ -3,7 +3,7 @@ var execSync = require('child_process').execSync
 var exec = require('child_process').exec;
 
 test('the command line using pipes or arguments produces the same output', function (t) {
-  if (execSync === undefined) {
+  if (process.version.substring(0,5) === 'v0.10' || process.version.substring(0,5) === 'v0.12') {
     t.plan(6);
     var bin = 'node ./bin/semver ';
     [[bin+'-i 1.0.0', 'echo 1.0.0 | '+bin+'-i'],
