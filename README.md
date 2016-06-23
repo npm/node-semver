@@ -16,18 +16,35 @@ As a command-line utility:
 
     $ semver -h
 
-    Usage: semver <version> [<version> [...]] [-r <range> | -i <inc> | --preid <identifier> | -l | -rv]
-    Test if version(s) satisfy the supplied range(s), and sort them.
+    SemVer 5.1.0
 
-    Multiple versions or ranges may be supplied, unless increment
-    option is specified.  In that case, only a single version may
-    be used, and it is incremented by the specified level
+    A JavaScript implementation of the http://semver.org/ specification
+    Copyright Isaac Z. Schlueter
+
+    Usage: semver [options] <version> [<version> [...]]
+    Prints valid versions sorted by SemVer precedence
+
+    Options:
+    -r --range <range>
+            Print versions that match the specified range.
+
+    -i --increment [<level>]
+            Increment a version by the specified level.  Level can
+            be one of: major, minor, patch, premajor, preminor,
+            prepatch, or prerelease.  Default level is 'patch'.
+            Only one version may be specified.
+
+    --preid <identifier>
+            Identifier to be used to prefix premajor, preminor,
+            prepatch or prerelease version increments.
+
+    -l --loose
+            Interpret versions and ranges loosely
 
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
 
-    If no versions are valid, or ranges are not satisfied,
-    then exits failure.
+    If no satisfying versions are found, then exits failure.
 
     Versions are printed in ascending order, so supplying
     multiple versions to the utility will just sort them.
