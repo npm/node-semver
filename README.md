@@ -327,6 +327,8 @@ strings that they parse.
   range.
 * `maxSatisfying(versions, range)`: Return the highest version in the list
   that satisfies the range, or `null` if none of them do.
+* `minSatisfying(versions, range)`: Return the lowest version in the list
+  that satisfies the range, or `null` if none of them do.
 * `gtr(version, range)`: Return `true` if version is greater than all the
   versions possible in the range.
 * `ltr(version, range)`: Return `true` if version is less than all the
