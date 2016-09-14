@@ -647,7 +647,9 @@ test('\nstrict vs loose version numbers', function(t) {
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
     ['   =1.2.3', '1.2.3'],
-    ['1.2.3foo', '1.2.3-foo']
+    ['1.2.3foo', '1.2.3-foo'],
+    ['1.2.3.foo', '1.2.3-foo'],
+    ['1.2.3.4.5.6.7.8.9.0', '1.2.3-4.5.6.7.8.9.0']
   ].forEach(function(v) {
     var loose = v[0];
     var strict = v[1];

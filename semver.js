@@ -80,7 +80,7 @@ src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
                   '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
 
 var PRERELEASELOOSE = R++;
-src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
+src[PRERELEASELOOSE] = '(?:[-\.]?(' + src[PRERELEASEIDENTIFIERLOOSE] +
                        '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
 
 // ## Build Metadata Identifier
