@@ -171,3 +171,8 @@ test('\nnegative gtr tests', function(t) {
   });
   t.end();
 });
+
+test('\noutside should throw if hilo is not set', function (t) {
+  t.throws(semver.outside.bind(semver, '1.2.3', '*', 'x'))
+  t.end()
+})

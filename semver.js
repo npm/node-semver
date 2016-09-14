@@ -2,16 +2,27 @@ exports = module.exports = SemVer;
 
 // The debug function is excluded entirely from the minified version.
 /* nomin */ var debug;
+/* istanbul ignore next */
 /* nomin */ if (typeof process === 'object' &&
+/* istanbul ignore next */
     /* nomin */ process.env &&
+/* istanbul ignore next */
     /* nomin */ process.env.NODE_DEBUG &&
+/* istanbul ignore next */
     /* nomin */ /\bsemver\b/i.test(process.env.NODE_DEBUG))
+/* istanbul ignore next */
   /* nomin */ debug = function() {
+/* istanbul ignore next */
     /* nomin */ var args = Array.prototype.slice.call(arguments, 0);
+/* istanbul ignore next */
     /* nomin */ args.unshift('SEMVER');
+/* istanbul ignore next */
     /* nomin */ console.log.apply(console, args);
+/* istanbul ignore next */
     /* nomin */ };
+/* istanbul ignore next */
 /* nomin */ else
+/* istanbul ignore next */
   /* nomin */ debug = function() {};
 
 // Note: this is the semver.org version of the spec that it implements
@@ -19,6 +30,7 @@ exports = module.exports = SemVer;
 exports.SEMVER_SPEC_VERSION = '2.0.0';
 
 var MAX_LENGTH = 256;
+/* istanbul ignore next */
 var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
 // The actual regexps go on exports.re
@@ -840,8 +852,7 @@ function replaceTilde(comp, loose) {
       ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
     else if (pr) {
       debug('replaceTilde pr', pr);
-      if (pr.charAt(0) !== '-')
-        pr = '-' + pr;
+      pr = '-' + pr;
       ret = '>=' + M + '.' + m + '.' + p + pr +
             ' <' + M + '.' + (+m + 1) + '.0';
     } else
@@ -884,8 +895,7 @@ function replaceCaret(comp, loose) {
         ret = '>=' + M + '.' + m + '.0 <' + (+M + 1) + '.0.0';
     } else if (pr) {
       debug('replaceCaret pr', pr);
-      if (pr.charAt(0) !== '-')
-        pr = '-' + pr;
+      pr = '-' + pr;
       if (M === '0') {
         if (m === '0')
           ret = '>=' + M + '.' + m + '.' + p + pr +
@@ -947,8 +957,9 @@ function replaceXRange(comp, loose) {
       // replace X with 0
       if (xm)
         m = 0;
-      if (xp)
-        p = 0;
+
+      // p is always an x if we get here.
+      p = 0;
 
       if (gtlt === '>') {
         // >1 => >=2.0.0
@@ -959,7 +970,7 @@ function replaceXRange(comp, loose) {
           M = +M + 1;
           m = 0;
           p = 0;
-        } else if (xp) {
+        } else {
           m = +m + 1;
           p = 0;
         }
