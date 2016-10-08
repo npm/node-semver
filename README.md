@@ -1,55 +1,61 @@
 semver(1) -- The semantic versioner for npm
 ===========================================
 
+## Install
+```bash
+npm install --save semver
+````
+
 ## Usage
+As a node module:
+```js
+const semver = require('semver')
 
-    $ npm install semver
-    $ node
-    var semver = require('semver')
-
-    semver.valid('1.2.3') // '1.2.3'
-    semver.valid('a.b.c') // null
-    semver.clean('  =v1.2.3   ') // '1.2.3'
-    semver.satisfies('1.2.3', '1.x || >=2.5.0 || 5.0.0 - 7.2.3') // true
-    semver.gt('1.2.3', '9.8.7') // false
-    semver.lt('1.2.3', '9.8.7') // true
+semver.valid('1.2.3') // '1.2.3'
+semver.valid('a.b.c') // null
+semver.clean('  =v1.2.3   ') // '1.2.3'
+semver.satisfies('1.2.3', '1.x || >=2.5.0 || 5.0.0 - 7.2.3') // true
+semver.gt('1.2.3', '9.8.7') // false
+semver.lt('1.2.3', '9.8.7') // true
+```
 
 As a command-line utility:
+```
+$ semver -h
 
-    $ semver -h
+SemVer 5.1.0
 
-    SemVer 5.1.0
+A JavaScript implementation of the http://semver.org/ specification
+Copyright Isaac Z. Schlueter
 
-    A JavaScript implementation of the http://semver.org/ specification
-    Copyright Isaac Z. Schlueter
+Usage: semver [options] <version> [<version> [...]]
+Prints valid versions sorted by SemVer precedence
 
-    Usage: semver [options] <version> [<version> [...]]
-    Prints valid versions sorted by SemVer precedence
+Options:
+-r --range <range>
+        Print versions that match the specified range.
 
-    Options:
-    -r --range <range>
-            Print versions that match the specified range.
+-i --increment [<level>]
+        Increment a version by the specified level.  Level can
+        be one of: major, minor, patch, premajor, preminor,
+        prepatch, or prerelease.  Default level is 'patch'.
+        Only one version may be specified.
 
-    -i --increment [<level>]
-            Increment a version by the specified level.  Level can
-            be one of: major, minor, patch, premajor, preminor,
-            prepatch, or prerelease.  Default level is 'patch'.
-            Only one version may be specified.
+--preid <identifier>
+        Identifier to be used to prefix premajor, preminor,
+        prepatch or prerelease version increments.
 
-    --preid <identifier>
-            Identifier to be used to prefix premajor, preminor,
-            prepatch or prerelease version increments.
+-l --loose
+        Interpret versions and ranges loosely
 
-    -l --loose
-            Interpret versions and ranges loosely
+Program exits successfully if any valid version satisfies
+all supplied ranges, and prints all satisfying versions.
 
-    Program exits successfully if any valid version satisfies
-    all supplied ranges, and prints all satisfying versions.
+If no satisfying versions are found, then exits failure.
 
-    If no satisfying versions are found, then exits failure.
-
-    Versions are printed in ascending order, so supplying
-    multiple versions to the utility will just sort them.
+Versions are printed in ascending order, so supplying
+multiple versions to the utility will just sort them.
+```
 
 ## Versions
 
