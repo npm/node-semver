@@ -14,7 +14,6 @@ var satisfies = semver.satisfies;
 var validRange = semver.validRange;
 var inc = semver.inc;
 var diff = semver.diff;
-var replaceStars = semver.replaceStars;
 var toComparators = semver.toComparators;
 var SemVer = semver.SemVer;
 var Range = semver.Range;

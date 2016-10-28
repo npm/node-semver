@@ -6,9 +6,6 @@
 var argv = process.argv.slice(2)
   , versions = []
   , range = []
-  , gt = []
-  , lt = []
-  , eq = []
   , inc = null
   , version = require("../package.json").version
   , loose = false
