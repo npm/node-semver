@@ -712,3 +712,18 @@ test('\nmin satisfying', function(t) {
   });
   t.end();
 });
+
+test('\ndynamic variables', function(t) {
+  var versionString = '0.0.0';
+  var version = semver(versionString);
+  t.equal(version.major, 0);
+
+  version.major = 3;
+  t.equal(version.major, 3);
+  t.equal(version.format(), '3.0.0');
+
+  version.build.push('abc');
+  t.equal(version.build[0], 'abc');
+  t.equal(version.format(), '3.0.0+abc');
+  t.end();
+});

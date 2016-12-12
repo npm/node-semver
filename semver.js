@@ -108,7 +108,7 @@ src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
 // comparison.
 
 var FULL = R++;
-var FULLPLAIN = 'v?' + src[MAINVERSION] +
+var FULLPLAIN = '(v?)' + src[MAINVERSION] +
                 src[PRERELEASE] + '?' +
                 src[BUILD] + '?';
 
@@ -117,7 +117,7 @@ src[FULL] = '^' + FULLPLAIN + '$';
 // like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
 // also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
 // common in the npm registry.
-var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
+var LOOSEPLAIN = '(v?[v=\\s]*)' + src[MAINVERSIONLOOSE] +
                  src[PRERELEASELOOSE] + '?' +
                  src[BUILD] + '?';
 
@@ -292,12 +292,15 @@ function SemVer(version, loose) {
   if (!m)
     throw new TypeError('Invalid Version: ' + version);
 
+  // note that this does NOT update if you change the object
   this.raw = version;
 
+  this.prefix = m[1];
+
   // these are actually numbers
-  this.major = +m[1];
-  this.minor = +m[2];
-  this.patch = +m[3];
+  this.major = +m[2];
+  this.minor = +m[3];
+  this.patch = +m[4];
 
   if (this.major > MAX_SAFE_INTEGER || this.major < 0)
     throw new TypeError('Invalid major version')
@@ -309,10 +312,10 @@ function SemVer(version, loose) {
     throw new TypeError('Invalid patch version')
 
   // numberify any prerelease numeric ids
-  if (!m[4])
+  if (!m[5])
     this.prerelease = [];
   else
-    this.prerelease = m[4].split('.').map(function(id) {
+    this.prerelease = m[5].split('.').map(function(id) {
       if (/^[0-9]+$/.test(id)) {
         var num = +id;
         if (num >= 0 && num < MAX_SAFE_INTEGER)
@@ -321,23 +324,28 @@ function SemVer(version, loose) {
       return id;
     });
 
-  this.build = m[5] ? m[5].split('.') : [];
+  this.build = m[6] ? m[6].split('.') : [];
   this.format();
+
+  Object.defineProperty(this, 'version', { get: function() { return this.format(); } } );
 }
 
-SemVer.prototype.format = function() {
-  this.version = this.major + '.' + this.minor + '.' + this.patch;
+// produces a strict semver from the SemVer's current data
+SemVer.prototype.format = function(includePrefix) {
+  var version = this.major + '.' + this.minor + '.' + this.patch;
   if (this.prerelease.length)
-    this.version += '-' + this.prerelease.join('.');
-  return this.version;
+    version += '-' + this.prerelease.join('.');
+  if (this.build.length)
+    version += '+' + this.build.join('.');
+  return version;
 };
 
 SemVer.prototype.toString = function() {
-  return this.version;
+  return this.format();
 };
 
 SemVer.prototype.compare = function(other) {
-  debug('SemVer.compare', this.version, this.loose, other);
+  debug('SemVer.compare', this.format(), this.loose, other);
   if (!(other instanceof SemVer))
     other = new SemVer(other, this.loose);
 
@@ -476,8 +484,7 @@ SemVer.prototype.inc = function(release, identifier) {
     default:
       throw new Error('invalid increment argument: ' + release);
   }
-  this.format();
-  this.raw = this.version;
+  this.raw = this.format();
   return this;
 };
 
