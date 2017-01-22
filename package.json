@@ -1,6 +1,11 @@
 {
   "name": "semver",
   "version": "5.3.0",
+  "keywords":{
+      "npm",
+      "JavaScript",
+      "versioner"
+  },
   "description": "The semantic version parser used by npm.",
   "main": "semver.js",
   "scripts": {
