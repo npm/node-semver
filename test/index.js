@@ -19,7 +19,7 @@ var toComparators = semver.toComparators;
 var SemVer = semver.SemVer;
 var Range = semver.Range;
 
-test('\ncomparison tests', function(t) {
+test('comparison tests', function(t) {
   // [version1, version2]
   // version1 should be greater than version2
   [['0.0.0', '0.0.0-foo'],
@@ -72,7 +72,7 @@ test('\ncomparison tests', function(t) {
   t.end();
 });
 
-test('\nequality tests', function(t) {
+test('equality tests', function(t) {
   // [version1, version2]
   // version1 should be equivalent to version2
   [['1.2.3', 'v1.2.3', true],
@@ -131,7 +131,7 @@ test('\nequality tests', function(t) {
 });
 
 
-test('\nrange tests', function(t) {
+test('range tests', function(t) {
   // [range, version]
   // version should be included by range
   [['1.0.0 - 2.0.0', '1.2.3'],
@@ -270,7 +270,7 @@ test('\nrange tests', function(t) {
   t.end();
 });
 
-test('\nnegative range tests', function(t) {
+test('negative range tests', function(t) {
   // [range, version]
   // version should not be included by range
   [['1.0.0 - 2.0.0', '2.2.3'],
@@ -353,7 +353,7 @@ test('\nnegative range tests', function(t) {
   t.end();
 });
 
-test('\nincrement versions test', function(t) {
+test('increment versions test', function(t) {
 //  [version, inc, result, identifier]
 //  inc(version, inc) -> result
   [['1.2.3', 'major', '2.0.0'],
@@ -465,7 +465,7 @@ test('\nincrement versions test', function(t) {
   t.end();
 });
 
-test('\ndiff versions test', function(t) {
+test('diff versions test', function(t) {
 //  [version1, version2, result]
 //  diff(version1, version2) -> result
   [['1.2.3', '0.2.3', 'major'],
@@ -493,7 +493,7 @@ test('\ndiff versions test', function(t) {
   t.end();
 });
 
-test('\nvalid range test', function(t) {
+test('valid range test', function(t) {
   // [range, result]
   // validRange(range) -> result
   // translate ranges into their canonical form
@@ -581,7 +581,7 @@ test('\nvalid range test', function(t) {
   t.end();
 });
 
-test('\ncomparators test', function(t) {
+test('comparators test', function(t) {
   // [range, comparators]
   // turn range into a set of individual comparators
   [['1.0.0 - 2.0.0', [['>=1.0.0', '<=2.0.0']]],
@@ -664,7 +664,7 @@ test('\ncomparators test', function(t) {
   t.end();
 });
 
-test('\ninvalid version numbers', function(t) {
+test('invalid version numbers', function(t) {
   ['1.2.3.4',
    'NOT VALID',
    1.2,
@@ -679,7 +679,7 @@ test('\ninvalid version numbers', function(t) {
   t.end();
 });
 
-test('\nstrict vs loose version numbers', function(t) {
+test('strict vs loose version numbers', function(t) {
   [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
@@ -706,7 +706,7 @@ test('\nstrict vs loose version numbers', function(t) {
   t.end();
 });
 
-test('\nstrict vs loose ranges', function(t) {
+test('strict vs loose ranges', function(t) {
   [['>=01.02.03', '>=1.2.3'],
     ['~1.02.03beta', '>=1.2.3-beta <1.3.0']
   ].forEach(function(v) {
@@ -720,7 +720,7 @@ test('\nstrict vs loose ranges', function(t) {
   t.end();
 });
 
-test('\nmax satisfying', function(t) {
+test('max satisfying', function(t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.4'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.4'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.6'],
@@ -736,7 +736,7 @@ test('\nmax satisfying', function(t) {
   t.end();
 });
 
-test('\nmin satisfying', function(t) {
+test('min satisfying', function(t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.3'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.3'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.3'],

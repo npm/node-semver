@@ -3,7 +3,7 @@ var test = tap.test;
 var semver = require('../semver.js');
 var ltr = semver.ltr;
 
-test('\nltr tests', function(t) {
+test('ltr tests', function(t) {
   // [range, version, loose]
   // Version should be less than range
   [
@@ -82,7 +82,7 @@ test('\nltr tests', function(t) {
   t.end();
 });
 
-test('\nnegative ltr tests', function(t) {
+test('negative ltr tests', function(t) {
   // [range, version, loose]
   // Version should NOT be less than range
   [

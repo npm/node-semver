@@ -3,7 +3,7 @@ var test = tap.test;
 var semver = require('../semver.js');
 var clean = semver.clean;
 
-test('\nclean tests', function(t) {
+test('clean tests', function(t) {
 	// [range, version]
 	// Version should be detectable despite extra characters
 	[

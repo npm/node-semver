@@ -3,7 +3,7 @@ var test = tap.test;
 var semver = require('../semver.js');
 var prerelease = semver.prerelease;
 
-test('\nprerelease', function(t) {
+test('prerelease', function(t) {
   // [prereleaseParts, version, loose]
   [
     [['alpha', 1], '1.2.2-alpha.1'],

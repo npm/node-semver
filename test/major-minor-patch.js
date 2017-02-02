@@ -2,7 +2,7 @@ var tap = require('tap');
 var test = tap.test;
 var semver = require('../semver.js');
 
-test('\nmajor tests', function(t) {
+test('major tests', function(t) {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -25,7 +25,7 @@ test('\nmajor tests', function(t) {
   t.end();
 });
 
-test('\nminor tests', function(t) {
+test('minor tests', function(t) {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -48,7 +48,7 @@ test('\nminor tests', function(t) {
   t.end();
 });
 
-test('\npatch tests', function(t) {
+test('patch tests', function(t) {
   // [range, version]
   // Version should be detectable despite extra characters
   [

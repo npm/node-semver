@@ -3,7 +3,7 @@ var test = tap.test;
 var semver = require('../semver.js');
 var gtr = semver.gtr;
 
-test('\ngtr tests', function(t) {
+test('gtr tests', function(t) {
   // [range, version, loose]
   // Version should be greater than range
   [
@@ -77,7 +77,7 @@ test('\ngtr tests', function(t) {
   t.end();
 });
 
-test('\nnegative gtr tests', function(t) {
+test('negative gtr tests', function(t) {
   // [range, version, loose]
   // Version should NOT be greater than range
   [
@@ -172,7 +172,7 @@ test('\nnegative gtr tests', function(t) {
   t.end();
 });
 
-test('\noutside should throw if hilo is not set', function (t) {
+test('outside should throw if hilo is not set', function (t) {
   t.throws(semver.outside.bind(semver, '1.2.3', '*', 'x'))
   t.end()
 })
