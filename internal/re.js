@@ -58,8 +58,13 @@ createToken('PRERELEASEIDENTIFIERLOOSE', `(?:${src[t.NUMERICIDENTIFIERLOOSE]
 createToken('PRERELEASE', `(?:-(${src[t.PRERELEASEIDENTIFIER]
 }(?:\\.${src[t.PRERELEASEIDENTIFIER]})*))`)
 
-createToken('PRERELEASELOOSE', `(?:-?(${src[t.PRERELEASEIDENTIFIERLOOSE]
-}(?:\\.${src[t.PRERELEASEIDENTIFIERLOOSE]})*))`)
+// loose mode prereleases can start with a dot, but only if they're not numeric
+// 1.2.3.foo is allowed, 1.2.3.4 is not.
+createToken('PRERELEASELOOSE', `(?:(?:-|\\.*(?=[a-zA-Z-]))(${
+  src[t.PRERELEASEIDENTIFIERLOOSE]
+}(?:\\.${
+  src[t.PRERELEASEIDENTIFIERLOOSE]
+})*))`)
 
 // ## Build Metadata Identifier
 // Any combination of digits, letters, or hyphens.
