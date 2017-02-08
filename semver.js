@@ -82,7 +82,6 @@ var PRERELEASEIDENTIFIERLOOSE = R++;
 src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
                                  '|' + src[NONNUMERICIDENTIFIER] + ')';
 
-
 // ## Pre-release Version
 // Hyphen, followed by one or more dot-separated pre-release version
 // identifiers.
@@ -91,8 +90,10 @@ var PRERELEASE = R++;
 src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
                   '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
 
+// Allow a . or a missing -, but only if the first pr id is non-numeric
 var PRERELEASELOOSE = R++;
-src[PRERELEASELOOSE] = '(?:[-\.]?(' + src[PRERELEASEIDENTIFIERLOOSE] +
+src[PRERELEASELOOSE] = '(?:(?:-|\\.*(?=[a-zA-Z-]))' +
+                       '(' + src[PRERELEASEIDENTIFIERLOOSE] +
                        '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
 
 // ## Build Metadata Identifier

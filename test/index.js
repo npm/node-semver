@@ -666,6 +666,8 @@ test('comparators test', function(t) {
 
 test('invalid version numbers', function(t) {
   ['1.2.3.4',
+   '1.2.34.5',
+   '1.2.3..4',
    'NOT VALID',
    1.2,
    null,
@@ -673,7 +675,10 @@ test('invalid version numbers', function(t) {
   ].forEach(function(v) {
     t.throws(function() {
       new SemVer(v);
-    }, {name:'TypeError', message:'Invalid Version: ' + v});
+    }, 'should be invalid: '+v, {name:'TypeError', message:'Invalid Version: ' + v});
+    t.throws(function() {
+      new SemVer(v, true);
+    }, 'should be invalid: '+v, {name:'TypeError', message:'Invalid Version: ' + v});
   });
 
   t.end();
@@ -686,7 +691,11 @@ test('strict vs loose version numbers', function(t) {
     ['   =1.2.3', '1.2.3'],
     ['1.2.3foo', '1.2.3-foo'],
     ['1.2.3.foo', '1.2.3-foo'],
-    ['1.2.3.4.5.6.7.8.9.0', '1.2.3-4.5.6.7.8.9.0']
+    ['1.2.3.x4.5.6.7.8.9.0', '1.2.3-x4.5.6.7.8.9.0'],
+    ['1.2.3.x', '1.2.3-x'],
+    ['1.2.3.-x', '1.2.3--x'],
+    ['1.2.3...x', '1.2.3-x'],
+    ['1.2.3...-x', '1.2.3--x']
   ].forEach(function(v) {
     var loose = v[0];
     var strict = v[1];
