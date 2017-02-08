@@ -12,4 +12,7 @@ module.exports = [
   [ /a regexp/, 'regexp is not a string'],
   [ /1.2.3/, 'semver-ish regexp is not a string'],
   [ {toString: () => '1.2.3'}, 'obj with a tostring is not a string'],
+  [ '1.2.3.foo', 'no dot-led prerelease tag, strict'],
+  [ '1.2.3.4', 'no dot-led numeric prerelease tag, strict'],
+  [ '1.2.3.4', 'no dot-led numeric prerelease tag, loose', { loose: true }],
 ]
