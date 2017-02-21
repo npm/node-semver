@@ -280,7 +280,7 @@ function SemVer(version, loose) {
   }
 
   if (version.length > MAX_LENGTH)
-    throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters')
+    throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters');
 
   if (!(this instanceof SemVer))
     return new SemVer(version, loose);
@@ -300,13 +300,13 @@ function SemVer(version, loose) {
   this.patch = +m[3];
 
   if (this.major > MAX_SAFE_INTEGER || this.major < 0)
-    throw new TypeError('Invalid major version')
+    throw new TypeError('Invalid major version');
 
   if (this.minor > MAX_SAFE_INTEGER || this.minor < 0)
-    throw new TypeError('Invalid minor version')
+    throw new TypeError('Invalid minor version');
 
   if (this.patch > MAX_SAFE_INTEGER || this.patch < 0)
-    throw new TypeError('Invalid patch version')
+    throw new TypeError('Invalid patch version');
 
   // numberify any prerelease numeric ids
   if (!m[4])
@@ -1181,7 +1181,7 @@ function outside(version, range, hilo, loose) {
 
     comparators.forEach(function(comparator) {
       if (comparator.semver === ANY) {
-        comparator = new Comparator('>=0.0.0')
+        comparator = new Comparator('>=0.0.0');
       }
       high = high || comparator;
       low = low || comparator;
