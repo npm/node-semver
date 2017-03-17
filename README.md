@@ -293,7 +293,7 @@ strings that they parse.
 * `valid(v)`: Return the parsed version, or null if it's not valid.
 * `inc(v, release)`: Return the version incremented by the release
   type (`major`,   `premajor`, `minor`, `preminor`, `patch`,
-  `prepatch`, or `prerelease`), or null if it's not valid
+  `prepatch`, `prerelease`, or `pre`), or null if it's not valid
   * `premajor` in one call will bump the version up to the next major
     version and down to a prerelease of that major version.
     `preminor`, and `prepatch` work the same way.
@@ -301,6 +301,7 @@ strings that they parse.
     same as `prepatch`. It increments the patch version, then makes a
     prerelease. If the input version is already a prerelease it simply
     increments it.
+  * If called from a prerelease version with `pre` it increments the revision number. Example: `inc('1.0.1-rc.0', 'pre') -> '1.0.1-rc.1'`. Be aware  that `inc('1.0.0', 'pre') => '1.0.0-0'` which is the wrong direction.
 * `prerelease(v)`: Returns an array of prerelease components, or null
   if none exist. Example: `prerelease('1.2.3-alpha.1') -> ['alpha', 1]`
 * `major(v)`: Return the major version number.
