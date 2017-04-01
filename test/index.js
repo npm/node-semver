@@ -712,3 +712,77 @@ test('\nmin satisfying', function(t) {
   });
   t.end();
 });
+
+test('\nintersect comparators', function(t) {
+  [
+    // One is a Version
+    ['1.3.0', '>=1.3.0', true],
+    ['1.3.0', '>1.3.0', false],
+    ['>=1.3.0', '1.3.0', true],
+    ['>1.3.0', '1.3.0', false],
+    // Same direction increasing
+    ['>1.3.0', '>1.2.0', true],
+    ['>1.2.0', '>1.3.0', true],
+    ['>=1.2.0', '>1.3.0', true],
+    ['>1.2.0', '>=1.3.0', true],
+    // Same direction decreasing
+    ['<1.3.0', '<1.2.0', true],
+    ['<1.2.0', '<1.3.0', true],
+    ['<=1.2.0', '<1.3.0', true],
+    ['<1.2.0', '<=1.3.0', true],
+    // Different directions, same semver and inclusive operator
+    ['>=1.3.0', '<=1.3.0', true],
+    ['>=1.3.0', '>=1.3.0', true],
+    ['<=1.3.0', '<=1.3.0', true],
+    ['>1.3.0', '<=1.3.0', false],
+    ['>=1.3.0', '<1.3.0', false],
+    // Opposite matching directions
+    ['>1.0.0', '<2.0.0', true],
+    ['>=1.0.0', '<2.0.0', true],
+    ['>=1.0.0', '<=2.0.0', true],
+    ['>1.0.0', '<=2.0.0', true],
+    ['<=2.0.0', '>1.0.0', true],
+    ['<=1.0.0', '>=2.0.0', false]
+  ].forEach(function(v) {
+    var comparator1 = v[0];
+    var comparator2 = v[1];
+    var expect = v[2];
+    var actual = semver.comparatorsIntersect(comparator1, comparator2);
+    t.equal(actual, expect);
+  });
+  t.end();
+});
+
+test('\ncomparator satisfies range', function(t) {
+  [
+    ['1.3.0', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['1.3.0', '<1.0.0 >2.0.0', false],
+    ['>=1.3.0', '<1.3.0', false],
+    ['<1.3.0', '>=1.3.0', false]
+  ].forEach(function(v) {
+    var comparator = v[0];
+    var range = v[1];
+    var expect = v[2];
+    var actual = semver.comparatorSatisfiesRange(comparator, range);
+    t.equal(actual, expect);
+  });
+  t.end();
+});
+
+test('\nranges intersect', function(t) {
+  [
+    ['1.3.0 || <1.0.0 >2.0.0', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['<1.0.0 >2.0.0', '>0.0.0', true],
+    ['<1.0.0 >2.0.0', '>1.4.0 <1.6.0', false],
+    ['<1.0.0 >2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false],
+    ['<1.0.0 >=2.0.0', '2.1.0', false],
+    ['<1.0.0 >=2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false]
+  ].forEach(function(v) {
+    var range1 = v[0];
+    var range2 = v[1];
+    var expect = v[2];
+    var actual = semver.rangesIntersect(range1, range2);
+    t.equal(actual, expect);
+  });
+  t.end();
+});

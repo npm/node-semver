@@ -793,6 +793,56 @@ function toComparators(range, loose) {
   });
 }
 
+exports.comparatorsIntersect = comparatorsIntersect;
+function comparatorsIntersect(compA, compB, loose, platform) {
+  compA = new Comparator(compA, loose);
+  compB = new Comparator(compB, loose);
+
+  if (compA.operator === '') {
+    var rangeB = new Range(compB.value, loose, platform);
+    return satisfies(compA.value, rangeB, loose, platform);
+  } else if (compB.operator === '') {
+    var rangeA = new Range(compA.value, loose, platform);
+    return satisfies(compB.semver, rangeA, loose, platform);
+  }
+  // Same direction increasing
+  return ((compA.operator === '>=' || compA.operator === '>') && (compB.operator === '>=' || compB.operator === '>')) ||
+    // Same direction decreasing
+    ((compA.operator === '<=' || compA.operator === '<') && (compB.operator === '<=' || compB.operator === '<')) ||
+    // Different directions, same semver and inclusive operator
+    (compA.semver.raw === compB.semver.raw &&
+    (compA.operator === '>=' || compA.operator === '<=') && (compB.operator === '>=' || compB.operator === '<=')) ||
+    // Opposite matching directions
+    (cmp(compA.semver, '<', compB.semver, loose) &&
+    ((compA.operator === '>=' || compA.operator === '>') && (compB.operator === '<=' || compB.operator === '<'))) ||
+    (cmp(compA.semver, '>', compB.semver, loose) &&
+    ((compA.operator === '<=' || compA.operator === '<') && (compB.operator === '>=' || compB.operator === '>')));
+}
+
+exports.comparatorSatisfiesRange = comparatorSatisfiesRange;
+function comparatorSatisfiesRange(comp, range, loose, platform) {
+  comp = new Comparator(comp, loose);
+  range = new Range(range, loose, platform);
+
+  return range.set.some(function(comparators) {
+    return comparators.every(function(comparator) {
+      return comparatorsIntersect(comparator, comp, loose, platform);
+    });
+  });
+}
+
+exports.rangesIntersect = rangesIntersect;
+function rangesIntersect(rangeA, rangeB, loose, platform) {
+  rangeA = new Range(rangeA, loose, platform);
+  rangeB = new Range(rangeB, loose, platform);
+
+  return rangeA.set.some(function(comparators) {
+    return comparators.every(function(comparator) {
+      return comparatorSatisfiesRange(comparator, rangeB, loose, platform);
+    });
+  });
+}
+
 // comprised of xranges, tildes, stars, and gtlt's at this point.
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
