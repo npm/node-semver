@@ -2,3 +2,4 @@
 .*.swp
 coverage/
 .nyc_output/
+.idea
