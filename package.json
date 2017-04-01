@@ -18,5 +18,8 @@
     "bin",
     "range.bnf",
     "semver.js"
-  ]
+  ],
+  "dependencies": {
+    "number-strings": "^1.0.1"
+  }
 }

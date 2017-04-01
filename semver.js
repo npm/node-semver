@@ -1,3 +1,5 @@
+var numberStrings = require('number-strings')
+
 exports = module.exports = SemVer;
 
 // The debug function is excluded entirely from the minified version.
@@ -37,6 +39,27 @@ src[NUMERICIDENTIFIER] = '0|[1-9]\\d*';
 var NUMERICIDENTIFIERLOOSE = R++;
 src[NUMERICIDENTIFIERLOOSE] = '[0-9]+';
 
+// ## Number String Identifier=
+// A word expressing a number, like 'two' or 'fourty-five trillion'.
+
+var ZERO = 'zero';
+var SINGLES = '(one|two|three|four|five|six|seven|eight|nine)';
+var TEN = 'ten';
+var TEENS = '(eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)';
+var TENS = '(twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)';
+var DOUBLES = '(' + TENS + '[- ]' + SINGLES + '|' + TENS + '|' + TEENS + '|' + TEN + '|' + SINGLES + ')';
+var HUNDREDS = '((a|' + DOUBLES + ') hundred)';
+var SEGMENT = '((' + HUNDREDS + '(( and)? ' + DOUBLES + ')?)|' + DOUBLES + ')';
+var THOUSANDS = '(((a|' + SEGMENT + ') thousand)(\,? ' + SEGMENT + ')?)';
+var MILLIONS = '(((a|' + SEGMENT + ') million)(\,? ' + THOUSANDS + ')?)';
+var BILLIONS = '(((a|' + SEGMENT + ') billion)(\,? ' + MILLIONS + ')?)';
+var TRILLIONS = '(((a|' + SEGMENT + ') trillion)(\,? ' + BILLIONS + ')?)';
+var QUADRILLIONS = '(((a|' + SEGMENT + ') quadrillion)(\,? ' + TRILLIONS + ')?)';
+// Sadly, JavaScript is not web-scale enough for numbers beyond a few quintillion without rounding errors.
+var QUINTILLIONS = '(((a|' + SEGMENT + ') quintillion)(\,? ' + QUADRILLIONS + ')?)';
+
+var NUMERICIDENTIFIERSTRINGFORM = R++;
+src[NUMERICIDENTIFIERSTRINGFORM] = '(' + ZERO + '|' + QUINTILLIONS + '|' + QUADRILLIONS + '|' + TRILLIONS + '|' + BILLIONS + '|' + MILLIONS + '|' + THOUSANDS + '|' + SEGMENT + ')';
 
 // ## Non-numeric Identifier
 // Zero or more digits, followed by a letter or hyphen, and then zero or
@@ -59,6 +82,11 @@ src[MAINVERSIONLOOSE] = '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
                         '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
                         '(' + src[NUMERICIDENTIFIERLOOSE] + ')';
 
+var MAINVERSIONSTRINGFORM = R++;
+src[MAINVERSIONSTRINGFORM] = '(' + src[NUMERICIDENTIFIERSTRINGFORM] + ')(\\.| dot | point )' +
+                             '(' + src[NUMERICIDENTIFIERSTRINGFORM] + ')(\\.| dot | point )' +
+                             '(' + src[NUMERICIDENTIFIERSTRINGFORM] + ')';
+
 // ## Pre-release Version Identifier
 // A numeric identifier, or a non-numeric identifier.
 
@@ -70,6 +98,9 @@ var PRERELEASEIDENTIFIERLOOSE = R++;
 src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
                                  '|' + src[NONNUMERICIDENTIFIER] + ')';
 
+var PRERELEASEIDENTIFIERSTRINGFORM = R++;
+src[PRERELEASEIDENTIFIERSTRINGFORM] = '(?:' + src[NUMERICIDENTIFIER] +
+                                      '|' + src[NONNUMERICIDENTIFIER] + ')';
 
 // ## Pre-release Version
 // Hyphen, followed by one or more dot-separated pre-release version
@@ -82,6 +113,10 @@ src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
 var PRERELEASELOOSE = R++;
 src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
                        '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
+
+var PRERELEASESTRINGFORM = R++;
+src[PRERELEASESTRINGFORM] = '(?:-(' + src[PRERELEASEIDENTIFIERSTRINGFORM] +
+                            '(?:\\.' + src[PRERELEASEIDENTIFIERSTRINGFORM] + ')*))';
 
 // ## Build Metadata Identifier
 // Any combination of digits, letters, or hyphens.
@@ -124,6 +159,18 @@ var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
 var LOOSE = R++;
 src[LOOSE] = '^' + LOOSEPLAIN + '$';
 
+// like full, but with string representations of numbers rather than
+// plain numbers, as string representations are much more explicit.
+var STRINGFORMPLAIN = 'v?' + src[MAINVERSIONSTRINGFORM] +
+                       src[PRERELEASESTRINGFORM] + '?' +
+                       src[BUILD] + '?';
+
+var STRINGFORMPLAINCOVERTER = R++;
+re[STRINGFORMPLAINCOVERTER] = new RegExp(src[NUMERICIDENTIFIERSTRINGFORM], 'g');
+
+var STRINGFORM = R++;
+src[STRINGFORM] = '^' + STRINGFORMPLAIN + '$';
+
 var GTLT = R++;
 src[GTLT] = '((?:<|>)?=?)';
 
@@ -132,6 +179,8 @@ src[GTLT] = '((?:<|>)?=?)';
 // Only the first item is strictly required.
 var XRANGEIDENTIFIERLOOSE = R++;
 src[XRANGEIDENTIFIERLOOSE] = src[NUMERICIDENTIFIERLOOSE] + '|x|X|\\*';
+var XRANGEIDENTIFIERSTRINGFORM = R++;
+src[XRANGEIDENTIFIERSTRINGFORM] = src[NUMERICIDENTIFIERSTRINGFORM] + '|x|X|\\*';
 var XRANGEIDENTIFIER = R++;
 src[XRANGEIDENTIFIER] = src[NUMERICIDENTIFIER] + '|x|X|\\*';
 
@@ -151,10 +200,20 @@ src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
                         src[BUILD] + '?' +
                         ')?)?';
 
+var XRANGEPLAINSTRINGFORM = R++;
+src[XRANGEPLAINSTRINGFORM] = '[v=\\s]*(' + src[XRANGEIDENTIFIERSTRINGFORM] + ')' +
+                             '(?:(\\.| dot | point )(' + src[XRANGEIDENTIFIERSTRINGFORM] + ')' +
+                             '(?:(\\.| dot | point )(' + src[XRANGEIDENTIFIERSTRINGFORM] + ')' +
+                             '(?:' + src[PRERELEASESTRINGFORM] + ')?' +
+                             src[BUILD] + '?' +
+                             ')?)?';
+
 var XRANGE = R++;
 src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$';
 var XRANGELOOSE = R++;
 src[XRANGELOOSE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAINLOOSE] + '$';
+var XRANGESTRINGFORM = R++;
+src[XRANGESTRINGFORM] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAINSTRINGFORM] + '$';
 
 // Tilde ranges.
 // Meaning is "reasonably at or greater than"
@@ -170,6 +229,8 @@ var TILDE = R++;
 src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$';
 var TILDELOOSE = R++;
 src[TILDELOOSE] = '^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$';
+var TILDESTRINGFORM = R++;
+src[TILDESTRINGFORM] = '^' + src[LONETILDE] + src[XRANGEPLAINSTRINGFORM] + '$';
 
 // Caret ranges.
 // Meaning is "at least and backwards compatible with"
@@ -185,10 +246,14 @@ var CARET = R++;
 src[CARET] = '^' + src[LONECARET] + src[XRANGEPLAIN] + '$';
 var CARETLOOSE = R++;
 src[CARETLOOSE] = '^' + src[LONECARET] + src[XRANGEPLAINLOOSE] + '$';
+var CARETSTRINGFORM = R++;
+src[CARETSTRINGFORM] = '^' + src[LONECARET] + src[XRANGEPLAINSTRINGFORM] + '$';
 
 // A simple gt/lt/eq thing, or just "" to indicate "any version"
 var COMPARATORLOOSE = R++;
 src[COMPARATORLOOSE] = '^' + src[GTLT] + '\\s*(' + LOOSEPLAIN + ')$|^$';
+var COMPARATORSTRINGFORM = R++;
+src[COMPARATORSTRINGFORM] = '^' + src[GTLT] + '\\s*(' + STRINGFORMPLAIN + ')$|^$';
 var COMPARATOR = R++;
 src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$';
 
@@ -220,6 +285,12 @@ src[HYPHENRANGELOOSE] = '^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
                         '(' + src[XRANGEPLAINLOOSE] + ')' +
                         '\\s*$';
 
+var HYPHENRANGESTRINGFORM = R++;
+src[HYPHENRANGESTRINGFORM] = '^\\s*(' + src[XRANGEPLAINSTRINGFORM] + ')' +
+                             '\\s+-\\s+' +
+                             '(' + src[XRANGEPLAINSTRINGFORM] + ')' +
+                             '\\s*$';
+
 // Star ranges basically just allow anything at all.
 var STAR = R++;
 src[STAR] = '(<|>)?=?\\s*\\*';
@@ -233,7 +304,7 @@ for (var i = 0; i < R; i++) {
 }
 
 exports.parse = parse;
-function parse(version, loose) {
+function parse(version, loose, stringForm) {
   if (version instanceof SemVer)
     return version;
 
@@ -243,33 +314,45 @@ function parse(version, loose) {
   if (version.length > MAX_LENGTH)
     return null;
 
-  var r = loose ? re[LOOSE] : re[FULL];
+  var r = stringForm ? re[STRINGFORM] : loose ? re[LOOSE] : re[FULL];
   if (!r.test(version))
     return null;
 
   try {
-    return new SemVer(version, loose);
+    return new SemVer(version, loose, stringForm);
   } catch (er) {
     return null;
   }
 }
 
 exports.valid = valid;
-function valid(version, loose) {
-  var v = parse(version, loose);
+function valid(version, loose, stringForm) {
+  var v = parse(version, loose, stringForm);
   return v ? v.version : null;
 }
 
 
 exports.clean = clean;
-function clean(version, loose) {
-  var s = parse(version.trim().replace(/^[=v]+/, ''), loose);
+function clean(version, loose, stringForm) {
+  var s = parse(version.trim().replace(/^[=v]+/, ''), loose, stringForm);
   return s ? s.version : null;
 }
 
 exports.SemVer = SemVer;
 
-function SemVer(version, loose) {
+function repositionForStringForm(m) {
+  // console.log(Array.from(m).map((v, i) => [v, i]).filter((v) => !v[0]))
+  return [
+    m[0],
+    numberStrings.parse(m[1]).toString(),
+    numberStrings.parse(m[760]).toString(),
+    numberStrings.parse(m[1519]).toString(),
+    m[2277],
+    m[2278]
+  ]
+}
+
+function SemVer(version, loose, stringForm) {
   if (version instanceof SemVer) {
     if (version.loose === loose)
       return version;
@@ -283,18 +366,24 @@ function SemVer(version, loose) {
     throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters')
 
   if (!(this instanceof SemVer))
-    return new SemVer(version, loose);
+    return new SemVer(version, loose, stringForm);
 
-  debug('SemVer', version, loose);
+  debug('SemVer', version, loose, stringForm);
+  this.stringForm = stringForm;
   this.loose = loose;
-  var m = version.trim().match(loose ? re[LOOSE] : re[FULL]);
+  var m = version.trim().match(stringForm ? re[STRINGFORM] : loose ? re[LOOSE] : re[FULL]);
 
   if (!m)
     throw new TypeError('Invalid Version: ' + version);
 
   this.raw = version;
 
-  // these are actually numbers
+  // The positions move a bit in string form...
+  if (stringForm) {
+    m = repositionForStringForm(m)
+  }
+
+  // these are actually numbers...except when they're not.
   this.major = +m[1];
   this.minor = +m[2];
   this.patch = +m[3];
@@ -337,16 +426,16 @@ SemVer.prototype.toString = function() {
 };
 
 SemVer.prototype.compare = function(other) {
-  debug('SemVer.compare', this.version, this.loose, other);
+  debug('SemVer.compare', this.version, this.loose, this.stringForm, other);
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.loose, this.stringForm);
 
   return this.compareMain(other) || this.comparePre(other);
 };
 
 SemVer.prototype.compareMain = function(other) {
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.loose, this.stringForm);
 
   return compareIdentifiers(this.major, other.major) ||
          compareIdentifiers(this.minor, other.minor) ||
@@ -355,7 +444,7 @@ SemVer.prototype.compareMain = function(other) {
 
 SemVer.prototype.comparePre = function(other) {
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.loose, this.stringForm);
 
   // NOT having a prerelease is > having one
   if (this.prerelease.length && !other.prerelease.length)
@@ -482,14 +571,18 @@ SemVer.prototype.inc = function(release, identifier) {
 };
 
 exports.inc = inc;
-function inc(version, release, loose, identifier) {
+function inc(version, release, loose, stringForm, identifier) {
   if (typeof(loose) === 'string') {
     identifier = loose;
     loose = undefined;
   }
+  if (typeof(stringForm) === 'string') {
+    identifier = stringForm;
+    stringForm = undefined;
+  }
 
   try {
-    return new SemVer(version, loose).inc(release, identifier).version;
+    return new SemVer(version, loose, stringForm).inc(release, identifier).version;
   } catch (er) {
     return null;
   }
@@ -547,23 +640,28 @@ function rcompareIdentifiers(a, b) {
 }
 
 exports.major = major;
-function major(a, loose) {
-  return new SemVer(a, loose).major;
+function major(a, loose, stringForm) {
+  return new SemVer(a, loose, stringForm).major;
 }
 
 exports.minor = minor;
-function minor(a, loose) {
-  return new SemVer(a, loose).minor;
+function minor(a, loose, stringForm) {
+  return new SemVer(a, loose, stringForm).minor;
 }
 
 exports.patch = patch;
-function patch(a, loose) {
-  return new SemVer(a, loose).patch;
+function patch(a, loose, stringForm) {
+  return new SemVer(a, loose, stringForm).patch;
 }
 
 exports.compare = compare;
-function compare(a, b, loose) {
-  return new SemVer(a, loose).compare(b);
+function compare(a, b, loose, stringForm) {
+  return new SemVer(a, loose, stringForm).compare(b);
+}
+
+exports.compareStringForm = compareStringForm;
+function compareStringForm(a, b) {
+  return compare(a, b, false, true);
 }
 
 exports.compareLoose = compareLoose;
@@ -572,56 +670,56 @@ function compareLoose(a, b) {
 }
 
 exports.rcompare = rcompare;
-function rcompare(a, b, loose) {
-  return compare(b, a, loose);
+function rcompare(a, b, loose, stringForm) {
+  return compare(b, a, loose, stringForm);
 }
 
 exports.sort = sort;
-function sort(list, loose) {
+function sort(list, loose, stringForm) {
   return list.sort(function(a, b) {
-    return exports.compare(a, b, loose);
+    return exports.compare(a, b, loose, stringForm);
   });
 }
 
 exports.rsort = rsort;
-function rsort(list, loose) {
+function rsort(list, loose, stringForm) {
   return list.sort(function(a, b) {
-    return exports.rcompare(a, b, loose);
+    return exports.rcompare(a, b, loose, stringForm);
   });
 }
 
 exports.gt = gt;
-function gt(a, b, loose) {
-  return compare(a, b, loose) > 0;
+function gt(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) > 0;
 }
 
 exports.lt = lt;
-function lt(a, b, loose) {
-  return compare(a, b, loose) < 0;
+function lt(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) < 0;
 }
 
 exports.eq = eq;
-function eq(a, b, loose) {
-  return compare(a, b, loose) === 0;
+function eq(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) === 0;
 }
 
 exports.neq = neq;
-function neq(a, b, loose) {
-  return compare(a, b, loose) !== 0;
+function neq(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) !== 0;
 }
 
 exports.gte = gte;
-function gte(a, b, loose) {
-  return compare(a, b, loose) >= 0;
+function gte(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) >= 0;
 }
 
 exports.lte = lte;
-function lte(a, b, loose) {
-  return compare(a, b, loose) <= 0;
+function lte(a, b, loose, stringForm) {
+  return compare(a, b, loose, stringForm) <= 0;
 }
 
 exports.cmp = cmp;
-function cmp(a, op, b, loose) {
+function cmp(a, op, b, loose, stringForm) {
   var ret;
   switch (op) {
     case '===':
@@ -634,19 +732,19 @@ function cmp(a, op, b, loose) {
       if (typeof b === 'object') b = b.version;
       ret = a !== b;
       break;
-    case '': case '=': case '==': ret = eq(a, b, loose); break;
-    case '!=': ret = neq(a, b, loose); break;
-    case '>': ret = gt(a, b, loose); break;
-    case '>=': ret = gte(a, b, loose); break;
-    case '<': ret = lt(a, b, loose); break;
-    case '<=': ret = lte(a, b, loose); break;
+    case '': case '=': case '==': ret = eq(a, b, loose, stringForm); break;
+    case '!=': ret = neq(a, b, loose, stringForm); break;
+    case '>': ret = gt(a, b, loose, stringForm); break;
+    case '>=': ret = gte(a, b, loose, stringForm); break;
+    case '<': ret = lt(a, b, loose, stringForm); break;
+    case '<=': ret = lte(a, b, loose, stringForm); break;
     default: throw new TypeError('Invalid operator: ' + op);
   }
   return ret;
 }
 
 exports.Comparator = Comparator;
-function Comparator(comp, loose) {
+function Comparator(comp, loose, stringForm) {
   if (comp instanceof Comparator) {
     if (comp.loose === loose)
       return comp;
@@ -655,9 +753,10 @@ function Comparator(comp, loose) {
   }
 
   if (!(this instanceof Comparator))
-    return new Comparator(comp, loose);
+    return new Comparator(comp, loose, stringForm);
 
-  debug('comparator', comp, loose);
+  debug('comparator', comp, loose, stringForm);
+  this.stringForm = stringForm;
   this.loose = loose;
   this.parse(comp);
 
@@ -671,6 +770,11 @@ function Comparator(comp, loose) {
 
 var ANY = {};
 Comparator.prototype.parse = function(comp) {
+  if (this.stringForm) {
+    comp = comp.replace(re[STRINGFORMPLAINCOVERTER], numberStrings.parse)
+    comp = comp.replace(/ (dot|point) /g, '.')
+  }
+
   var r = this.loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
   var m = comp.match(r);
 
@@ -693,26 +797,27 @@ Comparator.prototype.toString = function() {
 };
 
 Comparator.prototype.test = function(version) {
-  debug('Comparator.test', version, this.loose);
+  debug('Comparator.test', version, this.loose, this.stringForm);
 
   if (this.semver === ANY)
     return true;
 
   if (typeof version === 'string')
-    version = new SemVer(version, this.loose);
+    version = new SemVer(version, this.loose, this.stringForm);
 
-  return cmp(version, this.operator, this.semver, this.loose);
+  return cmp(version, this.operator, this.semver, this.loose, this.stringForm);
 };
 
 
 exports.Range = Range;
-function Range(range, loose) {
+function Range(range, loose, stringForm) {
   if ((range instanceof Range) && range.loose === loose)
     return range;
 
   if (!(this instanceof Range))
-    return new Range(range, loose);
+    return new Range(range, loose, stringForm);
 
+  this.stringForm = stringForm;
   this.loose = loose;
 
   // First, split based on boolean or ||
@@ -743,9 +848,17 @@ Range.prototype.toString = function() {
 };
 
 Range.prototype.parseRange = function(range) {
+  var stringForm = this.stringForm;
   var loose = this.loose;
   range = range.trim();
-  debug('range', range, loose);
+  debug('range', range, loose, stringForm);
+
+  if (stringForm) {
+    range = range.replace(re[STRINGFORMPLAINCOVERTER], numberStrings.parse)
+    range = range.replace(/ (dot|point) /g, '.')
+    debug('string-form replace', range);
+  }
+
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
   var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
   range = range.replace(hr, hyphenReplace);
@@ -762,6 +875,7 @@ Range.prototype.parseRange = function(range) {
 
   // normalize spaces
   range = range.split(/\s+/).join(' ');
+
 
   // At this point, the range is completely trimmed and
   // ready to be split into comparators.
@@ -785,8 +899,8 @@ Range.prototype.parseRange = function(range) {
 
 // Mostly just for testing and legacy API reasons
 exports.toComparators = toComparators;
-function toComparators(range, loose) {
-  return new Range(range, loose).set.map(function(comp) {
+function toComparators(range, loose, stringForm) {
+  return new Range(range, loose, stringForm).set.map(function(comp) {
     return comp.map(function(c) {
       return c.value;
     }).join(' ').trim().split(' ');
@@ -999,6 +1113,7 @@ function replaceStars(comp, loose) {
 // 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
 // 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
 // 1.2 - 3.4 => >=1.2.0 <3.5.0
+
 function hyphenReplace($0,
                        from, fM, fm, fp, fpr, fb,
                        to, tM, tm, tp, tpr, tb) {
@@ -1028,12 +1143,12 @@ function hyphenReplace($0,
 
 
 // if ANY of the sets match ALL of its comparators, then pass
-Range.prototype.test = function(version) {
+Range.prototype.test = function(version, stringForm) {
   if (!version)
     return false;
 
   if (typeof version === 'string')
-    version = new SemVer(version, this.loose);
+    version = new SemVer(version, this.loose, stringForm || this.stringForm);
 
   for (var i = 0; i < this.set.length; i++) {
     if (testSet(this.set[i], version))
@@ -1076,9 +1191,9 @@ function testSet(set, version) {
 }
 
 exports.satisfies = satisfies;
-function satisfies(version, range, loose) {
+function satisfies(version, range, loose, stringForm) {
   try {
-    range = new Range(range, loose);
+    range = new Range(range, loose, stringForm);
   } catch (er) {
     return false;
   }
@@ -1086,15 +1201,15 @@ function satisfies(version, range, loose) {
 }
 
 exports.maxSatisfying = maxSatisfying;
-function maxSatisfying(versions, range, loose) {
+function maxSatisfying(versions, range, loose, stringForm) {
   var max = null;
   var maxSV = null;
-  var rangeObj = new Range(range, loose);
+  var rangeObj = new Range(range, loose, stringForm);
   versions.forEach(function (v) {
-    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+    if (rangeObj.test(v)) { // satisfies(v, range, loose, stringForm)
       if (!max || maxSV.compare(v) === -1) { // compare(max, v, true)
         max = v;
-        maxSV = new SemVer(max, loose);
+        maxSV = new SemVer(max, loose, stringForm);
       }
     }
   })
@@ -1102,15 +1217,15 @@ function maxSatisfying(versions, range, loose) {
 }
 
 exports.minSatisfying = minSatisfying;
-function minSatisfying(versions, range, loose) {
+function minSatisfying(versions, range, loose, stringForm) {
   var min = null;
   var minSV = null;
-  var rangeObj = new Range(range, loose);
+  var rangeObj = new Range(range, loose, stringForm);
   versions.forEach(function (v) {
-    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+    if (rangeObj.test(v)) { // satisfies(v, range, loose, stringForm)
       if (!min || minSV.compare(v) === 1) { // compare(min, v, true)
         min = v;
-        minSV = new SemVer(min, loose);
+        minSV = new SemVer(min, loose, stringForm);
       }
     }
   })
@@ -1118,11 +1233,11 @@ function minSatisfying(versions, range, loose) {
 }
 
 exports.validRange = validRange;
-function validRange(range, loose) {
+function validRange(range, loose, stringForm) {
   try {
     // Return '*' instead of '' so that truthiness works.
     // This will throw if it's invalid anyway
-    return new Range(range, loose).range || '*';
+    return new Range(range, loose, stringForm).range || '*';
   } catch (er) {
     return null;
   }
@@ -1130,20 +1245,20 @@ function validRange(range, loose) {
 
 // Determine if version is less than all the versions possible in the range
 exports.ltr = ltr;
-function ltr(version, range, loose) {
-  return outside(version, range, '<', loose);
+function ltr(version, range, loose, stringForm) {
+  return outside(version, range, '<', loose, stringForm);
 }
 
 // Determine if version is greater than all the versions possible in the range.
 exports.gtr = gtr;
-function gtr(version, range, loose) {
-  return outside(version, range, '>', loose);
+function gtr(version, range, loose, stringForm) {
+  return outside(version, range, '>', loose, stringForm);
 }
 
 exports.outside = outside;
-function outside(version, range, hilo, loose) {
-  version = new SemVer(version, loose);
-  range = new Range(range, loose);
+function outside(version, range, hilo, loose, stringForm) {
+  version = new SemVer(version, loose, stringForm);
+  range = new Range(range, loose, stringForm);
 
   var gtfn, ltefn, ltfn, comp, ecomp;
   switch (hilo) {
@@ -1166,7 +1281,7 @@ function outside(version, range, hilo, loose) {
   }
 
   // If it satisifes the range it is not outside
-  if (satisfies(version, range, loose)) {
+  if (satisfies(version, range, loose, stringForm)) {
     return false;
   }
 
@@ -1185,9 +1300,9 @@ function outside(version, range, hilo, loose) {
       }
       high = high || comparator;
       low = low || comparator;
-      if (gtfn(comparator.semver, high.semver, loose)) {
+      if (gtfn(comparator.semver, high.semver, loose, stringForm)) {
         high = comparator;
-      } else if (ltfn(comparator.semver, low.semver, loose)) {
+      } else if (ltfn(comparator.semver, low.semver, loose, stringForm)) {
         low = comparator;
       }
     });
@@ -1211,7 +1326,7 @@ function outside(version, range, hilo, loose) {
 }
 
 exports.prerelease = prerelease;
-function prerelease(version, loose) {
-  var parsed = parse(version, loose);
+function prerelease(version, loose, stringForm) {
+  var parsed = parse(version, loose, stringForm);
   return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
 }
