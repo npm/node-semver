@@ -704,6 +704,48 @@ Comparator.prototype.test = function(version) {
   return cmp(version, this.operator, this.semver, this.loose);
 };
 
+Comparator.prototype.intersects = function(comp, loose, platform) {
+  if (!(comp instanceof Comparator)) {
+    throw new TypeError('a Comparator is required');
+  }
+
+  var rangeTmp;
+
+  if (this.operator === '') {
+    rangeTmp = new Range(comp.value, loose, platform);
+    return satisfies(this.value, rangeTmp, loose, platform);
+  } else if (comp.operator === '') {
+    rangeTmp = new Range(this.value, loose, platform);
+    return satisfies(comp.semver, rangeTmp, loose, platform);
+  }
+
+  var sameDirectionIncreasing = (this.operator === '>=' || this.operator === '>') && (comp.operator === '>=' || comp.operator === '>');
+  var sameDirectionDecreasing = (this.operator === '<=' || this.operator === '<') && (comp.operator === '<=' || comp.operator === '<');
+  var sameSemVer = this.semver.raw === comp.semver.raw;
+  var differentDirectionsInclusive = (this.operator === '>=' || this.operator === '<=') && (comp.operator === '>=' || comp.operator === '<=');
+  var oppositeDirectionsLessThan = cmp(this.semver, '<', comp.semver, loose) &&
+    ((this.operator === '>=' || this.operator === '>') && (comp.operator === '<=' || comp.operator === '<'));
+  var oppositeDirectionsGreaterThan = cmp(this.semver, '>', comp.semver, loose) &&
+    ((this.operator === '<=' || this.operator === '<') && (comp.operator === '>=' || comp.operator === '>'));
+
+  return sameDirectionIncreasing || sameDirectionDecreasing || (sameSemVer && differentDirectionsInclusive) ||
+    oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
+};
+
+Comparator.prototype.satisfiesRange = function(range, loose, platform) {
+  if (!(range instanceof Range)) {
+    throw new TypeError('a Range is required');
+  }
+
+  var comp = this;
+
+  return range.set.some(function(comparators) {
+    return comparators.every(function(comparator) {
+      return comp.intersects(comparator, loose, platform);
+    });
+  });
+};
+
 
 exports.Range = Range;
 function Range(range, loose) {
@@ -783,6 +825,18 @@ Range.prototype.parseRange = function(range) {
   return set;
 };
 
+Range.prototype.intersects = function(range, loose, platform) {
+  if (!(range instanceof Range)) {
+    throw new TypeError('a Range is required');
+  }
+
+  return this.set.some(function(comparators) {
+    return comparators.every(function(comparator) {
+      return comparator.satisfiesRange(range, loose, platform);
+    });
+  });
+};
+
 // Mostly just for testing and legacy API reasons
 exports.toComparators = toComparators;
 function toComparators(range, loose) {
@@ -790,56 +844,6 @@ function toComparators(range, loose) {
     return comp.map(function(c) {
       return c.value;
     }).join(' ').trim().split(' ');
-  });
-}
-
-exports.comparatorsIntersect = comparatorsIntersect;
-function comparatorsIntersect(compA, compB, loose, platform) {
-  compA = new Comparator(compA, loose);
-  compB = new Comparator(compB, loose);
-
-  if (compA.operator === '') {
-    var rangeB = new Range(compB.value, loose, platform);
-    return satisfies(compA.value, rangeB, loose, platform);
-  } else if (compB.operator === '') {
-    var rangeA = new Range(compA.value, loose, platform);
-    return satisfies(compB.semver, rangeA, loose, platform);
-  }
-  // Same direction increasing
-  return ((compA.operator === '>=' || compA.operator === '>') && (compB.operator === '>=' || compB.operator === '>')) ||
-    // Same direction decreasing
-    ((compA.operator === '<=' || compA.operator === '<') && (compB.operator === '<=' || compB.operator === '<')) ||
-    // Different directions, same semver and inclusive operator
-    (compA.semver.raw === compB.semver.raw &&
-    (compA.operator === '>=' || compA.operator === '<=') && (compB.operator === '>=' || compB.operator === '<=')) ||
-    // Opposite matching directions
-    (cmp(compA.semver, '<', compB.semver, loose) &&
-    ((compA.operator === '>=' || compA.operator === '>') && (compB.operator === '<=' || compB.operator === '<'))) ||
-    (cmp(compA.semver, '>', compB.semver, loose) &&
-    ((compA.operator === '<=' || compA.operator === '<') && (compB.operator === '>=' || compB.operator === '>')));
-}
-
-exports.comparatorSatisfiesRange = comparatorSatisfiesRange;
-function comparatorSatisfiesRange(comp, range, loose, platform) {
-  comp = new Comparator(comp, loose);
-  range = new Range(range, loose, platform);
-
-  return range.set.some(function(comparators) {
-    return comparators.every(function(comparator) {
-      return comparatorsIntersect(comparator, comp, loose, platform);
-    });
-  });
-}
-
-exports.rangesIntersect = rangesIntersect;
-function rangesIntersect(rangeA, rangeB, loose, platform) {
-  rangeA = new Range(rangeA, loose, platform);
-  rangeB = new Range(rangeB, loose, platform);
-
-  return rangeA.set.some(function(comparators) {
-    return comparators.every(function(comparator) {
-      return comparatorSatisfiesRange(comparator, rangeB, loose, platform);
-    });
   });
 }
 

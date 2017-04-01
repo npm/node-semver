@@ -18,6 +18,7 @@ var replaceStars = semver.replaceStars;
 var toComparators = semver.toComparators;
 var SemVer = semver.SemVer;
 var Range = semver.Range;
+var Comparator = semver.Comparator;
 
 test('\ncomparison tests', function(t) {
   // [version1, version2]
@@ -744,12 +745,23 @@ test('\nintersect comparators', function(t) {
     ['<=2.0.0', '>1.0.0', true],
     ['<=1.0.0', '>=2.0.0', false]
   ].forEach(function(v) {
-    var comparator1 = v[0];
-    var comparator2 = v[1];
+    var comparator1 = new Comparator(v[0]);
+    var comparator2 = new Comparator(v[1]);
     var expect = v[2];
-    var actual = semver.comparatorsIntersect(comparator1, comparator2);
-    t.equal(actual, expect);
+
+    var actual1 = comparator1.intersects(comparator2);
+    var actual2 = comparator2.intersects(comparator1);
+    t.equal(actual1, expect);
+    t.equal(actual2, expect);
   });
+  t.end();
+});
+
+test('\nmissing comparator parameter in intersect comparators', function(t) {
+  t.throws(function() {
+      new Comparator('>1.0.0').intersects();
+    }, new TypeError('a Comparator is required'),
+    'throws type error');
   t.end();
 });
 
@@ -760,12 +772,20 @@ test('\ncomparator satisfies range', function(t) {
     ['>=1.3.0', '<1.3.0', false],
     ['<1.3.0', '>=1.3.0', false]
   ].forEach(function(v) {
-    var comparator = v[0];
-    var range = v[1];
+    var comparator = new Comparator(v[0]);
+    var range = new Range(v[1]);
     var expect = v[2];
-    var actual = semver.comparatorSatisfiesRange(comparator, range);
+    var actual = comparator.satisfiesRange(range);
     t.equal(actual, expect);
   });
+  t.end();
+});
+
+test('\nmissing range parameter in comparator satisfies range', function(t) {
+  t.throws(function() {
+      new Comparator('>1.0.0').satisfiesRange();
+    }, new TypeError('a Range is required'),
+    'throws type error');
   t.end();
 });
 
@@ -775,14 +795,25 @@ test('\nranges intersect', function(t) {
     ['<1.0.0 >2.0.0', '>0.0.0', true],
     ['<1.0.0 >2.0.0', '>1.4.0 <1.6.0', false],
     ['<1.0.0 >2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false],
+    ['>1.0.0 <=2.0.0', '2.0.0', true],
     ['<1.0.0 >=2.0.0', '2.1.0', false],
     ['<1.0.0 >=2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false]
   ].forEach(function(v) {
-    var range1 = v[0];
-    var range2 = v[1];
+    var range1 = new Range(v[0]);
+    var range2 = new Range(v[1]);
     var expect = v[2];
-    var actual = semver.rangesIntersect(range1, range2);
-    t.equal(actual, expect);
+    var actual1 = range1.intersects(range2);
+    var actual2 = range2.intersects(range1);
+    t.equal(actual1, expect);
+    t.equal(actual2, expect);
   });
+  t.end();
+});
+
+test('\nmissing range parameter in range intersect', function(t) {
+  t.throws(function() {
+      new Range('1.0.0').intersects();
+    }, new TypeError('a Range is required'),
+    'throws type error');
   t.end();
 });
