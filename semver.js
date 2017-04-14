@@ -1104,7 +1104,7 @@ function hyphenReplace($0,
 
 
 // if ANY of the sets match ALL of its comparators, then pass
-Range.prototype.test = function(version) {
+Range.prototype.test = function(version, prereleaseLock) {
   if (!version)
     return false;
 
@@ -1112,19 +1112,23 @@ Range.prototype.test = function(version) {
     version = new SemVer(version, this.loose);
 
   for (var i = 0; i < this.set.length; i++) {
-    if (testSet(this.set[i], version))
+    if (testSet(this.set[i], version, prereleaseLock))
       return true;
   }
   return false;
 };
 
-function testSet(set, version) {
+function testSet(set, version, prereleaseLock) {
   for (var i = 0; i < set.length; i++) {
     if (!set[i].test(version))
       return false;
   }
 
-  if (version.prerelease.length) {
+  if (prereleaseLock === undefined) {
+    prereleaseLock = true;
+  }
+
+  if (version.prerelease.length && prereleaseLock) {
     // Find the set of versions that are allowed to have prereleases
     // For example, ^1.2.3-pr.1 desugars to >=1.2.3-pr.1 <2.0.0
     // That should allow `1.2.3-pr.2` to pass.
@@ -1152,13 +1156,13 @@ function testSet(set, version) {
 }
 
 exports.satisfies = satisfies;
-function satisfies(version, range, loose) {
+function satisfies(version, range, loose, prereleaseLock) {
   try {
     range = new Range(range, loose);
   } catch (er) {
     return false;
   }
-  return range.test(version);
+  return range.test(version, prereleaseLock);
 }
 
 exports.maxSatisfying = maxSatisfying;
