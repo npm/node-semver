@@ -316,6 +316,39 @@ test('\nnegative range tests', function(t) {
   t.end();
 });
 
+test('\nunlocked prerelease range tests', function(t) {
+  // [range, version]
+  // version should be included by range
+  [['*', '1.0.0-rc1'],
+    ['^1.0.0', '2.0.0-rc1'],
+    ['^1.0.0-0', '1.0.1-rc1'],
+    ['^1.0.0-rc2', '1.0.1-rc1'],
+    ['^1.0.0', '1.0.1-rc1'],
+    ['^1.0.0', '1.1.0-rc1']
+  ].forEach(function(v) {
+    var range = v[0];
+    var ver = v[1];
+    var loose = v[2];
+    t.ok(satisfies(ver, range, loose, false), range + ' satisfied by ' + ver);
+  });
+  t.end();
+});
+
+test('\nnegative unlocked prerelease range tests', function(t) {
+  // [range, version]
+  // version should not be included by range
+  [['^1.0.0', '1.0.0-rc1'],
+    ['^1.2.3-rc2', '2.0.0'],
+  ].forEach(function(v) {
+    var range = v[0];
+    var ver = v[1];
+    var loose = v[2];
+    var found = satisfies(ver, range, loose, false);
+    t.ok(!found, ver + ' not satisfied by ' + range);
+  });
+  t.end();
+});
+
 test('\nincrement versions test', function(t) {
 //  [version, inc, result, identifier]
 //  inc(version, inc) -> result
