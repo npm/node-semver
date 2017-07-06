@@ -495,6 +495,33 @@ function inc(version, release, loose, identifier) {
   }
 }
 
+SemVer.prototype.truncate = function(release) {
+  switch (release) {
+    case 'major':
+      this.minor = 0;
+    case 'minor':
+      this.patch = 0;
+    case 'patch':
+      this.prerelease = [];
+      break;
+
+    default:
+      throw new Error('invalid truncate argument: ' + release);
+  }
+  this.format();
+  this.raw = this.version;
+  return this;
+};
+
+exports.truncate = truncate;
+function truncate(version, release, loose) {
+  try {
+    return new SemVer(version, loose).truncate(release).version;
+  } catch (er) {
+    return null;
+  }
+}
+
 exports.diff = diff;
 function diff(version1, version2) {
   if (eq(version1, version2)) {
