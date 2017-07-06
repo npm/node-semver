@@ -301,6 +301,8 @@ strings that they parse.
     same as `prepatch`. It increments the patch version, then makes a
     prerelease. If the input version is already a prerelease it simply
     increments it.
+* `truncate(v, release)`: Return the version truncated by the release
+  type (`major`, `minor`, `patch`), or the origin version if it cannot be truncated.
 * `prerelease(v)`: Returns an array of prerelease components, or null
   if none exist. Example: `prerelease('1.2.3-alpha.1') -> ['alpha', 1]`
 * `major(v)`: Return the major version number.
