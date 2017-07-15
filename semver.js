@@ -743,20 +743,6 @@ Comparator.prototype.intersects = function(comp, loose) {
     oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
 };
 
-Comparator.prototype.satisfiesRange = function(range, loose) {
-  if (!(range instanceof Range)) {
-    throw new TypeError('a Range is required');
-  }
-
-  var comp = this;
-
-  return range.set.some(function(comparators) {
-    return comparators.every(function(comparator) {
-      return comp.intersects(comparator, loose);
-    });
-  });
-};
-
 
 exports.Range = Range;
 function Range(range, loose) {
@@ -841,9 +827,13 @@ Range.prototype.intersects = function(range, loose) {
     throw new TypeError('a Range is required');
   }
 
-  return this.set.some(function(comparators) {
-    return comparators.every(function(comparator) {
-      return comparator.satisfiesRange(range, loose);
+  return this.set.some(function(thisComparators) {
+    return thisComparators.every(function(thisComparator) {
+      return range.set.some(function(rangeComparators) {
+        return rangeComparators.every(function(rangeComparator) {
+          return thisComparator.intersects(rangeComparator, loose);
+        });
+      });
     });
   });
 };
