@@ -329,6 +329,8 @@ strings that they parse.
   (`major`, `premajor`, `minor`, `preminor`, `patch`, `prepatch`, or `prerelease`),
   or null if the versions are the same.
 
+### Comparators
+* `intersects(comparator)`: Return true if the comparators intersect
 
 ### Ranges
 
@@ -347,6 +349,7 @@ strings that they parse.
   the bounds of the range in either the high or low direction.  The
   `hilo` argument must be either the string `'>'` or `'<'`.  (This is
   the function called by `gtr` and `ltr`.)
+* `intersects(range)`: Return true if any of the ranges comparators intersect
 
 Note that, since ranges may be non-contiguous, a version might not be
 greater than a range, less than a range, *or* satisfy a range!  For
