@@ -704,7 +704,7 @@ Comparator.prototype.test = function(version) {
   return cmp(version, this.operator, this.semver, this.loose);
 };
 
-Comparator.prototype.intersects = function(comp, loose, platform) {
+Comparator.prototype.intersects = function(comp, loose) {
   if (!(comp instanceof Comparator)) {
     throw new TypeError('a Comparator is required');
   }
@@ -712,27 +712,38 @@ Comparator.prototype.intersects = function(comp, loose, platform) {
   var rangeTmp;
 
   if (this.operator === '') {
-    rangeTmp = new Range(comp.value, loose, platform);
-    return satisfies(this.value, rangeTmp, loose, platform);
+    rangeTmp = new Range(comp.value, loose);
+    return satisfies(this.value, rangeTmp, loose);
   } else if (comp.operator === '') {
-    rangeTmp = new Range(this.value, loose, platform);
-    return satisfies(comp.semver, rangeTmp, loose, platform);
+    rangeTmp = new Range(this.value, loose);
+    return satisfies(comp.semver, rangeTmp, loose);
   }
 
-  var sameDirectionIncreasing = (this.operator === '>=' || this.operator === '>') && (comp.operator === '>=' || comp.operator === '>');
-  var sameDirectionDecreasing = (this.operator === '<=' || this.operator === '<') && (comp.operator === '<=' || comp.operator === '<');
+  var sameDirectionIncreasing =
+    (this.operator === '>=' || this.operator === '>') &&
+    (comp.operator === '>=' || comp.operator === '>');
+  var sameDirectionDecreasing =
+    (this.operator === '<=' || this.operator === '<') &&
+    (comp.operator === '<=' || comp.operator === '<');
   var sameSemVer = this.semver.raw === comp.semver.raw;
-  var differentDirectionsInclusive = (this.operator === '>=' || this.operator === '<=') && (comp.operator === '>=' || comp.operator === '<=');
-  var oppositeDirectionsLessThan = cmp(this.semver, '<', comp.semver, loose) &&
-    ((this.operator === '>=' || this.operator === '>') && (comp.operator === '<=' || comp.operator === '<'));
-  var oppositeDirectionsGreaterThan = cmp(this.semver, '>', comp.semver, loose) &&
-    ((this.operator === '<=' || this.operator === '<') && (comp.operator === '>=' || comp.operator === '>'));
+  var differentDirectionsInclusive =
+    (this.operator === '>=' || this.operator === '<=') &&
+    (comp.operator === '>=' || comp.operator === '<=');
+  var oppositeDirectionsLessThan =
+    cmp(this.semver, '<', comp.semver, loose) &&
+    ((this.operator === '>=' || this.operator === '>') &&
+    (comp.operator === '<=' || comp.operator === '<'));
+  var oppositeDirectionsGreaterThan =
+    cmp(this.semver, '>', comp.semver, loose) &&
+    ((this.operator === '<=' || this.operator === '<') &&
+    (comp.operator === '>=' || comp.operator === '>'));
 
-  return sameDirectionIncreasing || sameDirectionDecreasing || (sameSemVer && differentDirectionsInclusive) ||
+  return sameDirectionIncreasing || sameDirectionDecreasing ||
+    (sameSemVer && differentDirectionsInclusive) ||
     oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
 };
 
-Comparator.prototype.satisfiesRange = function(range, loose, platform) {
+Comparator.prototype.satisfiesRange = function(range, loose) {
   if (!(range instanceof Range)) {
     throw new TypeError('a Range is required');
   }
@@ -741,7 +752,7 @@ Comparator.prototype.satisfiesRange = function(range, loose, platform) {
 
   return range.set.some(function(comparators) {
     return comparators.every(function(comparator) {
-      return comp.intersects(comparator, loose, platform);
+      return comp.intersects(comparator, loose);
     });
   });
 };
@@ -825,14 +836,14 @@ Range.prototype.parseRange = function(range) {
   return set;
 };
 
-Range.prototype.intersects = function(range, loose, platform) {
+Range.prototype.intersects = function(range, loose) {
   if (!(range instanceof Range)) {
     throw new TypeError('a Range is required');
   }
 
   return this.set.some(function(comparators) {
     return comparators.every(function(comparator) {
-      return comparator.satisfiesRange(range, loose, platform);
+      return comparator.satisfiesRange(range, loose);
     });
   });
 };
