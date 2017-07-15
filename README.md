@@ -331,8 +331,6 @@ strings that they parse.
 
 ### Comparators
 * `intersects(comparator)`: Return true if the comparators intersect
-* `satisfiesRange(range)`: Return true if the comparator intersects with any
-of the range's comparators
 
 ### Ranges
 

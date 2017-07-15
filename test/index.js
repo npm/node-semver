@@ -765,30 +765,6 @@ test('\nmissing comparator parameter in intersect comparators', function(t) {
   t.end();
 });
 
-test('\ncomparator satisfies range', function(t) {
-  [
-    ['1.3.0', '1.3.0 || <1.0.0 >2.0.0', true],
-    ['1.3.0', '<1.0.0 >2.0.0', false],
-    ['>=1.3.0', '<1.3.0', false],
-    ['<1.3.0', '>=1.3.0', false]
-  ].forEach(function(v) {
-    var comparator = new Comparator(v[0]);
-    var range = new Range(v[1]);
-    var expect = v[2];
-    var actual = comparator.satisfiesRange(range);
-    t.equal(actual, expect);
-  });
-  t.end();
-});
-
-test('\nmissing range parameter in comparator satisfies range', function(t) {
-  t.throws(function() {
-      new Comparator('>1.0.0').satisfiesRange();
-    }, new TypeError('a Range is required'),
-    'throws type error');
-  t.end();
-});
-
 test('\nranges intersect', function(t) {
   [
     ['1.3.0 || <1.0.0 >2.0.0', '1.3.0 || <1.0.0 >2.0.0', true],
