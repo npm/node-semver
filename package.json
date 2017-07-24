@@ -4,10 +4,10 @@
   "description": "The semantic version parser used by npm.",
   "main": "semver.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tap test/*.js --cov -J"
   },
   "devDependencies": {
-    "tap": "^2.0.0"
+    "tap": "^10.7.0"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
