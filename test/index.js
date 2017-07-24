@@ -189,6 +189,8 @@ test('\nrange tests', function(t) {
     ['*', '1.2.3'],
     ['2', '2.1.2'],
     ['2.3', '2.3.1'],
+    ['~x', '0.0.9'], // >=2.4.0 <2.5.0
+    ['~2', '2.0.9'], // >=2.4.0 <2.5.0
     ['~2.4', '2.4.0'], // >=2.4.0 <2.5.0
     ['~2.4', '2.4.5'],
     ['~>3.2.1', '3.2.2'], // >=3.2.1 <3.3.0,
@@ -222,11 +224,19 @@ test('\nrange tests', function(t) {
     ['^1.2.3', '1.8.1'],
     ['^0.1.2', '0.1.2'],
     ['^0.1', '0.1.2'],
+    ['^0.0.1', '0.0.1'],
     ['^1.2', '1.4.2'],
     ['^1.2 ^1', '1.4.2'],
     ['^1.2.3-alpha', '1.2.3-pre'],
     ['^1.2.0-alpha', '1.2.0-pre'],
-    ['^0.0.1-alpha', '0.0.1-beta']
+    ['^0.0.1-alpha', '0.0.1-beta'],
+    ['^0.1.1-alpha', '0.1.1-beta'],
+    ['^x', '1.2.3'],
+    ['x - 1.0.0', '0.9.7'],
+    ['x - 1.x', '0.9.7'],
+    ['1.0.0 - x', '1.9.7'],
+    ['1.x - x', '1.9.7'],
+    ['<=7.x', '7.9.9']
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
@@ -299,6 +309,7 @@ test('\nnegative range tests', function(t) {
     ['<1.2.3', '1.2.3-beta'],
     ['=1.2.3', '1.2.3-beta'],
     ['>1.2', '1.2.8'],
+    ['^0.0.1', '0.0.2'],
     ['^1.2.3', '2.0.0-alpha'],
     ['^1.2.3', '1.2.2'],
     ['^1.2', '1.1.9'],
@@ -306,7 +317,8 @@ test('\nnegative range tests', function(t) {
     // invalid ranges never satisfied!
     ['blerg', '1.2.3'],
     ['git+https://user:password0123@github.com/foo', '123.0.0', true],
-    ['^1.2.3', '2.0.0-pre']
+    ['^1.2.3', '2.0.0-pre'],
+    ['^1.2.3', false]
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
@@ -664,6 +676,7 @@ test('\nstrict vs loose version numbers', function(t) {
     t.throws(function() {
       new SemVer(strict).compare(loose);
     });
+    t.equal(semver.compareLoose(v[0], v[1]), 0);
   });
   t.end();
 });
@@ -824,5 +837,56 @@ test('\nmissing range parameter in range intersect', function(t) {
       new Range('1.0.0').intersects();
     }, new TypeError('a Range is required'),
     'throws type error');
+  t.end();
+});
+
+test('outside with bad hilo throws', function(t) {
+  t.throws(function() {
+    semver.outside('1.2.3', '>1.5.0', 'blerg', true)
+  }, new TypeError('Must provide a hilo val of "<" or ">"'));
+  t.end()
+})
+
+test('comparator testing', function(t) {
+  var c = new Comparator('>=1.2.3');
+  t.ok(c.test('1.2.4'));
+  var c2 = new Comparator(c);
+  t.ok(c2.test('1.2.4'));
+  var c3 = new Comparator(c, true);
+  t.ok(c3.test('1.2.4'));
+  t.end()
+});
+
+test('tostrings', function(t) {
+  t.equal(Range('>= v1.2.3').toString(), '>=1.2.3')
+  t.equal(Comparator('>= v1.2.3').toString(), '>=1.2.3')
+  t.end()
+})
+
+test('invalid cmp usage', function(t) {
+  t.throws(function() {
+    cmp('1.2.3', 'a frog', '4.5.6');
+  }, new TypeError('Invalid operator: a frog'));
+  t.end();
+});
+
+test('sorting', function(t) {
+  var list = [
+    '1.2.3',
+    '5.9.6',
+    '0.1.2'
+  ];
+  var sorted = [
+    '0.1.2',
+    '1.2.3',
+    '5.9.6'
+  ];
+  var rsorted = [
+    '5.9.6',
+    '1.2.3',
+    '0.1.2'
+  ];
+  t.same(semver.sort(list), sorted);
+  t.same(semver.rsort(list), rsorted);
   t.end();
 });
