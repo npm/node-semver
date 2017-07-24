@@ -890,3 +890,10 @@ test('sorting', function(t) {
   t.same(semver.rsort(list), rsorted);
   t.end();
 });
+
+test('bad ranges in max/min satisfying', function(t) {
+  var r = 'some frogs and sneks-v2.5.6';
+  t.equal(semver.maxSatisfying([], r), null);
+  t.equal(semver.minSatisfying([], r), null);
+  t.end();
+});

@@ -1153,7 +1153,11 @@ exports.maxSatisfying = maxSatisfying;
 function maxSatisfying(versions, range, loose) {
   var max = null;
   var maxSV = null;
-  var rangeObj = new Range(range, loose);
+  try {
+    var rangeObj = new Range(range, loose);
+  } catch (er) {
+    return null;
+  }
   versions.forEach(function (v) {
     if (rangeObj.test(v)) { // satisfies(v, range, loose)
       if (!max || maxSV.compare(v) === -1) { // compare(max, v, true)
@@ -1169,7 +1173,11 @@ exports.minSatisfying = minSatisfying;
 function minSatisfying(versions, range, loose) {
   var min = null;
   var minSV = null;
-  var rangeObj = new Range(range, loose);
+  try {
+    var rangeObj = new Range(range, loose);
+  } catch (er) {
+    return null;
+  }
   versions.forEach(function (v) {
     if (rangeObj.test(v)) { // satisfies(v, range, loose)
       if (!min || minSV.compare(v) === 1) { // compare(min, v, true)
