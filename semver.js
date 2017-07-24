@@ -746,8 +746,17 @@ Comparator.prototype.intersects = function(comp, loose) {
 
 exports.Range = Range;
 function Range(range, loose) {
-  if ((range instanceof Range) && range.loose === loose)
-    return range;
+  if (range instanceof Range) {
+    if (range.loose === loose) {
+      return range;
+    } else {
+      return new Range(range.raw, loose);
+    }
+  }
+
+  if (range instanceof Comparator) {
+    return new Range(range.value, loose);
+  }
 
   if (!(this instanceof Range))
     return new Range(range, loose);
@@ -1269,4 +1278,11 @@ exports.prerelease = prerelease;
 function prerelease(version, loose) {
   var parsed = parse(version, loose);
   return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
+}
+
+exports.intersects = intersects;
+function intersects(r1, r2, loose) {
+  r1 = new Range(r1, loose)
+  r2 = new Range(r2, loose)
+  return r1.intersects(r2)
 }

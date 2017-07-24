@@ -306,6 +306,8 @@ strings that they parse.
 * `major(v)`: Return the major version number.
 * `minor(v)`: Return the minor version number.
 * `patch(v)`: Return the patch version number.
+* `intersects(r1, r2, loose)`: Return true if the two supplied ranges
+  or comparators intersect.
 
 ### Comparison
 
@@ -330,6 +332,7 @@ strings that they parse.
   or null if the versions are the same.
 
 ### Comparators
+
 * `intersects(comparator)`: Return true if the comparators intersect
 
 ### Ranges
