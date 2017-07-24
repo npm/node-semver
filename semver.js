@@ -725,7 +725,7 @@ Comparator.prototype.intersects = function(comp, loose) {
   var sameDirectionDecreasing =
     (this.operator === '<=' || this.operator === '<') &&
     (comp.operator === '<=' || comp.operator === '<');
-  var sameSemVer = this.semver.raw === comp.semver.raw;
+  var sameSemVer = this.semver.version === comp.semver.version;
   var differentDirectionsInclusive =
     (this.operator === '>=' || this.operator === '<=') &&
     (comp.operator === '>=' || comp.operator === '<=');
