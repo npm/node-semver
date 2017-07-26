@@ -9,4 +9,3 @@ notifications:
 cache:
   directories:
     - $HOME/.npm
-    - node_modules
