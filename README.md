@@ -338,6 +338,7 @@ strings that they parse.
 ### Ranges
 
 * `validRange(range)`: Return the valid range or null if it's not valid
+* `minVersion(range)`: Return the lowest version that satisfies the range.
 * `satisfies(version, range)`: Return true if the version satisfies the
   range.
 * `maxSatisfying(versions, range)`: Return the highest version in the list

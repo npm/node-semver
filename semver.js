@@ -1200,6 +1200,19 @@ function validRange(range, loose) {
   }
 }
 
+exports.minVersion = minVersion;
+function minVersion(range, loose) {
+  try {
+    var rangeObj = new Range(range, loose);
+  } catch (er) {
+    return null;
+  }
+  if (!rangeObj.range) {
+    return '0.0.0';
+  }
+  return rangeObj.set[0][0].semver.version;
+}
+
 // Determine if version is less than all the versions possible in the range
 exports.ltr = ltr;
 function ltr(version, range, loose) {

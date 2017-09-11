@@ -695,6 +695,22 @@ test('\nstrict vs loose ranges', function(t) {
   t.end();
 });
 
+test('\nmin version', function(t) {
+  [['1.2', '1.2.0'],
+    ['>=2.1.0 <2.2.0', '2.1.0'],
+    ['', '0.0.0'],
+    ['~3.3', '3.3.0', true],
+    ['invalid range', null]
+  ].forEach(function(v) {
+    var range = v[0];
+    var expect = v[1];
+    var loose = v[2];
+    var actual = semver.minVersion(range, loose);
+    t.equal(actual, expect);
+  });
+  t.end();
+});
+
 test('\nmax satisfying', function(t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.4'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.4'],
