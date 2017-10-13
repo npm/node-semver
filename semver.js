@@ -267,6 +267,21 @@ function clean(version, loose) {
   return s ? s.version : null;
 }
 
+exports.pad = pad;
+function pad(version) {
+  var ver = version;
+  var split = ver.split('.');
+  if (split.length === 3) {
+    return ver;
+  }
+  if (split.length < 3) {
+    for (let i = split.length; i < 3; i++) {
+      ver += '.0';
+    }
+  }
+  return ver;
+}
+
 exports.SemVer = SemVer;
 
 function SemVer(version, loose) {

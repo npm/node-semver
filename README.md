@@ -17,6 +17,7 @@ const semver = require('semver')
 semver.valid('1.2.3') // '1.2.3'
 semver.valid('a.b.c') // null
 semver.clean('  =v1.2.3   ') // '1.2.3'
+semver.pad('1.2') // '1.2.0'
 semver.satisfies('1.2.3', '1.x || >=2.5.0 || 5.0.0 - 7.2.3') // true
 semver.gt('1.2.3', '9.8.7') // false
 semver.lt('1.2.3', '9.8.7') // true
