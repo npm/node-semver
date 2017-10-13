@@ -275,7 +275,7 @@ function pad(version) {
     return ver;
   }
   if (split.length < 3) {
-    for (let i = split.length; i < 3; i++) {
+    for (var i = split.length; i < 3; i++) {
       ver += '.0';
     }
   }
