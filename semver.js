@@ -1294,3 +1294,24 @@ function intersects(r1, r2, loose) {
   r2 = new Range(r2, loose)
   return r1.intersects(r2)
 }
+
+exports.coerce = coerce;
+function coerce(version) {
+  if (version instanceof SemVer)
+    return version
+
+  if (typeof version !== 'string')
+    return null
+
+  if (version.length > MAX_LENGTH)
+    return null;
+
+  var match = version.match(/([vV]?\d+(?:[.]\d+)*)/)
+  if (match == null)
+    return null
+
+  var parts = match[0].split(/[.]/)
+  var semver = ['0', '0', '0'].map(function (ph, idx) { return parts[idx] || ph } ).join('.')
+
+  return parse(semver)
+}
