@@ -1306,7 +1306,7 @@ function coerce(version) {
   if (version.length > MAX_LENGTH)
     return null;
 
-  var match = version.match(/([vV]?\d+(?:[.]\d+)*)/)
+  var match = version.match(/([vV]?\d+(?:[.]\d+){0,2})/)
   if (match == null)
     return null
 

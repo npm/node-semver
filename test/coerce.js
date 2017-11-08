@@ -14,6 +14,7 @@ test('\ncoerce tests', function(t) {
     function () { return '1.2.3'; },
     '',
     '.',
+    'version one',
     tooLong
   ].forEach(function (input) {
     var msg = 'coerce(' + input + ') should be null'
@@ -60,6 +61,10 @@ test('\ncoerce tests', function(t) {
     ['version1', '1.0.0'],
     ['version1.0', '1.0.0'],
     ['version1.1', '1.1.0'],
+    ['42.6.7.9.3-alpha', '42.6.7'],
+    ['v2', '2.0.0'],
+    ['v3.4 replaces v3.3.1', '3.4.0'],
+    ['4.6.3.9.2-alpha2', '4.6.3'],
     [justRight, '12.1.1']
   ].forEach(function (tuple) {
     var input = tuple[0]
