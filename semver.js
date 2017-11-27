@@ -1288,6 +1288,12 @@ function prerelease(version, loose) {
   return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
 }
 
+exports.build = build;
+function build(version, loose) {
+  var parsed = parse(version, loose);
+  return (parsed && parsed.build.length) ? parsed.build : null;
+}
+
 exports.intersects = intersects;
 function intersects(r1, r2, loose) {
   r1 = new Range(r1, loose)
