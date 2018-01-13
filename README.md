@@ -382,3 +382,7 @@ consumes all remaining characters which satisfy at least a partial semver
 Longer versions are simply truncated (`4.6.3.9.2-alpha2` becomes `4.6.3`).
 All surrounding text is simply ignored (`v3.4 replaces v3.3.1` becomes `3.4.0`).
 Only text which lacks digits will fail coercion (`version one` is not valid).
+The maximum  length for any semver component considered for coercion is 16 characters;
+longer components will be ignored (`10000000000000000.4.7.4` becomes `4.7.4`).
+The maximum value for any semver component is `Integer.MAX_SAFE_INTEGER || (2**53 - 1)`;
+higher value components are invalid (`9999999999999999.4.7.4` is likely invalid).
