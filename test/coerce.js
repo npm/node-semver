@@ -114,5 +114,12 @@ test('\ncoerce tests', function(t) {
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
   t.same(valid(coerce('v2')), '2.0.0')
 
+  // Testing the remove of leading zeros
+  t.same(valid(coerce('0.45.06')), '0.45.6')
+  t.same(valid(coerce('1.05')), '1.5.0')
+  t.same(valid(coerce('2018.06.9')), '2018.6.9')
+  t.same(valid(coerce('version34.0000256000-beta4')), '34.256000.0')
+  t.same(valid(coerce('000.00002.0000005')), '0.2.5')
+
   t.done();
 });

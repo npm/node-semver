@@ -1307,6 +1307,31 @@ function intersects(r1, r2, loose) {
   return r1.intersects(r2)
 }
 
+function removeLeadingZeros(num){
+  let countLeadingZeros = 0
+  let chars = num.split('')
+  let foundNonZeroChar = false
+  // iterate chars until first non-zero char
+  while(chars.length > 0 && !foundNonZeroChar){
+    let currentChar = chars.splice(0, 1)[0]
+    if(currentChar === '0'){
+      // count number of zeros
+      countLeadingZeros += 1
+    }else{
+      // found a non-zero char
+      foundNonZeroChar = true
+    }
+  }
+  if(countLeadingZeros == 0){
+    return num // no one zero in num -> return num
+  }else if(countLeadingZeros == num.length){
+    return '0' // all zeros num -> return 0
+  }else{
+    // more than a zeros with at least a non-zero char
+    return num.substring(countLeadingZeros) // leading zeros before real num
+  }
+}
+
 exports.coerce = coerce;
 function coerce(version) {
   if (version instanceof SemVer)
@@ -1319,6 +1344,13 @@ function coerce(version) {
 
   if (match == null)
     return null;
+
+  // try to remove leading zeros in each major, minor and patch
+  for(let i=1; i<=match.length; i++){
+    if(match[i] != undefined){
+      match[i] = removeLeadingZeros(match[i])
+    }
+  }
 
   return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
 }
