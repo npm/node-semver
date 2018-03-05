@@ -1308,12 +1308,12 @@ function intersects(r1, r2, loose) {
 }
 
 function removeLeadingZeros(num){
-  let countLeadingZeros = 0
-  let chars = num.split('')
-  let foundNonZeroChar = false
+  var countLeadingZeros = 0
+  var chars = num.split('')
+  var foundNonZeroChar = false
   // iterate chars until first non-zero char
   while(chars.length > 0 && !foundNonZeroChar){
-    let currentChar = chars.splice(0, 1)[0]
+    var currentChar = chars.splice(0, 1)[0]
     if(currentChar === '0'){
       // count number of zeros
       countLeadingZeros += 1
@@ -1346,7 +1346,7 @@ function coerce(version) {
     return null;
 
   // try to remove leading zeros in each major, minor and patch
-  for(let i=1; i<=match.length; i++){
+  for(var i=1; i<=match.length; i++){
     if(match[i] != undefined){
       match[i] = removeLeadingZeros(match[i])
     }
