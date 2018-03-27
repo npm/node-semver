@@ -1302,6 +1302,13 @@ function prerelease(version, loose) {
 
 exports.intersects = intersects;
 function intersects(r1, r2, loose) {
+  /* Special case for range representations that represent an infinite range */
+  if (r1 == '*' || r1 == 'x' || r1 == '' || r1 == '* - *' 
+	  || r1 == '* - x' || r1 == 'x - *' || r1 == 'x - x') r1 = '0 - *' 
+		  
+  if (r1 == '*' || r2 == 'x' || r2 == '' || r2 == '* - *'  
+	  || r2 == '* - x' || r2 == 'x - *' || r1 == 'x - x') r2 = '0 - *';
+	
   r1 = new Range(r1, loose)
   r2 = new Range(r2, loose)
   return r1.intersects(r2)
