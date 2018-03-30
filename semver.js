@@ -1307,6 +1307,50 @@ function intersects(r1, r2, loose) {
   return r1.intersects(r2)
 }
 
+exports.subset = subset;
+function subset(r1, r2, loose){
+	
+  if(r2.match(/^</)) r2 = "0 "+r2;
+	
+  r1 = new Range(r1, loose); 
+  r2 = new Range(r2, loose); 
+	
+  set_a = r1.range.match(/([0-9\.])+/g).sort(function(a, b){
+    a = a.match(/[0-9]+/);
+    b = b.match(/[0-9]+/);
+    return a-b;
+  });	
+	
+  set_b = r2.range.match(/([0-9\.])+/g).sort(function(a, b){
+    a = a.match(/[0-9]+/);
+    b = b.match(/[0-9]+/);
+    return a-b;
+  });
+	
+  set_a_min = set_a[0];
+  set_a_max = set_a[set_a.length-1];
+  set_b_min = set_b[0];
+  set_b_max = set_b[set_b.length-1];
+
+  if( set_a_min == set_a_max && set_b_min < set_b_max ){
+	if( r1.range.match(/>/) ){
+		return false;
+	}
+  }
+	
+  if( set_b_min == set_b_max ){
+	if( r2.range.match(/>/) ){
+		if (set_a_min >= set_b_min){
+			return true;
+		}
+	}
+  }
+	
+  if(set_a_min < set_b_min || set_a_max > set_b_max ) return false;
+  return true;
+}
+
+
 exports.coerce = coerce;
 function coerce(version) {
   if (version instanceof SemVer)
