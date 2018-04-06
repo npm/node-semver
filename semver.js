@@ -1318,206 +1318,158 @@ function subset(r1, r2, loose){
   var 	eval_range_to_range		=[];
   var 	eval_range_to_atomic	=[];
   
-  for(i=0; i < r1.set.length; i++)
-  {
-
-	  for(j=0; j < r1.set[i].length; j++)
-	  {
+  var	range_to_range_check 	= 0;
+  var 	atomic_to_atomic_check	= 0;
+  var	atomic_to_range_check	= 0;
+  var	range_to_atomic_check	= 0;
+  
+  for(i=0; i < r1.set.length; i++){
+	  for(j=0; j < r1.set[i].length; j++){
 		  set_a_op = r1.set[i][j].operator
 		  set_a_value = r1.set[i][j].value
 		  set_a_value = set_a_value.replace(/([<>=])+/gi,'');
-		  
-		  //Verify if this is a subset of b 
-		  for(m=0; m < r2.set.length; m++)
-		  {
-			  for( n=0; n < r2.set[m].length; n++)
-			  {
-					set_b_op = r2.set[m][n].operator
-					set_b_value = r2.set[m][n].value
-					set_b_value = set_b_value.replace(/([<>=])+/gi,'');
-					
-					/* The case of set_a being an atom and set_b being an atom */
-					if(set_a_op == '' && set_b_op == '')
-					{
-						//comparing a ranged item to an atomic
-						if(set_a_value == set_b_value)
-						{
-							eval_atomic_to_atomic.push(true);
-						}
-						else
-						{
-							eval_atomic_to_atomic.push(false);
-						}
-					}
-					
-					/* the case of an atomic to a range */
-					
-					/* The case of set_a being an atom and set_b being a range */
-					if( ( set_a_op == '' && set_b_op == '>=' ) || ( set_a_op == '' && set_b_op == '>' ) )
-					{
-						//comparing a ranged item to an atomic
-						if(set_a_value >= set_b_value)
-						{
-							eval_atomic_to_range.push(true);
-						}
-						if(set_a_value < set_b_value)
-						{
-							eval_atomic_to_range.push(false);
-						}
-					}
-					
-					if( ( set_a_op == '' && set_b_op == '<=' ) || ( set_a_op == '' && set_b_op == '<' ) )
-					{
-						//comparing a ranged item to an atomic
-						if(set_a_value > set_b_value)
-						{
-							eval_atomic_to_range.push(false);
-						}
-						if(set_a_value <= set_b_value)
-						{
-							eval_atomic_to_range.push(true);
-						}
-					}
 
-					/* The case of set_a being a range and set_b being a atomic */
-					if( ( set_a_op == '>=' && set_b_op == '' ) || ( set_a_op == '>' && set_b_op == '' ) )
-					{
-					//comparing a ranged item to an atomic 
-						eval_range_to_atomic.push(false);
+		  for(m=0; m < r2.set.length; m++){
+			  for( n=0; n < r2.set[m].length; n++){
+				set_b_op = r2.set[m][n].operator
+				set_b_value = r2.set[m][n].value
+				set_b_value = set_b_value.replace(/([<>=])+/gi,'');
+
+				/* The case of set_a being an atom and set_b being an atom */
+				if(set_a_op == '' && set_b_op == ''){
+					if(set_a_value == set_b_value){
+						eval_atomic_to_atomic.push(true);
 					}
-					
-					if( ( set_a_op == '<=' && set_b_op == '' ) || ( set_a_op == '<' && set_b_op == '' ) )
-					{
-					//comparing a ranged item to an atomic 
-						eval_range_to_atomic.push(false);
+					else{
+						eval_atomic_to_atomic.push(false);
 					}
+				}				
+				/* The case of set_a being an atom and set_b being a range */
+				if( ( set_a_op == '' && set_b_op == '>=' ) || 
+					( set_a_op == '' && set_b_op == '>'  ) )
+				{
+					if(set_a_value >= set_b_value){
+						eval_atomic_to_range.push(true);
+					}
+					if(set_a_value < set_b_value){
+						eval_atomic_to_range.push(false);
+					}
+				}
+
+				if( ( set_a_op == '' && set_b_op == '<=' ) || 
+					( set_a_op == '' && set_b_op == '<'  ) )
+				{
+					if(set_a_value > set_b_value){
+						eval_atomic_to_range.push(false);
+					}
+					if(set_a_value <= set_b_value){
+						eval_atomic_to_range.push(true);
+					}
+				}
+
+				/* The case of set_a being a range and set_b being a atomic */
+				if( ( set_a_op == '>=' && set_b_op == '' ) || 
+					( set_a_op == '>' && set_b_op == ''  ) )
+				{
+					eval_range_to_atomic.push(false);
+				}
+
+				if( ( set_a_op == '<=' && set_b_op == '' ) || 
+					( set_a_op == '<' && set_b_op == ''  ) )
+				{ 
+					eval_range_to_atomic.push(false);
+				}
+
+				/* The case of range to range */
+				if( ( set_a_op == '>=' && set_b_op == '>=' ) || 
+					( set_a_op == '>=' && set_b_op == '>'  ) || 
+					( set_a_op == '>'  && set_b_op == '>=' ) || 
+					( set_a_op == '>'  && set_b_op == '>'  ) )
+				{
+					if ( set_a_value >= set_b_value ){
+						eval_range_to_range.push(true);
+					}
+					if ( set_a_value < set_b_value ){
+						eval_range_to_range.push(false);
+					}
+				}
+
+				if( ( set_a_op == '>=' && set_b_op == '<=' ) || 
+					( set_a_op == '>=' && set_b_op == '<'  ) ||
+					( set_a_op == '>'  && set_b_op == '<=' ) || 
+					( set_a_op == '>'  && set_b_op == '<'  ) )
+				{
 	
-					/* The case of range to range */
-					if( ( set_a_op == '>=' && set_b_op == '>=' ) || ( set_a_op == '>=' && set_b_op == '>' ) || 
-						( set_a_op == '>'  && set_b_op == '>=' ) || ( set_a_op == '>'  && set_b_op == '>' ) )
+					if ( set_a_value > set_b_value )
 					{
-						
-						/* if value in set_a is greater than or eq to value in set_b */
-						if ( set_a_value >= set_b_value )
-						{
-							eval_range_to_range.push(true);
-						}
-						/* if value in set_a is less than value in set_b */
-						if ( set_a_value < set_b_value )
-						{
-							eval_range_to_range.push(false);
-						}
-						
+						eval_range_to_range.push(false);
 					}
 					
-					if( ( set_a_op == '>=' && set_b_op == '<=' ) || ( set_a_op == '>=' && set_b_op == '<' ) ||
-						( set_a_op == '>'  && set_b_op == '<=' ) || ( set_a_op == '>'  && set_b_op == '<' ) )
+					if ( set_a_value <= set_b_value )
 					{
-						
-						/* if value in set_a is greater than or eq to value in set_b */
-						if ( set_a_value > set_b_value )
-						{
-							eval_range_to_range.push(false);
-						}
-						/* if value in set_a is less than value in set_b */
-						if ( set_a_value <= set_b_value )
-						{
-							eval_range_to_range.push(true);
-						}
-						
+						eval_range_to_range.push(true);
 					}
-					
-					if( ( set_a_op == '<=' && set_b_op == '>=' ) || ( set_a_op == '<=' && set_b_op == '>' ) ||
-						( set_a_op == '<'  && set_b_op == '>=' ) || ( set_a_op == '<'  && set_b_op == '>' ) )
-					{
-						
-						/* if value in set_a is greater than or eq to value in set_b */
-						if ( set_a_value >= set_b_value )
-						{
-							eval_range_to_range.push(true);
-						}
-						/* if value in set_a is less than value in set_b */
-						if ( set_a_value < set_b_value )
-						{
-							eval_range_to_range.push(false);
-						}
-						
+				}
+
+				if( ( set_a_op == '<=' && set_b_op == '>=' ) || 
+					( set_a_op == '<=' && set_b_op == '>'  ) ||
+					( set_a_op == '<'  && set_b_op == '>=' ) || 
+					( set_a_op == '<'  && set_b_op == '>'  ) )
+				{
+					if ( set_a_value >= set_b_value ){
+						eval_range_to_range.push(true);
 					}
-					
-					if( ( set_a_op == '<=' && set_b_op == '<=' ) || ( set_a_op == '<=' && set_b_op == '<' ) ||
-						( set_a_op == '<'  && set_b_op == '<=' ) || ( set_a_op == '<'  && set_b_op == '<') )
-					{
-						
-						/* if value in set_a is greater than or eq to value in set_b */
-						if ( set_a_value > set_b_value )
-						{
-							eval_range_to_range.push(false);
-						}
-						/* if value in set_a is less than value in set_b */
-						if ( set_a_value <= set_b_value )
-						{
-							eval_range_to_range.push(true);
-						}
-						
+					if ( set_a_value < set_b_value ){
+						eval_range_to_range.push(false);
 					}
-			  }
-		  }
-	  }
-  }
+				}
+
+				if( ( set_a_op == '<=' && set_b_op == '<=' ) || 
+					( set_a_op == '<=' && set_b_op == '<'  ) ||
+					( set_a_op == '<'  && set_b_op == '<=' ) || 
+					( set_a_op == '<'  && set_b_op == '<'  ) )
+				{
+					if ( set_a_value > set_b_value ){
+						eval_range_to_range.push(false);
+					}
+					if ( set_a_value <= set_b_value ){
+						eval_range_to_range.push(true);
+					}	
+				}
+			}
+		}
+	}
+}
   
-  //debug stuff
-  /*
-  console.log('atomic to atomic '+eval_atomic_to_atomic+' (can be false)');
-  console.log('atomic to range = '+ eval_atomic_to_range+' (can be false)');
-  console.log('range to range = '+ eval_range_to_range+' (all must be true)'); 
-  console.log('range to atomic = '+ eval_range_to_atomic+' (will always be false)');
-  */
-  /* the results */
-  range_to_range_check 		= 0;
-  atomic_to_atomic_check 	= 0;
-  atomic_to_range_check 	= 0;
-  range_to_atomic_check 	= 0;
-  
-  for(i=0;i < eval_range_to_range.length;i++)
-  {
-	  if(eval_range_to_range[i]==false)
-	  {
+  for(i=0;i < eval_range_to_range.length;i++){
+	  if(eval_range_to_range[i]==false){
 		  return false;
 	  }
-	  if(eval_range_to_range[i]==true)
-	  {
+	  if(eval_range_to_range[i]==true){
 		  range_to_range_check = 1;
 	  }
   }
 
-  for(i=0;i < eval_atomic_to_atomic.length;i++)
-  {
-	  if(eval_atomic_to_atomic[i]==true)
-	  {
+  for(i=0;i < eval_atomic_to_atomic.length;i++){
+	  if(eval_atomic_to_atomic[i]==true){
 		  atomic_to_atomic_check = 1;
 	  }
   }
 
-  for(i=0;i < eval_atomic_to_range.length;i++)
-  {
-	  if(eval_atomic_to_range[i]==true)
-	  {
+  for(i=0;i < eval_atomic_to_range.length;i++){
+	  if(eval_atomic_to_range[i]==true){
 		  atomic_to_atomic_check = 1;
 	  }
   }
   
-  if(range_to_range_check == 1)
-  {
+  if(range_to_range_check == 1){
 	  return true;
   }
-  else
-  {
-	  if( atomic_to_atomic_check == 1 || atomic_to_range_check == 1)
-	  {
+  else{
+	  if( atomic_to_atomic_check == 1 || atomic_to_range_check == 1){
 		  return true;
 	  }
-	  else
-	  {
+	  else{
 		  return false;
 	  }
   }
