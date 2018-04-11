@@ -1309,254 +1309,211 @@ function intersects(r1, r2, loose) {
 
 exports.subset = subset;
 function subset(r1, r2, loose){
-  //transform orphan ranges "<n" into "0 < n"
-  //if(r2.match(/^</)) r2 = "0 "+r2;
-  //console.log(r2);
-  
-  r1 = new Range(r1, loose); 
-  r2 = new Range(r2, loose); 
 
-  /*
+  r1 = new Range(r1, loose);
+  r2 = new Range(r2, loose);
+  
+  var number_of_atoms  = 0;
+  var number_of_ranges = 0;
+  
+  var atoms_to_atoms_results = [];
+  var atoms_to_range_checks  = [];
+  var atoms_to_range_results = [];
+  var verification_results   = [];
+  var atoms_check_passed     = null;
+  var atoms_to_range_check_passed = null;
+  var verification_results_passed = null
+  
   console.log(r1.set);
   console.log(r2.set);
   console.log("( "+r1.set + " )( "+ r2.set+" )");
-  */
   
-  var range_to_range_check           = null;
-  var atomic_to_atomic_check         = false;
-  var atomic_to_range_check          = null; 
-  var passed_atomic_to_atomic_checks = null;
-  var passed_atomic_to_range_check   = null;
-  var values_array = [];
-  
-  //we will need these for atomic comparisons
-  var number_of_atoms = 0;
-  var pass = 0;
-  
-  
-  for(k =0; k <r2.set.length; k++){
-    for(l=0; l <r2.set[k].length; l++){
-	 if(r2.set[k][l].operator==''){
-	   number_of_atoms++;
-	 }
+  //atom to atom validation if all false, and atom to range is false then result is false
+  //atom to atom validation if all is false, and atom to range is true then result is true
+  //atom to atom validation is true, and atom to range is false then result is true
+  /*
+  for(k =0; k <r2.set.length; k++)
+  {
+    for(l=0; l <r2.set[k].length; l++)
+	{
+      if(r2.set[k][l].operator=='')
+	  {
+	    number_of_atoms++;
+      }
+	  else
+	  {
+		number_of_ranges++;
+	  }
 	}
   }
- 
-  for(i=0; i < r1.set.length; i++){
-    for(j=0; j < r1.set[i].length; j++){
+  */
+  
+  for(i=0; i < r1.set.length; i++)
+  {
+    for(j=0; j < r1.set[i].length; j++)
+	{
       set_a_op = r1.set[i][j].operator
       set_a_value = r1.set[i][j].value
       set_a_value = set_a_value.replace(/([<>=])+/gi,'');
 
-      for(m=0; m < r2.set.length; m++){
-        for( n=0; n < r2.set[m].length; n++){
-          set_b_op = r2.set[m][n].operator
+	  //compare atom to atoms
+      for(m=0; m < r2.set.length; m++)
+	  {
+        for( n=0; n < r2.set[m].length; n++)
+		{
+ 
+		  set_b_op = r2.set[m][n].operator
           set_b_value = r2.set[m][n].value
           set_b_value = set_b_value.replace(/([<>=])+/gi,'');
- 
-          /* The case of set_a being an atom and set_b being an atom */
-          if(set_a_op == '' && set_b_op == ''){
-			if(set_a_value == set_b_value){
-				atomic_to_atomic_check = true;
-				if(range_to_range_check != null){	
-				  passed_atomic_to_range_check = true;
-				}
-				else{
-				  passed_atomic_to_atomic_checks = true;
-				}
-			}
-			pass++;
-			if( pass >= number_of_atoms ){
-			  if(atomic_to_atomic_check == false){
-                passed_atomic_to_atomic_checks = false;
-			  }
-			  atomic_to_atomic_check = false;
-			  pass = 0;
+          if( ( set_a_op == '' && set_b_op =='' ) )
+          {  
+		    console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'")
+            if(cmp(set_a_value,'=',set_b_value))
+			{
+              atoms_to_atoms_results.push(true);
+        	}
+			else
+			{
+			  atoms_to_atoms_results.push(false);
 			}
           }
-	  
-          /* The case of set_a being an atom and set_b being a range */
-          if( ( set_a_op == '' && set_b_op == '>=' ) || 
-              ( set_a_op == '' && set_b_op == '>'  ) )
-          {
-            if(set_a_value >= set_b_value){
-			  atomic_to_range_check = true;
-			  passed_atomic_to_range_check = true;
-            }
-			else{
-			  passed_atomic_to_range_check = false;
-			}
-          }
-		  
-          if( ( set_a_op == '' && set_b_op == '<=' ) || 
-              ( set_a_op == '' && set_b_op == '<'  ) )
-          {
-            if(set_a_value <= set_b_value){
-			  atomic_to_range_check = true;
-			  passed_atomic_to_range_check = true;
-            }
-			else{
-			  passed_atomic_to_range_check = false;
-			}
-          }
-
-          /* The case of range to range */
-		  /* if this check fails we can safely exit otherwise this is true */
-          if( ( set_a_op == '>=' && set_b_op == '>=' ) || 
-              ( set_a_op == '>=' && set_b_op == '>'  ) || 
-              ( set_a_op == '>'  && set_b_op == '>=' ) || 
-              ( set_a_op == '>'  && set_b_op == '>'  ) )
-          {
-
-            if ( set_a_value >= set_b_value ){
-			  range_to_range_check = true;
-            }
-            if ( set_a_value < set_b_value ){
-			  return false;
-            }
-          }
-          if( ( set_a_op == '>=' && set_b_op == '<=' ) || 
-              ( set_a_op == '>=' && set_b_op == '<'  ) ||
-              ( set_a_op == '>'  && set_b_op == '<=' ) || 
-              ( set_a_op == '>'  && set_b_op == '<'  ) )
-          {	
-
-            if ( set_a_value > set_b_value ){
-			  return false;
-            }					
-            if ( set_a_value <= set_b_value ){
-			  range_to_range_check = true;
-            }
-          }
-          if( ( set_a_op == '<=' && set_b_op == '>=' ) || 
-              ( set_a_op == '<=' && set_b_op == '>'  ) ||
-              ( set_a_op == '<'  && set_b_op == '>=' ) || 
-              ( set_a_op == '<'  && set_b_op == '>'  ) )
-          {
-
-            if ( set_a_value >= set_b_value ){
-			  range_to_range_check = true;
-            }
-            if ( set_a_value < set_b_value ){
-			  return false;
-            }
-          }
-          if( ( set_a_op == '<=' && set_b_op == '<=' ) || 
-              ( set_a_op == '<=' && set_b_op == '<'  ) ||
-              ( set_a_op == '<'  && set_b_op == '<=' ) || 
-              ( set_a_op == '<'  && set_b_op == '<'  ) )
-          {
-
-            if ( set_a_value > set_b_value ){
-			  return false;
-            }
-            if ( set_a_value <= set_b_value ){
-			  range_to_range_check = true;
-            }	
-          }
-		  
-		  values_array = [];
-		  
         }
       }
-    }
+      console.log(atoms_to_atoms_results);
+	  
+	  //can be optimized
+	  for(k=0;k<atoms_to_atoms_results.length;k++)
+	  {
+		  if(atoms_to_atoms_results[k]==true) 
+		  {
+			  console.log(atoms_to_atoms_results[k]);
+			  atoms_check_passed = true;
+		  }
+	  }
+
+	  if(atoms_check_passed == true){
+		  verification_results.push(true);
+		  console.log('atoms_check_passed');
+		  atoms_check_passed = null;
+	  }
+	  else
+	  {
+		  console.log('atoms_check_failed ... testing against range');
+		  //we don't fail it yet until we compare it against the range 
+		  //do an atom to range search
+		  /* atom to range check */
+			 for(m=0; m < r2.set.length; m++)
+			 {
+				  for( n=0; n < r2.set[m].length; n++)
+				  {
+				    set_b_op = r2.set[m][n].operator
+				    set_b_value = r2.set[m][n].value
+				    set_b_value = set_b_value.replace(/([<>=])+/gi,'');
+				    if(set_a_op == '' && (set_b_op == '>=' || set_b_op == '>' || set_b_op == '<=' || set_b_op == '<') )
+				    {
+				      console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'");
+				      if(cmp(set_a_value,set_b_op,set_b_value))
+				      {
+				        atoms_to_range_checks.push(true)
+				      }
+				      else
+				      {
+				        atoms_to_range_checks.push(false)
+				      }
+				    } 
+				  }
+			  }
+			  
+			  console.log(atoms_to_range_checks);
+			  
+			  //this can be reduced
+			  for(k=0;k<=atoms_to_range_checks.length-1;k=k+2)
+			  {
+			    console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1])
+			    if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == false)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					atoms_to_range_results.push(false)
+			    }
+			    if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == false)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					atoms_to_range_results.push(false)
+			    }
+				if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == true)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					atoms_to_range_results.push(false)
+			    }
+				if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == true)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
+					atoms_to_range_results.push(true)
+			    }
+				if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == undefined)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
+					atoms_to_range_results.push(true)
+			    }
+				if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == undefined)
+			    {
+					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					atoms_to_range_results.push(false)
+			    }
+			  } 
+			  
+			  
+			  console.log("atoms_to_range_results = " + atoms_to_range_results);
+			  //if pass push true
+			  //if fail push false
+			  //can be optimized
+			  for(k=0;k<=atoms_to_range_results.length-1;k++)
+			  {
+				  if(atoms_to_range_results[k]==true) 
+				  {	  
+					  atoms_to_range_check_passed = true;
+				  }
+			  }
+			  
+			  if (atoms_to_range_check_passed == true)
+			  {
+				  verification_results.push(true);
+			  }
+			  else
+			  {
+				  verification_results.push(false);
+			  }
+			  atoms_check_passed = null;
+			  atoms_to_range_check_passed = null;
+		  
+	  }
+	  
+	}
+		atoms_to_atoms_results=[];
+		atoms_to_range_results=[];
   }
   
   
-  console.log("passed_atomic_to_atomic_checks = "+ passed_atomic_to_atomic_checks);
-  console.log("passed_atomic_to_range_check = "+ passed_atomic_to_range_check);
-  console.log("range_to_range_check = "+ range_to_range_check);
+  //final evaluation step
+  console.log("final verification = " + verification_results);
+  for(k=0;k<=verification_results.length-1;k++)
+  {
+	  if(verification_results[k]==true) 
+	  {	  
+		  verification_results_passed = true;
+	  }
+  }
+  
+  if(verification_results_passed == true){
+	  return true;
+  }
+  else{
+	  return false;
+  }
   
   
-  /* e.g. set_a (2.0) set_b (3.0) */
-  if( passed_atomic_to_atomic_checks == false &&
-      passed_atomic_to_range_check   == null  &&
-	  range_to_range_check           == null)
-	  {
-		  return false;
-	  }
-  /* e.g. set_a (2.0) set_b (2.0) */
-  if( passed_atomic_to_atomic_checks == true &&
-      passed_atomic_to_range_check   == null &&
-	  range_to_range_check           == null)
-	  {
-		  return true;
-	  }
-  /* e.g set_a (2.0) set_b (1.0 - 3.0) */   
-  if( passed_atomic_to_atomic_checks == null &&
-      passed_atomic_to_range_check   == true &&
-	  range_to_range_check           == null)
-	  {
-		  return true;
-	  }
-  /* e.g set_a (4.0) set_b (1.0 - 3.0) */   
-  if( passed_atomic_to_atomic_checks == null &&
-      passed_atomic_to_range_check   == false &&
-	  range_to_range_check           == null)
-	  {
-		  return false;
-	  }
-
-  /* e.g set_a (5.0) set_b (1.0 || 2.0 - 3.0 || 5.0) */   
-  if( passed_atomic_to_atomic_checks == true &&
-      passed_atomic_to_range_check   == false &&
-	  range_to_range_check           == null)
-	  {
-		  return true;
-	  }
-  /* e.g set_a (5.0) set_b (1.0 || 2.0 - 3.0 || 5.0) */	  
-  if( passed_atomic_to_atomic_checks == false &&
-      passed_atomic_to_range_check   == false &&
-	  range_to_range_check           == null)
-	  {
-		  return false;
-	  }
-  /* e.g set_a (3.4.0 - 3.5.0) set_b (2.0.0 - 5.0.0) */	  
-  if( passed_atomic_to_atomic_checks == null &&
-      passed_atomic_to_range_check   == null &&
-	  range_to_range_check           == true)
-	  {
-		  return true;
-	  }
-  /* e.g set_a (3.4.0 - 3.5.0 || 6.0.0) set_b (2.0.0 - 5.0.0 || 7.0.0) */	  
-  if( passed_atomic_to_atomic_checks == false &&
-      passed_atomic_to_range_check   == false &&
-	  range_to_range_check           == true)
-	  {
-		  return false;
-	  } 
-	  
-  /* e.g set_a (1.0.0 || 3.4.0 - 3.5.0 || 6.0.0) set_b (1.0.0 || 2.0.0 - 5.0.0 || 6.0.0) */	  
-  if( passed_atomic_to_atomic_checks == true &&
-      passed_atomic_to_range_check   == true &&
-	  range_to_range_check           == true)
-	  {
-		  return true;
-	  }	
-  /* e.g set_a (1.0.0) set_b (1.0.0 || 2.0.0 - 5.0.0 || 6.0.0) */	  
-  if( passed_atomic_to_atomic_checks == true &&
-      passed_atomic_to_range_check   == true &&
-	  range_to_range_check           == null)
-	  {
-		  return true;
-	  }
-
-  /* e.g set_a (2.0.0) set_b (1.0.0 || 2.0.0 - 5.0.0 || 6.0.0) */	  
-  if( passed_atomic_to_atomic_checks == false &&
-      passed_atomic_to_range_check   == true &&
-	  range_to_range_check           == null)
-	  {
-		  return true;
-	  }	
-
-  /* e.g set_a (3.0.0 - 3.5.0 || 4.0.0 || 6.0.0) set_b (1.0.0 || 2.0.0 - 5.0.0 || 6.0.0) */	  
-  if( passed_atomic_to_atomic_checks == false &&
-      passed_atomic_to_range_check   == true &&
-	  range_to_range_check           == true)
-	  {
-		  return true;
-	  }	  	  	  
 }
+
 
 exports.coerce = coerce;
 function coerce(version) {
