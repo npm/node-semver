@@ -1315,39 +1315,23 @@ function subset(r1, r2, loose){
   
   var number_of_atoms  = 0;
   var number_of_ranges = 0;
+  var pass             = 0;
   
   var atoms_to_atoms_results = [];
   var atoms_to_range_checks  = [];
   var atoms_to_range_results = [];
   var verification_results   = [];
+  var range_stack_a	         = [];
+  var range_stack_b          = [];
   var atoms_check_passed     = null;
+  var range_to_range_passed  = null;
   var atoms_to_range_check_passed = null;
   var verification_results_passed = null
   
-  console.log(r1.set);
-  console.log(r2.set);
-  console.log("( "+r1.set + " )( "+ r2.set+" )");
-  
-  //atom to atom validation if all false, and atom to range is false then result is false
-  //atom to atom validation if all is false, and atom to range is true then result is true
-  //atom to atom validation is true, and atom to range is false then result is true
-  /*
-  for(k =0; k <r2.set.length; k++)
-  {
-    for(l=0; l <r2.set[k].length; l++)
-	{
-      if(r2.set[k][l].operator=='')
-	  {
-	    number_of_atoms++;
-      }
-	  else
-	  {
-		number_of_ranges++;
-	  }
-	}
-  }
-  */
-  
+  //console.log(r1.set);
+  //console.log(r2.set);
+  //console.log("( "+r1.set + " )( "+ r2.set+" )");
+   
   for(i=0; i < r1.set.length; i++)
   {
     for(j=0; j < r1.set[i].length; j++)
@@ -1356,18 +1340,18 @@ function subset(r1, r2, loose){
       set_a_value = r1.set[i][j].value
       set_a_value = set_a_value.replace(/([<>=])+/gi,'');
 
-	  //compare atom to atoms
       for(m=0; m < r2.set.length; m++)
 	  {
         for( n=0; n < r2.set[m].length; n++)
 		{
- 
 		  set_b_op = r2.set[m][n].operator
           set_b_value = r2.set[m][n].value
           set_b_value = set_b_value.replace(/([<>=])+/gi,'');
+		  
+		  //compare atom to atoms
           if( ( set_a_op == '' && set_b_op =='' ) )
           {  
-		    console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'")
+		    //console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'")
             if(cmp(set_a_value,'=',set_b_value))
 			{
               atoms_to_atoms_results.push(true);
@@ -1379,91 +1363,88 @@ function subset(r1, r2, loose){
           }
         }
       }
-      console.log(atoms_to_atoms_results);
+      //console.log(atoms_to_atoms_results);
 	  
 	  //can be optimized
 	  for(k=0;k<atoms_to_atoms_results.length;k++)
 	  {
 		  if(atoms_to_atoms_results[k]==true) 
 		  {
-			  console.log(atoms_to_atoms_results[k]);
 			  atoms_check_passed = true;
 		  }
 	  }
 
 	  if(atoms_check_passed == true){
 		  verification_results.push(true);
-		  console.log('atoms_check_passed');
 		  atoms_check_passed = null;
 	  }
 	  else
 	  {
-		  console.log('atoms_check_failed ... testing against range');
 		  //we don't fail it yet until we compare it against the range 
 		  //do an atom to range search
 		  /* atom to range check */
-			 for(m=0; m < r2.set.length; m++)
-			 {
-				  for( n=0; n < r2.set[m].length; n++)
+			for(m=0; m < r2.set.length; m++)
+			{
+			  for( n=0; n < r2.set[m].length; n++)
+			  {
+				set_b_op = r2.set[m][n].operator
+				set_b_value = r2.set[m][n].value
+				set_b_value = set_b_value.replace(/([<>=])+/gi,'');
+				if(set_a_op == '' && (set_b_op == '>=' || set_b_op == '>' || set_b_op == '<=' || set_b_op == '<') )
+				{
+				  //console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'");
+				  if(cmp(set_a_value,set_b_op,set_b_value))
 				  {
-				    set_b_op = r2.set[m][n].operator
-				    set_b_value = r2.set[m][n].value
-				    set_b_value = set_b_value.replace(/([<>=])+/gi,'');
-				    if(set_a_op == '' && (set_b_op == '>=' || set_b_op == '>' || set_b_op == '<=' || set_b_op == '<') )
-				    {
-				      console.log(set_a_value+" '"+set_a_op+"' "+set_b_value+" '"+set_b_op+"'");
-				      if(cmp(set_a_value,set_b_op,set_b_value))
-				      {
-				        atoms_to_range_checks.push(true)
-				      }
-				      else
-				      {
-				        atoms_to_range_checks.push(false)
-				      }
-				    } 
+					atoms_to_range_checks.push(true)
 				  }
+				  else
+				  {
+					atoms_to_range_checks.push(false)
+				  }
+				}
 			  }
+			}
 			  
-			  console.log(atoms_to_range_checks);
+			  //console.log(atoms_to_range_checks);
 			  
 			  //this can be reduced
 			  for(k=0;k<=atoms_to_range_checks.length-1;k=k+2)
 			  {
-			    console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1])
+			    //console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1])
 			    if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == false)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
 					atoms_to_range_results.push(false)
 			    }
 			    if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == false)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
 					atoms_to_range_results.push(false)
 			    }
 				if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == true)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
 					atoms_to_range_results.push(false)
 			    }
 				if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == true)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
 					atoms_to_range_results.push(true)
 			    }
 				if(atoms_to_range_checks[k] == true && atoms_to_range_checks[k+1] == undefined)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = true")
 					atoms_to_range_results.push(true)
 			    }
 				if(atoms_to_range_checks[k] == false && atoms_to_range_checks[k+1] == undefined)
 			    {
-					console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
+					//console.log(atoms_to_range_checks[k] +" "+atoms_to_range_checks[k+1]+" = false")
 					atoms_to_range_results.push(false)
 			    }
 			  } 
 			  
 			  
-			  console.log("atoms_to_range_results = " + atoms_to_range_results);
+			  //console.log("atoms_to_range_results = " + atoms_to_range_results);
 			  //if pass push true
 			  //if fail push false
 			  //can be optimized
@@ -1488,14 +1469,74 @@ function subset(r1, r2, loose){
 		  
 	  }
 	  
+		//compare range to range
+		if( ( set_a_op == '>=' || set_a_op == '>' || set_a_op == '<=' || set_a_op == '<')  )
+		{	
+			//after 2 passes we need to compare the stacks, if they are identical then they pass
+			
+			//console.log(set_a_value);
+			
+			if(pass%2 == 0){
+				//console.log('toss into stack 1');
+			}
+			else{
+				//console.log('toss into stack 2');
+			}
+			for(k=0;k<r2.set.length;k++)
+			{
+				for(h=0;h<r2.set[k].length; h++)
+				{
+					if(r2.set[k][h].operator == '>=' || r2.set[k][h].operator == '<=' ||
+					   r2.set[k][h].operator == '>'  || r2.set[k][h].operator == '>')
+					   {
+							set_b_range = r2.set[k][h].value.replace(/([<>=])+/gi,'')
+							/*
+							console.log(
+							set_a_value+", "+ r2.set[k][h].operator+", "+set_b_range+" = "+
+							cmp(set_a_value,r2.set[k][h].operator,set_b_range));
+							*/
+							
+							if(pass%2 == 0){
+								range_stack_a.push(cmp(set_a_value,r2.set[k][h].operator,set_b_range));
+							}
+							else{
+								range_stack_b.push(cmp(set_a_value,r2.set[k][h].operator,set_b_range));
+							}
+		
+					   }
+				}
+			}
+			pass++;
+		}
 	}
 		atoms_to_atoms_results=[];
 		atoms_to_range_results=[];
   }
   
   
+  //check the range_stacks
+		//console.log(range_stack_a);
+		//console.log(range_stack_b);
+	    for(q=0;q<range_stack_a.length;q++)
+		{
+			//console.log(range_stack_a[q]+" "+range_stack_b[q]);
+			if(range_stack_a[q] != range_stack_b[q]){
+				range_to_range_passed = false;
+				//console.log(range_stack_a[q]+" "+range_stack_b[q]+" = "+range_to_range_passed);
+				
+			}
+		}
+	  
+	    if(range_to_range_passed == false){
+			verification_results.push(false);
+		}else{
+			verification_results.push(true);
+		}
+  
+  
+  
   //final evaluation step
-  console.log("final verification = " + verification_results);
+  //console.log("final verification = " + verification_results);
   for(k=0;k<=verification_results.length-1;k++)
   {
 	  if(verification_results[k]==true) 
