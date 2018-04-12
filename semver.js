@@ -1310,102 +1310,103 @@ function intersects(r1, r2, loose) {
 exports.subset = subset;
 function subset(r1, r2, loose){
 
-  r1 = new Range(r1, loose)
-  r2 = new Range(r2, loose)
+  r1 = new Range(r1, loose);
+  r2 = new Range(r2, loose);
   
-  var number_of_atoms  = 0
-  var number_of_ranges = 0
-  var pass             = 0
+  var number_of_atoms  = 0;
+  var number_of_ranges = 0;
+  var pass             = 0;
   
   var atoms_to_atoms_results = [];
   var atoms_to_range_checks  = [];
   var atoms_to_range_results = [];
   var verification_results   = [];
-  var range_stack_a	         = [];
+  var range_stack_a	     = [];
   var range_stack_b          = [];
-  var atoms_check_passed     = null
-  var range_to_range_passed  = null
-  var atoms_to_range_check_passed = null
-  var verification_results_passed = null
+  var atoms_check_passed     = null;
+  var range_to_range_passed  = null;
+  var atoms_to_range_check_passed = null;
+  var verification_results_passed = null;
 
   for(i=0; i < r1.set.length; i++){
     for(j=0; j < r1.set[i].length; j++){
-      set_a_op = r1.set[i][j].operator
-      set_a_value = r1.set[i][j].value
-      set_a_value = set_a_value.replace(/([<>=])+/gi,'')
+      set_a_op = r1.set[i][j].operator;
+      set_a_value = r1.set[i][j].value;
+      set_a_value = set_a_value.replace(/([<>=])+/gi,'');
 
       for(m=0; m < r2.set.length; m++){
         for( n=0; n < r2.set[m].length; n++){
-          set_b_op = r2.set[m][n].operator
-          set_b_value = r2.set[m][n].value
-          set_b_value = set_b_value.replace(/([<>=])+/gi,'')
+          set_b_op = r2.set[m][n].operator;
+          set_b_value = r2.set[m][n].value;
+          set_b_value = set_b_value.replace(/([<>=])+/gi,'');
 
           /* compare atom to atoms */
           if( ( set_a_op == '' && set_b_op =='' ) ){  
             if(cmp(set_a_value,'=',set_b_value)){
-              atoms_to_atoms_results.push(true)
+              atoms_to_atoms_results.push(true);
             }else{
-              atoms_to_atoms_results.push(false)}
+              atoms_to_atoms_results.push(false);
+	    }
           }
         }
       }
       for(k=0;k<atoms_to_atoms_results.length;k++){
         if(atoms_to_atoms_results[k]==true){
-          atoms_check_passed = true
+          atoms_check_passed = true;
         }
       }
       if(atoms_check_passed == true){
-        verification_results.push(true)
-        atoms_check_passed = null
+        verification_results.push(true);
+        atoms_check_passed = null;
       }else{
         /* atom to range check */
         for(m=0; m < r2.set.length; m++){
           for( n=0; n < r2.set[m].length; n++){
-            set_b_op = r2.set[m][n].operator
-            set_b_value = r2.set[m][n].value
-            set_b_value = set_b_value.replace(/([<>=])+/gi,'')
+            set_b_op = r2.set[m][n].operator;
+            set_b_value = r2.set[m][n].value;
+            set_b_value = set_b_value.replace(/([<>=])+/gi,'');
             if( set_a_op == '' && 
-			   (set_b_op == '>=' || set_b_op == '>' || 
-			    set_b_op == '<=' || set_b_op == '<') ){
+               (set_b_op == '>=' || set_b_op == '>' || 
+	        set_b_op == '<=' || set_b_op == '<')){
               if(cmp(set_a_value,set_b_op,set_b_value)){
-                atoms_to_range_checks.push(true)
+                atoms_to_range_checks.push(true);
               }else{
-                atoms_to_range_checks.push(false)
+                atoms_to_range_checks.push(false);
               }
             }
           }
         }
         for(k=0;k<=atoms_to_range_checks.length-1;k=k+2){
-		  if( ( atoms_to_range_checks[k]   == false && 
-		        atoms_to_range_checks[k+1] == false ) ||
+	  if( ( atoms_to_range_checks[k]   == false && 
+		atoms_to_range_checks[k+1] == false ) ||
               ( atoms_to_range_checks[k]   == true &&
-		        atoms_to_range_checks[k+1] == false ) ||
+		atoms_to_range_checks[k+1] == false ) ||
               ( atoms_to_range_checks[k]   == false && 
-		        atoms_to_range_checks[k+1] == true  ) ||
+		atoms_to_range_checks[k+1] == true  ) ||
               ( atoms_to_range_checks[k]   == false && 
-		        atoms_to_range_checks[k+1] == undefined )){
-            atoms_to_range_results.push(false)
+		atoms_to_range_checks[k+1] == undefined )){
+            atoms_to_range_results.push(false);
           }
           if( ( atoms_to_range_checks[k]   == true && 
                 atoms_to_range_checks[k+1] == true  ) ||
-			  ( atoms_to_range_checks[k]   == true && 
-		        atoms_to_range_checks[k+1] == undefined )){
-            atoms_to_range_results.push(true)
-		  }		  
+	      ( atoms_to_range_checks[k]   == true && 
+		atoms_to_range_checks[k+1] == undefined )){
+            atoms_to_range_results.push(true);
+	  }		  
         } 
       for(k=0;k<=atoms_to_range_results.length-1;k++){
         if(atoms_to_range_results[k]==true){	  
           atoms_to_range_check_passed = true;
-	    }
+	}
       }
       if(atoms_to_range_check_passed == true){
         verification_results.push(true);
       }else{
         verification_results.push(false);
-	  }
+      }
       atoms_check_passed = null;
       atoms_to_range_check_passed = null;
-	  /* End of atom to range comparison */
+      /* End of atom to range comparison */
     }
     /* compare range to range */
     if( ( set_a_op == '>=' || set_a_op == '>' || 
@@ -1413,16 +1414,16 @@ function subset(r1, r2, loose){
       for(k=0;k<r2.set.length;k++){
         for(h=0;h<r2.set[k].length; h++){
           if( r2.set[k][h].operator == '>=' || 
-		      r2.set[k][h].operator == '<=' ||
+	      r2.set[k][h].operator == '<=' ||
               r2.set[k][h].operator == '>'  || 
-			  r2.set[k][h].operator == '>'){
+	      r2.set[k][h].operator == '>'){
             set_b_range = r2.set[k][h].value.replace(/([<>=])+/gi,'')
             if(pass%2 == 0){
               range_stack_a.push(cmp(set_a_value,r2.set[k][h].operator,set_b_range));
             }else{
               range_stack_b.push(cmp(set_a_value,r2.set[k][h].operator,set_b_range));
             }
-		  }
+	  }
         }
       }
       pass++;
