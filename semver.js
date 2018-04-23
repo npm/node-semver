@@ -1307,29 +1307,8 @@ function intersects(r1, r2, loose) {
   return r1.intersects(r2)
 }
 
-function removeLeadingZeros(num){
-  var countLeadingZeros = 0
-  var chars = num.split('')
-  var foundNonZeroChar = false
-  // iterate chars until first non-zero char
-  while(chars.length > 0 && !foundNonZeroChar){
-    var currentChar = chars.splice(0, 1)[0]
-    if(currentChar === '0'){
-      // count number of zeros
-      countLeadingZeros += 1
-    }else{
-      // found a non-zero char
-      foundNonZeroChar = true
-    }
-  }
-  if(countLeadingZeros == 0){
-    return num // no one zero in num -> return num
-  }else if(countLeadingZeros == num.length){
-    return '0' // all zeros num -> return 0
-  }else{
-    // more than a zeros with at least a non-zero char
-    return num.substring(countLeadingZeros) // leading zeros before real num
-  }
+function removeLeadingZeros(num) {
+  return num.replace(/^0+(\d+$)/,'$1')
 }
 
 exports.coerce = coerce;
@@ -1342,12 +1321,12 @@ function coerce(version) {
 
   var match = version.match(re[COERCE]);
 
-  if (match == null)
+  if (match === null)
     return null;
 
   // try to remove leading zeros in each major, minor and patch
   for(var i=1; i<=match.length; i++){
-    if(match[i] != undefined){
+    if(match[i] !== undefined){
       match[i] = removeLeadingZeros(match[i])
     }
   }
