@@ -721,6 +721,10 @@ Comparator.prototype.intersects = function(comp, loose) {
     throw new TypeError('a Comparator is required');
   }
 
+  if (this.semver === ANY || comp.semver === ANY) {
+    return true;
+  }
+
   var rangeTmp;
 
   if (this.operator === '') {
