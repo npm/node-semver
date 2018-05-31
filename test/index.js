@@ -803,7 +803,14 @@ test('\nranges intersect', function(t) {
     ['<1.0.0 >2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false],
     ['>1.0.0 <=2.0.0', '2.0.0', true],
     ['<1.0.0 >=2.0.0', '2.1.0', false],
-    ['<1.0.0 >=2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false]
+    ['<1.0.0 >=2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false],
+    // check caret, tilde ranges per issues 225 and 236
+    ['*', '^1.2.3', true],
+    ['x', '^1.2.3', true],
+    ['', '^1.2.3', true],
+    ['*', '~1.2.3', true],
+    ['x', '~1.2.3', true],
+    ['', '~1.2.3', true]
   ].forEach(function(v) {
     var range1 = new Range(v[0]);
     var range2 = new Range(v[1]);
