@@ -13,6 +13,7 @@ var lte = semver.lte;
 var satisfies = semver.satisfies;
 var validRange = semver.validRange;
 var inc = semver.inc;
+var dec = semver.dec;
 var diff = semver.diff;
 var replaceStars = semver.replaceStars;
 var toComparators = semver.toComparators;
@@ -432,6 +433,118 @@ test('\nincrement versions test', function(t) {
     } else if (parsed) {
       t.throws(function () {
         parsed.inc(what, id)
+      })
+    } else {
+      t.equal(parsed, null)
+    }
+  });
+
+  t.end();
+});
+
+test('\ndecrement versions test', function(t) {
+//  [version, inc, result, identifier]
+//  inc(version, inc) -> result
+  [
+    ['2.2.3', 'major', '1.0.0'],
+    ['2.2.3', 'minor', '2.1.0'],
+    ['2.2.3', 'patch', '2.2.2'],
+    ['2.2.3tag', 'major', '1.0.0', true],
+    ['2.2.3-tag', 'major', '1.0.0'],
+    ['2.2.3', 'fake', null],
+    ['2.2.0-0', 'patch', '2.2.0'],
+    ['fake', 'major', null],
+    ['2.2.3-4', 'major', '1.0.0'],
+    ['1.2.3-4', 'minor', '1.1.0'],
+    ['1.2.3-4', 'patch', '1.2.3'],
+    ['2.2.3-alpha.0.beta', 'major', '1.0.0'],
+    ['2.2.3-alpha.0.beta', 'minor', '2.1.0'],
+    ['2.2.3-alpha.0.beta', 'patch', '2.2.3'],
+    ['1.2.6', 'prerelease', '1.2.5-0'],
+    ['1.2.3-1', 'prerelease', '1.2.3-0'],
+    ['1.2.3-alpha.1', 'prerelease', '1.2.3-alpha.0'],
+    ['1.2.3-alpha.2', 'prerelease', '1.2.3-alpha.1'],
+    ['1.2.3-alpha.3', 'prerelease', '1.2.3-alpha.2'],
+    ['1.2.3-alpha.1.beta', 'prerelease', '1.2.3-alpha.0.beta'],
+    ['1.2.3-alpha.2.beta', 'prerelease', '1.2.3-alpha.1.beta'],
+    ['1.2.3-alpha.3.beta', 'prerelease', '1.2.3-alpha.2.beta'],
+    ['1.2.3-alpha.10.1.beta', 'prerelease', '1.2.3-alpha.10.0.beta'],
+    ['1.2.3-alpha.10.2.beta', 'prerelease', '1.2.3-alpha.10.1.beta'],
+    ['1.2.3-alpha.10.3.beta', 'prerelease', '1.2.3-alpha.10.2.beta'],
+    ['1.2.3-alpha.10.beta.1', 'prerelease', '1.2.3-alpha.10.beta.0'],
+    ['1.2.3-alpha.10.beta.2', 'prerelease', '1.2.3-alpha.10.beta.1'],
+    ['1.2.3-alpha.10.beta.3', 'prerelease', '1.2.3-alpha.10.beta.2'],
+    ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.9.beta'],
+    ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.10.beta'],
+    ['1.2.3-alpha.12.beta', 'prerelease', '1.2.3-alpha.11.beta'],
+    ['1.2.1', 'prepatch', '1.2.0-0'],
+    ['1.2.2-1', 'prepatch', '1.2.1-0'],
+    ['1.3.0', 'preminor', '1.2.0-0'],
+    ['1.4.3-1', 'preminor', '1.3.0-0'],
+    ['2.2.0', 'premajor', '1.0.0-0'],
+    ['3.2.3-1', 'premajor', '2.0.0-0'],
+    ['1.2.0-1', 'minor', '1.2.0'],
+    ['1.0.0-1', 'major', '1.0.0'],
+
+    ['2.2.3', 'major', '1.0.0', false, 'dev'],
+    ['1.2.3', 'minor', '1.1.0', false, 'dev'],
+    ['1.2.3', 'patch', '1.2.2', false, 'dev'],
+    ['2.2.3tag', 'major', '1.0.0', true, 'dev'],
+    ['2.2.3-tag', 'major', '1.0.0', false, 'dev'],
+    ['1.2.3', 'fake', null, false, 'dev'],
+    ['1.2.0-0', 'patch', '1.2.0', false, 'dev'],
+    ['fake', 'major', null, false, 'dev'],
+    ['2.2.3-4', 'major', '1.0.0', false, 'dev'],
+    ['1.2.3-4', 'minor', '1.1.0', false, 'dev'],
+    ['1.2.3-4', 'patch', '1.2.3', false, 'dev'],
+    ['2.2.3-alpha.0.beta', 'major', '1.0.0', false, 'dev'],
+    ['1.2.3-alpha.0.beta', 'minor', '1.1.0', false, 'dev'],
+    ['1.2.3-alpha.0.beta', 'patch', '1.2.3', false, 'dev'],
+    ['1.2.4', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-0', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.0', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.1', 'prerelease', '1.2.3-alpha.0', false, 'alpha'],
+    ['1.2.3-alpha.0.beta', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.3.beta', 'prerelease', '1.2.3-alpha.2.beta', false, 'alpha'],
+    ['1.2.3-alpha.10.0.beta', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.10.2.beta', 'prerelease', '1.2.3-alpha.10.1.beta', false, 'alpha'],
+    ['1.2.3-alpha.10.4.beta', 'prerelease', '1.2.3-alpha.10.3.beta', false, 'alpha'],
+    ['1.2.3-alpha.10.6.beta', 'prerelease', '1.2.3-alpha.10.5.beta', false, 'alpha'],
+    ['1.2.3-alpha.10.beta.0', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.10.beta.1', 'prerelease', '1.2.3-alpha.10.beta.0', false, 'alpha'],
+    ['1.2.3-alpha.10.beta.2', 'prerelease', '1.2.3-alpha.10.beta.1', false, 'alpha'],
+    ['1.2.3-alpha.10.beta.3', 'prerelease', '1.2.3-alpha.10.beta.2', false, 'alpha'],
+    ['1.2.3-alpha.9.beta', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+    ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.9.beta', false, 'alpha'],
+    ['1.2.3-alpha.12.beta', 'prerelease', '1.2.3-alpha.11.beta', false, 'alpha'],
+    ['1.2.3-alpha.13.beta', 'prerelease', '1.2.3-alpha.12.beta', false, 'alpha'],
+    ['1.2.0', 'prepatch', '1.2.0-dev.0', false, 'dev'],
+    ['1.2.0-1', 'prepatch', '1.2.0-dev.0', false, 'dev'],
+    ['1.2.0', 'preminor', '1.1.0-dev.0', false, 'dev'],
+    ['1.2.3-1', 'preminor', '1.1.0-dev.0', false, 'dev'],
+    ['2.2.0', 'premajor', '1.0.0-dev.0', false, 'dev'],
+    ['2.2.3-1', 'premajor', '1.0.0-dev.0', false, 'dev'],
+    ['1.2.0-1', 'minor', '1.2.0', false, 'dev'],
+    ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev']
+
+  ].forEach(function(v) {
+    var pre = v[0];
+    var what = v[1];
+    var wanted = v[2];
+    var loose = v[3];
+    var id = v[4];
+    var found = dec(pre, what, loose, id);
+    var cmd = 'dec(' + pre + ', ' + what + ', ' + id + ')';
+    t.equal(found, wanted, cmd + ' === ' + wanted);
+
+    var parsed = semver.parse(pre, loose);
+    if (wanted) {
+      parsed.dec(what, id);
+      t.equal(parsed.version, wanted, cmd + ' object version updated');
+      t.equal(parsed.raw, wanted, cmd + ' object raw field updated');
+    } else if (parsed) {
+      t.throws(function () {
+        parsed.dec(what, id)
       })
     } else {
       t.equal(parsed, null)

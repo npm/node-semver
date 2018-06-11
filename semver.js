@@ -507,6 +507,104 @@ function inc(version, release, loose, identifier) {
   }
 }
 
+
+SemVer.prototype.dec = function(release, identifier) {
+  switch (release) {
+    case 'premajor':
+      this.prerelease.length = 0;
+      this.patch = 0;
+      this.minor = 0;
+      if (this.major > 0)
+        this.major--;
+      this.dec('pre', identifier);
+      break;
+    case 'preminor':
+      this.prerelease.length = 0;
+      this.patch = 0;
+      if (this.minor > 0)
+        this.minor--;
+      this.dec('pre', identifier);
+      break;
+    case 'prepatch':
+      this.prerelease.length = 0;
+      this.dec('patch', identifier);
+      this.dec('pre', identifier);
+      break;
+    case 'prerelease':
+      if (this.prerelease.length === 0)
+        this.dec('patch', identifier);
+      this.dec('pre', identifier);
+      break;
+    case 'major':
+      if (this.major > 0) {
+        if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0)
+          this.major--;
+      }
+      this.minor = 0;
+      this.patch = 0;
+      this.prerelease = [];
+      break;
+    case 'minor':
+      if (this.minor > 0) {
+        if (this.patch !== 0 || this.prerelease.length === 0)
+          this.minor--;
+      }
+      this.patch = 0;
+      this.prerelease = [];
+      break;
+    case 'patch':
+      if (this.patch > 0) {
+        if (this.prerelease.length === 0)
+          this.patch--;
+      }
+      this.prerelease = [];
+      break;
+    case 'pre':
+      if (this.prerelease.length === 0) {
+        this.prerelease = [0];
+      } else {
+        var i = this.prerelease.length;
+        while (--i >= 0) {
+          if (typeof this.prerelease[i] === 'number' && this.prerelease[i] > 0) {
+            this.prerelease[i]--;
+            i = -2;
+          }
+        }
+        if (i === -1)
+          this.prerelease.push(0);
+      }
+      if (identifier) {
+        if (this.prerelease[0] === identifier) {
+          if (isNaN(this.prerelease[1]))
+            this.prerelease = [identifier, 0];
+        } else {
+          this.prerelease = [identifier, 0]
+        }
+      }
+      break;
+
+    default:
+      throw new Error('invalid decrement argument: ' + release);
+  }
+  this.format();
+  this.raw = this.version;
+  return this;
+}
+
+exports.dec = dec;
+function dec(version, release, loose, identifier) {
+  if (typeof(loose) === 'string') {
+    identifier = loose;
+    loose = undefined;
+  }
+
+  try {
+    return new SemVer(version, loose).dec(release, identifier).version;
+  } catch (er) {
+    return null;
+  }
+}
+
 exports.diff = diff;
 function diff(version1, version2) {
   if (eq(version1, version2)) {

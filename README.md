@@ -47,6 +47,12 @@ Options:
         prepatch, or prerelease.  Default level is 'patch'.
         Only one version may be specified.
 
+-d --decrement [<level>]
+        Decrement a version by the specified level.  Level can
+        be one of: major, minor, patch, premajor, preminor,
+        prepatch, or prerelease.  Default level is 'patch'.
+        Only one version may be specified.
+
 --preid <identifier>
         Identifier to be used to prefix premajor, preminor,
         prepatch or prerelease version increments.
