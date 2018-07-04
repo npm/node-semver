@@ -7,7 +7,7 @@
     "test": "tap test/*.js --cov -J"
   },
   "devDependencies": {
-    "tap": "^10.7.0"
+    "tap": "^12.0.0"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
