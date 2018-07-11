@@ -119,7 +119,7 @@ function success () {
 function help () {
   console.log(['SemVer ' + version,
     '',
-    'A JavaScript implementation of the http://semver.org/ specification',
+    'A JavaScript implementation of the https://semver.org/ specification',
     'Copyright Isaac Z. Schlueter',
     '',
     'Usage: semver [options] <version> [<version> [...]]',

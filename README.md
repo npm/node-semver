@@ -29,7 +29,7 @@ As a command-line utility:
 ```
 $ semver -h
 
-A JavaScript implementation of the http://semver.org/ specification
+A JavaScript implementation of the https://semver.org/ specification
 Copyright Isaac Z. Schlueter
 
 Usage: semver [options] <version> [<version> [...]]
@@ -71,7 +71,7 @@ multiple versions to the utility will just sort them.
 ## Versions
 
 A "version" is described by the `v2.0.0` specification found at
-<http://semver.org/>.
+<https://semver.org/>.
 
 A leading `"="` or `"v"` character is stripped off and ignored.
 
