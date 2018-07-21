@@ -503,6 +503,7 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
 
 exports.inc = inc;
 function inc(version, release, loose, identifier, identifierIndex) {
+  
   if (typeof(loose) === 'string') {
     identifier = loose;
     loose = undefined;
