@@ -397,35 +397,35 @@ SemVer.prototype.comparePre = function(other) {
 
 // preminor will bump the version up to the next minor release, and immediately
 // down to pre-release. premajor and prepatch work the same way.
-SemVer.prototype.inc = function(release, identifier) {
+SemVer.prototype.inc = function(release, identifier, identifierIndex) {
   switch (release) {
     case 'premajor':
       this.prerelease.length = 0;
       this.patch = 0;
       this.minor = 0;
       this.major++;
-      this.inc('pre', identifier);
+      this.inc('pre', identifier, identifierIndex);
       break;
     case 'preminor':
       this.prerelease.length = 0;
       this.patch = 0;
       this.minor++;
-      this.inc('pre', identifier);
+      this.inc('pre', identifier, identifierIndex);
       break;
     case 'prepatch':
       // If this is already a prerelease, it will bump to the next version
       // drop any prereleases that might already exist, since they are not
       // relevant at this point.
       this.prerelease.length = 0;
-      this.inc('patch', identifier);
-      this.inc('pre', identifier);
+      this.inc('patch', identifier, identifierIndex);
+      this.inc('pre', identifier, identifierIndex);
       break;
     // If the input is a non-prerelease version, this acts the same as
     // prepatch.
     case 'prerelease':
       if (this.prerelease.length === 0)
-        this.inc('patch', identifier);
-      this.inc('pre', identifier);
+        this.inc('patch', identifier, identifierIndex);
+      this.inc('pre', identifier, identifierIndex);
       break;
 
     case 'major':
@@ -463,6 +463,8 @@ SemVer.prototype.inc = function(release, identifier) {
     case 'pre':
       if (this.prerelease.length === 0)
         this.prerelease = [0];
+        if (identifierIndex) 
+          this.prerelease = [identifierIndex];
       else {
         var i = this.prerelease.length;
         while (--i >= 0) {
@@ -475,13 +477,14 @@ SemVer.prototype.inc = function(release, identifier) {
           this.prerelease.push(0);
       }
       if (identifier) {
+        var index = identifierIndex ? identifierIndex : 0;
         // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
         // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
         if (this.prerelease[0] === identifier) {
           if (isNaN(this.prerelease[1]))
-            this.prerelease = [identifier, 0];
+            this.prerelease = [identifier, index];
         } else
-          this.prerelease = [identifier, 0];
+          this.prerelease = [identifier, index];
       }
       break;
 
@@ -494,14 +497,15 @@ SemVer.prototype.inc = function(release, identifier) {
 };
 
 exports.inc = inc;
-function inc(version, release, loose, identifier) {
+function inc(version, release, loose, identifier, identifierIndex) {
   if (typeof(loose) === 'string') {
     identifier = loose;
     loose = undefined;
   }
 
   try {
-    return new SemVer(version, loose).inc(release, identifier).version;
+    identifierIndex = parseInt(identifierIndex);
+    return new SemVer(version, loose).inc(release, identifier, identifierIndex).version;
   } catch (er) {
     return null;
   }

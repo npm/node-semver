@@ -14,6 +14,7 @@ var argv = process.argv.slice(2)
   , loose = false
   , coerce = false
   , identifier = undefined
+  , identifierIndex = undefined
   , semver = require("../semver")
   , reverse = false
 
@@ -55,6 +56,8 @@ function main () {
       case "-r": case "--range":
         range.push(argv.shift())
         break
+      case "-n":
+        identifierIndex = argv.shift();
       case "-c": case "--coerce":
         coerce = true
         break
@@ -98,7 +101,7 @@ function success () {
   }).map(function (v) {
     return semver.clean(v, loose)
   }).map(function (v) {
-    return inc ? semver.inc(v, inc, loose, identifier) : v
+    return inc ? semver.inc(v, inc, loose, identifier, identifierIndex) : v
   }).forEach(function (v,i,_) { console.log(v) })
 }
 
