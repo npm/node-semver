@@ -51,12 +51,18 @@ Options:
         Identifier to be used to prefix premajor, preminor,
         prepatch or prerelease version increments.
 
+-n <identifier number base>
+        This is the number base to be used for the
+        prerelease identifier.  Zero-based or one-based.
+
 -l --loose
         Interpret versions and ranges loosely
 
 -c --coerce
         Coerce a string into SemVer if possible
         (does not imply --loose)
+
+
 
 Program exits successfully if any valid version satisfies
 all supplied ranges, and prints all satisfying versions.
@@ -159,6 +165,25 @@ Which then can be used to increment further:
 $ semver 1.2.4-beta.0 -i prerelease
 1.2.4-beta.1
 ```
+
+#### Prerelease Identifier Index
+
+The method `.inc` takes an optional parameter 'identifierIndex' string
+that will let you let your prerelease number as zero-based or one-based.
+If you do not specify this parameter, it will default to zero-based.
+
+```javascript
+semver.inc('1.2.3', 'prerelease', 'beta', '1')
+// '1.2.4-beta.1'
+```
+
+command-line example:
+
+```bash
+$ semver 1.2.3 -i prerelease --preid beta -n 1
+1.2.4-beta.1
+```
+
 
 ### Advanced Range Syntax
 

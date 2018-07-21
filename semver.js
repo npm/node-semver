@@ -478,6 +478,8 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
           this.prerelease.push(0);
       }
       if (identifier) {
+        //if user specified identifierIndex, use their value.  
+        // Zero-based or one-based.  Default is zero.
         var index = 0;
         if (typeof identifierIndex === 'number' &&
           isNaN(identifierIndex) == false) {
