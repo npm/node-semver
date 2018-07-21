@@ -461,10 +461,11 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
     // This probably shouldn't be used publicly.
     // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
     case 'pre':
+      if (identifierIndex) {
+          this.prerelease = [identifierIndex];
+      }
       if (this.prerelease.length === 0)
         this.prerelease = [0];
-        if (identifierIndex) 
-          this.prerelease = [identifierIndex];
       else {
         var i = this.prerelease.length;
         while (--i >= 0) {
@@ -477,7 +478,11 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
           this.prerelease.push(0);
       }
       if (identifier) {
-        var index = typeof identifierIndex == 'number' ? identifierIndex : 0;
+        var index = 0;
+        if (typeof identifierIndex === 'number' &&
+          isNaN(identifierIndex) == false) {
+            index = identifierIndex;
+          }
         // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
         // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
         if (this.prerelease[0] === identifier) {
