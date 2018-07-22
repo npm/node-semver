@@ -10,12 +10,13 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/bin/semver",
       "args": [
-        "-i", "prerelease", 
-        "--preid", "alpha",
+        "-i", "preminor", 
+        "--preid", "dev",
         "-n", "1",
-        "1.2.3"
+        "1.2.0"
     
       ]
     }
   ]
-} //  ok inc(1.2.3-dev.bar, prerelease, dev) === 1.2.3-dev.0
+} 
+    

@@ -443,8 +443,7 @@ test('\nincrement versions test', function(t) {
 
 
 test('\nincrement versions with prerelease identifier number option test', function(t) {
-//  [version, inc, result, identifier]
-//  inc(version, inc) -> result
+//  [version, inc, result, identifierIndex, loose, identifier]
   [
     ['1.2.0-1', 'prerelease', '1.2.0-alpha.0', '0', false, 'alpha'],    
     ['1.2.1', 'prerelease', '1.2.2-alpha.0', '0', false, 'alpha'],
@@ -457,20 +456,22 @@ test('\nincrement versions with prerelease identifier number option test', funct
     ['1.2.0-1', 'prepatch', '1.2.1-dev.1', '1', false, 'dev'],
     ['1.2.0', 'premajor', '2.0.0-dev.0', '0', false, 'dev'],
     ['1.2.3-1', 'premajor', '2.0.0-dev.0', '0', false, 'dev'],
-    ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', '0', false, 'dev']
+    ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', '0', false, 'dev'],
+    ['1.2.0', 'preminor', '1.3.0-dev.1', '1', false, 'dev'],
+    ['1.2.3-1', 'preminor', '1.3.0-dev.0', false, 'dev']
   ].forEach(function(v) {
-    var pre = v[0];
-    var what = v[1];
-    var wanted = v[2];
-    var identifierIndex = v[3];
+    var pre = v[0]; //version
+    var what = v[1]; // increment type
+    var wanted = v[2]; // result we want
+    var identifierIndex = v[3]; // prerelease identifier index base 0 or 1
     var loose = v[4];
-    var id = v[5];
-    var found = inc(pre, what, loose, id, identifierIndex);
+    var id = v[5]; // identifer
+    //  inc(version, inc, loose, identifier, identifierIndex) -> result
+    var found = inc(pre, what, loose, id, identifierIndex);  // Using semver.js code
     var cmd = 'inc(' + pre + ', ' + what + ', ' + id + ', ' + identifierIndex + ')';
     
     t.equal(found, wanted, cmd + ' === ' + wanted);
   });
-
   t.end();
 });
 
