@@ -10,9 +10,9 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/bin/semver",
       "args": [
-        "-i", "preminor", 
+        "-i", "prerelease", 
         "--preid", "dev",
-        "-n", "1",
+        "-n", "0",
         "1.2.0"
     
       ]

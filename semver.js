@@ -461,8 +461,9 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
     // This probably shouldn't be used publicly.
     // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
     case 'pre':
-      if (identifierIndex) {
-          this.prerelease = [identifierIndex];
+      if (identifierIndex && validateIdentifierIndex(identifierIndex)) {
+        index = identifierIndex;
+        this.prerelease = [identifierIndex];
       }
       if (this.prerelease.length === 0)
         this.prerelease = [0];
@@ -481,10 +482,10 @@ SemVer.prototype.inc = function(release, identifier, identifierIndex) {
         //if user specified identifierIndex, use their value.  
         // Zero-based or one-based.  Default is zero.
         var index = 0;
-        if (typeof identifierIndex === 'number' &&
-          isNaN(identifierIndex) == false) {
-            index = identifierIndex;
-          }
+        // validation for identifierIndex done above
+        if (identifierIndex) {
+          index = identifierIndex;
+        }
         // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
         // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
         if (this.prerelease[0] === identifier) {
@@ -510,12 +511,25 @@ function inc(version, release, loose, identifier, identifierIndex) {
     identifier = loose;
     loose = undefined;
   }
+  if (identifierIndex) identifierIndex = parseInt(identifierIndex);
 
   try {
-    identifierIndex = parseInt(identifierIndex);
     return new SemVer(version, loose).inc(release, identifier, identifierIndex).version;
   } catch (er) {
     return null;
+  }
+}
+
+function validateIdentifierIndex (identifierIndex) {
+  if (typeof identifierIndex === 'number' &&
+    isNaN(identifierIndex) == false) {
+    if (identifierIndex === 1 || identifierIndex === 0) {
+      return true;
+    }  else {      
+      throw new TypeError('Invalid identifier number base: ' + identifierIndex);
+    }
+  } else {
+    throw new TypeError('Invalid identifier number base: ' + identifierIndex);
   }
 }
 
