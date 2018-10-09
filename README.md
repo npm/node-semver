@@ -29,8 +29,6 @@ As a command-line utility:
 ```
 $ semver -h
 
-SemVer 5.3.0
-
 A JavaScript implementation of the http://semver.org/ specification
 Copyright Isaac Z. Schlueter
 
