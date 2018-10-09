@@ -289,9 +289,15 @@ part       ::= nr | [-0-9A-Za-z]+
 
 ## Functions
 
-All methods and classes take a final `loose` boolean argument that, if
-true, will be more forgiving about not-quite-valid semver strings.
-The resulting output will always be 100% strict, of course.
+All methods and classes take a final `options` object argument.  All
+options in this object are `false` by default.  The options supported
+are:
+
+- `loose`  Be more forgiving about not-quite-valid semver strings.
+  (Any resulting output will always be 100% strict compliant, of
+  course.)  For backwards compatibility reasons, if the `options`
+  argument is a boolean value instead of an object, it is interpreted
+  to be the `loose` param.
 
 Strict-mode Comparators and Ranges will be strict about the SemVer
 strings that they parse.
