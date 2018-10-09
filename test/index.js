@@ -341,8 +341,8 @@ test('\nunlocked prerelease range tests', function(t) {
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
-    var loose = v[2];
-    t.ok(satisfies(ver, range, loose, false), range + ' satisfied by ' + ver);
+    var options = { includePrerelease: true }
+    t.ok(satisfies(ver, range, options), range + ' satisfied by ' + ver);
   });
   t.end();
 });
@@ -355,8 +355,8 @@ test('\nnegative unlocked prerelease range tests', function(t) {
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
-    var loose = v[2];
-    var found = satisfies(ver, range, loose, false);
+    var options = { includePrerelease: true }
+    var found = satisfies(ver, range, options);
     t.ok(!found, ver + ' not satisfied by ' + range);
   });
   t.end();

@@ -786,7 +786,8 @@ function Range(range, options) {
     options = { loose: options }
 
   if (range instanceof Range) {
-    if (range.loose === !!options.loose) {
+    if (range.loose === !!options.loose &&
+        range.includePrerelease === !!options.includePrerelease) {
       return range;
     } else {
       return new Range(range.raw, options);
@@ -802,6 +803,7 @@ function Range(range, options) {
 
   this.options = options;
   this.loose = !!options.loose;
+  this.includePrerelease = !!options.includePrerelease
 
   // First, split based on boolean or ||
   this.raw = range;
@@ -1143,7 +1145,7 @@ function hyphenReplace($0,
 
 
 // if ANY of the sets match ALL of its comparators, then pass
-Range.prototype.test = function(version, prereleaseLock) {
+Range.prototype.test = function(version) {
   if (!version)
     return false;
 
@@ -1151,23 +1153,22 @@ Range.prototype.test = function(version, prereleaseLock) {
     version = new SemVer(version, this.options);
 
   for (var i = 0; i < this.set.length; i++) {
-    if (testSet(this.set[i], version, prereleaseLock))
+    if (testSet(this.set[i], version, this.options))
       return true;
   }
   return false;
 };
 
-function testSet(set, version, prereleaseLock) {
+function testSet(set, version, options) {
   for (var i = 0; i < set.length; i++) {
     if (!set[i].test(version))
       return false;
   }
 
-  if (prereleaseLock === undefined) {
-    prereleaseLock = true;
-  }
+  if (!options)
+    options = {}
 
-  if (version.prerelease.length && prereleaseLock) {
+  if (version.prerelease.length && !options.includePrerelease) {
     // Find the set of versions that are allowed to have prereleases
     // For example, ^1.2.3-pr.1 desugars to >=1.2.3-pr.1 <2.0.0
     // That should allow `1.2.3-pr.2` to pass.
@@ -1195,13 +1196,13 @@ function testSet(set, version, prereleaseLock) {
 }
 
 exports.satisfies = satisfies;
-function satisfies(version, range, options, prereleaseLock) {
+function satisfies(version, range, options) {
   try {
     range = new Range(range, options);
   } catch (er) {
     return false;
   }
-  return range.test(version, prereleaseLock);
+  return range.test(version);
 }
 
 exports.maxSatisfying = maxSatisfying;

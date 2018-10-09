@@ -54,6 +54,9 @@ Options:
 -l --loose
         Interpret versions and ranges loosely
 
+-p --include-prerelease
+        Always include prerelease versions in range matching
+
 -c --coerce
         Coerce a string into SemVer if possible
         (does not imply --loose)
@@ -298,6 +301,10 @@ are:
   course.)  For backwards compatibility reasons, if the `options`
   argument is a boolean value instead of an object, it is interpreted
   to be the `loose` param.
+- `includePrerelease`  Set to suppress the [default
+  behavior](https://github.com/npm/node-semver#prerelease-tags) of
+  excluding prerelease tagged versions from ranges unless they are
+  explicitly opted into.
 
 Strict-mode Comparators and Ranges will be strict about the SemVer
 strings that they parse.
