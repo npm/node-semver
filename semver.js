@@ -246,10 +246,8 @@ for (var i = 0; i < R; i++) {
 
 exports.parse = parse;
 function parse(version, options) {
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
 
   if (version instanceof SemVer)
     return version;
@@ -287,10 +285,8 @@ function clean(version, options) {
 exports.SemVer = SemVer;
 
 function SemVer(version, options) {
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
   if (version instanceof SemVer) {
     if (version.loose === options.loose)
       return version;
@@ -670,10 +666,8 @@ function cmp(a, op, b, loose) {
 
 exports.Comparator = Comparator;
 function Comparator(comp, options) {
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
 
   if (comp instanceof Comparator) {
     if (comp.loose === !!options.loose)
@@ -738,10 +732,8 @@ Comparator.prototype.intersects = function(comp, options) {
     throw new TypeError('a Comparator is required');
   }
 
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
 
   var rangeTmp;
 
@@ -780,10 +772,8 @@ Comparator.prototype.intersects = function(comp, options) {
 
 exports.Range = Range;
 function Range(range, options) {
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
 
   if (range instanceof Range) {
     if (range.loose === !!options.loose &&
@@ -931,10 +921,8 @@ function replaceTildes(comp, options) {
 }
 
 function replaceTilde(comp, options) {
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
   var r = options.loose ? re[TILDELOOSE] : re[TILDE];
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('tilde', comp, _, M, m, p, pr);
@@ -977,10 +965,8 @@ function replaceCarets(comp, options) {
 
 function replaceCaret(comp, options) {
   debug('caret', comp, options);
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
   var r = options.loose ? re[CARETLOOSE] : re[CARET];
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('caret', comp, _, M, m, p, pr);
@@ -1037,10 +1023,8 @@ function replaceXRanges(comp, options) {
 
 function replaceXRange(comp, options) {
   comp = comp.trim();
-  if (!options)
-    options = {}
-  if (typeof options === 'boolean')
-    options = { loose: options }
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
   var r = options.loose ? re[XRANGELOOSE] : re[XRANGE];
   return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
     debug('xRange', comp, ret, gtlt, M, m, p, pr);
