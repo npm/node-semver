@@ -17,6 +17,7 @@ var argv = process.argv.slice(2)
   , identifier = undefined
   , semver = require("../semver")
   , reverse = false
+  , options = {}
 
 main()
 
