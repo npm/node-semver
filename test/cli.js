@@ -15,7 +15,7 @@ test('\nCLI (bin/semver) tests', function(t) {
     var expectedStdout = input[1];
 
     try {
-      stdout = execSync(`${require.resolve('../bin/semver')} ` + input[0]);
+      stdout = execSync('"./bin/semver" ' + input[0]);
       if (expectedStdout) {
         t.same(stdout.toString().trim(), expectedStdout);
       }
