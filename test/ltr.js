@@ -1,9 +1,9 @@
-var tap = require('tap');
-var test = tap.test;
-var semver = require('../semver.js');
-var ltr = semver.ltr;
+var tap = require('tap')
+var test = tap.test
+var semver = require('../semver.js')
+var ltr = semver.ltr
 
-test('\nltr tests', function(t) {
+test('\nltr tests', function (t) {
   // [range, version, loose]
   // Version should be less than range
   [
@@ -72,17 +72,17 @@ test('\nltr tests', function(t) {
     ['1', '1.0.0beta', true],
     ['>=0.7.x', '0.6.2'],
     ['>1.2.3', '1.3.0-alpha']
-  ].forEach(function(tuple) {
-    var range = tuple[0];
-    var version = tuple[1];
-    var loose = tuple[2] || false;
-    var msg = 'ltr(' + version + ', ' + range + ', ' + loose + ')';
-    t.ok(ltr(version, range, loose), msg);
-  });
-  t.end();
-});
+  ].forEach(function (tuple) {
+    var range = tuple[0]
+    var version = tuple[1]
+    var loose = tuple[2] || false
+    var msg = 'ltr(' + version + ', ' + range + ', ' + loose + ')'
+    t.ok(ltr(version, range, loose), msg)
+  })
+  t.end()
+})
 
-test('\nnegative ltr tests', function(t) {
+test('\nnegative ltr tests', function (t) {
   // [range, version, loose]
   // Version should NOT be less than range
   [
@@ -170,12 +170,12 @@ test('\nnegative ltr tests', function(t) {
     ['^1.0.0-alpha', '1.0.0-beta'],
     ['~1.0.0-alpha', '1.0.0-beta'],
     ['=0.1.0', '1.0.0']
-  ].forEach(function(tuple) {
-    var range = tuple[0];
-    var version = tuple[1];
-    var loose = tuple[2] || false;
-    var msg = '!ltr(' + version + ', ' + range + ', ' + loose + ')';
-    t.notOk(ltr(version, range, loose), msg);
-  });
-  t.end();
-});
+  ].forEach(function (tuple) {
+    var range = tuple[0]
+    var version = tuple[1]
+    var loose = tuple[2] || false
+    var msg = '!ltr(' + version + ', ' + range + ', ' + loose + ')'
+    t.notOk(ltr(version, range, loose), msg)
+  })
+  t.end()
+})
