@@ -1,6 +1,5 @@
 'use strict'
 var t = require('tap');
-var execSync = require('child_process').execSync;
 
 const spawn = require('child_process').spawn
 const bin = require.resolve('../bin/semver')
