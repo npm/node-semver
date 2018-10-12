@@ -1,26 +1,25 @@
-'use strict';
+'use strict'
 
-var tap = require('tap');
-var test = tap.test;
-var semver = require('../semver.js');
-var eq = semver.eq;
-var gt = semver.gt;
-var lt = semver.lt;
-var neq = semver.neq;
-var cmp = semver.cmp;
-var gte = semver.gte;
-var lte = semver.lte;
-var satisfies = semver.satisfies;
-var validRange = semver.validRange;
-var inc = semver.inc;
-var diff = semver.diff;
-var replaceStars = semver.replaceStars;
-var toComparators = semver.toComparators;
-var SemVer = semver.SemVer;
-var Range = semver.Range;
-var Comparator = semver.Comparator;
+var tap = require('tap')
+var test = tap.test
+var semver = require('../semver.js')
+var eq = semver.eq
+var gt = semver.gt
+var lt = semver.lt
+var neq = semver.neq
+var cmp = semver.cmp
+var gte = semver.gte
+var lte = semver.lte
+var satisfies = semver.satisfies
+var validRange = semver.validRange
+var inc = semver.inc
+var diff = semver.diff
+var toComparators = semver.toComparators
+var SemVer = semver.SemVer
+var Range = semver.Range
+var Comparator = semver.Comparator
 
-test('\ncomparison tests', function(t) {
+test('\ncomparison tests', function (t) {
   // [version1, version2]
   // version1 should be greater than version2
   [['0.0.0', '0.0.0-foo'],
@@ -54,26 +53,26 @@ test('\ncomparison tests', function(t) {
     ['1.2.3-a.b.c.10.d.5', '1.2.3-a.b.c.5.d.100'],
     ['1.2.3-r2', '1.2.3-r100'],
     ['1.2.3-r100', '1.2.3-R2']
-  ].forEach(function(v) {
-    var v0 = v[0];
-    var v1 = v[1];
-    var loose = v[2];
-    t.ok(gt(v0, v1, loose), "gt('" + v0 + "', '" + v1 + "')");
-    t.ok(lt(v1, v0, loose), "lt('" + v1 + "', '" + v0 + "')");
-    t.ok(!gt(v1, v0, loose), "!gt('" + v1 + "', '" + v0 + "')");
-    t.ok(!lt(v0, v1, loose), "!lt('" + v0 + "', '" + v1 + "')");
-    t.ok(eq(v0, v0, loose), "eq('" + v0 + "', '" + v0 + "')");
-    t.ok(eq(v1, v1, loose), "eq('" + v1 + "', '" + v1 + "')");
-    t.ok(neq(v0, v1, loose), "neq('" + v0 + "', '" + v1 + "')");
-    t.ok(cmp(v1, '==', v1, loose), "cmp('" + v1 + "' == '" + v1 + "')");
-    t.ok(cmp(v0, '>=', v1, loose), "cmp('" + v0 + "' >= '" + v1 + "')");
-    t.ok(cmp(v1, '<=', v0, loose), "cmp('" + v1 + "' <= '" + v0 + "')");
-    t.ok(cmp(v0, '!=', v1, loose), "cmp('" + v0 + "' != '" + v1 + "')");
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var v0 = v[0]
+    var v1 = v[1]
+    var loose = v[2]
+    t.ok(gt(v0, v1, loose), "gt('" + v0 + "', '" + v1 + "')")
+    t.ok(lt(v1, v0, loose), "lt('" + v1 + "', '" + v0 + "')")
+    t.ok(!gt(v1, v0, loose), "!gt('" + v1 + "', '" + v0 + "')")
+    t.ok(!lt(v0, v1, loose), "!lt('" + v0 + "', '" + v1 + "')")
+    t.ok(eq(v0, v0, loose), "eq('" + v0 + "', '" + v0 + "')")
+    t.ok(eq(v1, v1, loose), "eq('" + v1 + "', '" + v1 + "')")
+    t.ok(neq(v0, v1, loose), "neq('" + v0 + "', '" + v1 + "')")
+    t.ok(cmp(v1, '==', v1, loose), "cmp('" + v1 + "' == '" + v1 + "')")
+    t.ok(cmp(v0, '>=', v1, loose), "cmp('" + v0 + "' >= '" + v1 + "')")
+    t.ok(cmp(v1, '<=', v0, loose), "cmp('" + v1 + "' <= '" + v0 + "')")
+    t.ok(cmp(v0, '!=', v1, loose), "cmp('" + v0 + "' != '" + v1 + "')")
+  })
+  t.end()
+})
 
-test('\nequality tests', function(t) {
+test('\nequality tests', function (t) {
   // [version1, version2]
   // version1 should be equivalent to version2
   [['1.2.3', 'v1.2.3', true],
@@ -113,26 +112,25 @@ test('\nequality tests', function(t) {
     ['1.2.3-beta+build', '1.2.3-beta+otherbuild'],
     ['1.2.3+build', '1.2.3+otherbuild'],
     ['  v1.2.3+build', '1.2.3+otherbuild']
-  ].forEach(function(v) {
-    var v0 = v[0];
-    var v1 = v[1];
-    var loose = v[2];
-    t.ok(eq(v0, v1, loose), "eq('" + v0 + "', '" + v1 + "')");
-    t.ok(!neq(v0, v1, loose), "!neq('" + v0 + "', '" + v1 + "')");
-    t.ok(cmp(v0, '==', v1, loose), 'cmp(' + v0 + '==' + v1 + ')');
-    t.ok(!cmp(v0, '!=', v1, loose), '!cmp(' + v0 + '!=' + v1 + ')');
-    t.ok(!cmp(v0, '===', v1, loose), '!cmp(' + v0 + '===' + v1 + ')');
-    t.ok(cmp(v0, '!==', v1, loose), 'cmp(' + v0 + '!==' + v1 + ')');
-    t.ok(!gt(v0, v1, loose), "!gt('" + v0 + "', '" + v1 + "')");
-    t.ok(gte(v0, v1, loose), "gte('" + v0 + "', '" + v1 + "')");
-    t.ok(!lt(v0, v1, loose), "!lt('" + v0 + "', '" + v1 + "')");
-    t.ok(lte(v0, v1, loose), "lte('" + v0 + "', '" + v1 + "')");
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var v0 = v[0]
+    var v1 = v[1]
+    var loose = v[2]
+    t.ok(eq(v0, v1, loose), "eq('" + v0 + "', '" + v1 + "')")
+    t.ok(!neq(v0, v1, loose), "!neq('" + v0 + "', '" + v1 + "')")
+    t.ok(cmp(v0, '==', v1, loose), 'cmp(' + v0 + '==' + v1 + ')')
+    t.ok(!cmp(v0, '!=', v1, loose), '!cmp(' + v0 + '!=' + v1 + ')')
+    t.ok(!cmp(v0, '===', v1, loose), '!cmp(' + v0 + '===' + v1 + ')')
+    t.ok(cmp(v0, '!==', v1, loose), 'cmp(' + v0 + '!==' + v1 + ')')
+    t.ok(!gt(v0, v1, loose), "!gt('" + v0 + "', '" + v1 + "')")
+    t.ok(gte(v0, v1, loose), "gte('" + v0 + "', '" + v1 + "')")
+    t.ok(!lt(v0, v1, loose), "!lt('" + v0 + "', '" + v1 + "')")
+    t.ok(lte(v0, v1, loose), "lte('" + v0 + "', '" + v1 + "')")
+  })
+  t.end()
+})
 
-
-test('\nrange tests', function(t) {
+test('\nrange tests', function (t) {
   // [range, version]
   // version should be included by range
   [['1.0.0 - 2.0.0', '1.2.3'],
@@ -237,16 +235,16 @@ test('\nrange tests', function(t) {
     ['1.0.0 - x', '1.9.7'],
     ['1.x - x', '1.9.7'],
     ['<=7.x', '7.9.9']
-  ].forEach(function(v) {
-    var range = v[0];
-    var ver = v[1];
-    var loose = v[2];
-    t.ok(satisfies(ver, range, loose), range + ' satisfied by ' + ver);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var range = v[0]
+    var ver = v[1]
+    var loose = v[2]
+    t.ok(satisfies(ver, range, loose), range + ' satisfied by ' + ver)
+  })
+  t.end()
+})
 
-test('\nnegative range tests', function(t) {
+test('\nnegative range tests', function (t) {
   // [range, version]
   // version should not be included by range
   [['1.0.0 - 2.0.0', '2.2.3'],
@@ -319,17 +317,17 @@ test('\nnegative range tests', function(t) {
     ['git+https://user:password0123@github.com/foo', '123.0.0', true],
     ['^1.2.3', '2.0.0-pre'],
     ['^1.2.3', false]
-  ].forEach(function(v) {
-    var range = v[0];
-    var ver = v[1];
-    var loose = v[2];
-    var found = satisfies(ver, range, loose);
-    t.ok(!found, ver + ' not satisfied by ' + range);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var range = v[0]
+    var ver = v[1]
+    var loose = v[2]
+    var found = satisfies(ver, range, loose)
+    t.ok(!found, ver + ' not satisfied by ' + range)
+  })
+  t.end()
+})
 
-test('\nunlocked prerelease range tests', function(t) {
+test('\nunlocked prerelease range tests', function (t) {
   // [range, version]
   // version should be included by range
   [['*', '1.0.0-rc1'],
@@ -338,31 +336,31 @@ test('\nunlocked prerelease range tests', function(t) {
     ['^1.0.0-rc2', '1.0.1-rc1'],
     ['^1.0.0', '1.0.1-rc1'],
     ['^1.0.0', '1.1.0-rc1']
-  ].forEach(function(v) {
-    var range = v[0];
-    var ver = v[1];
+  ].forEach(function (v) {
+    var range = v[0]
+    var ver = v[1]
     var options = { includePrerelease: true }
-    t.ok(satisfies(ver, range, options), range + ' satisfied by ' + ver);
-  });
-  t.end();
-});
+    t.ok(satisfies(ver, range, options), range + ' satisfied by ' + ver)
+  })
+  t.end()
+})
 
-test('\nnegative unlocked prerelease range tests', function(t) {
+test('\nnegative unlocked prerelease range tests', function (t) {
   // [range, version]
   // version should not be included by range
   [['^1.0.0', '1.0.0-rc1'],
-    ['^1.2.3-rc2', '2.0.0'],
-  ].forEach(function(v) {
-    var range = v[0];
-    var ver = v[1];
+    ['^1.2.3-rc2', '2.0.0']
+  ].forEach(function (v) {
+    var range = v[0]
+    var ver = v[1]
     var options = { includePrerelease: true }
-    var found = satisfies(ver, range, options);
-    t.ok(!found, ver + ' not satisfied by ' + range);
-  });
-  t.end();
-});
+    var found = satisfies(ver, range, options)
+    t.ok(!found, ver + ' not satisfied by ' + range)
+  })
+  t.end()
+})
 
-test('\nincrement versions test', function(t) {
+test('\nincrement versions test', function (t) {
 //  [version, inc, result, identifier]
 //  inc(version, inc) -> result
   [['1.2.3', 'major', '2.0.0'],
@@ -447,21 +445,21 @@ test('\nincrement versions test', function(t) {
     ['1.0.0-1', 'major', '1.0.0', false, 'dev'],
     ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev']
 
-  ].forEach(function(v) {
-    var pre = v[0];
-    var what = v[1];
-    var wanted = v[2];
-    var loose = v[3];
-    var id = v[4];
-    var found = inc(pre, what, loose, id);
-    var cmd = 'inc(' + pre + ', ' + what + ', ' + id + ')';
-    t.equal(found, wanted, cmd + ' === ' + wanted);
+  ].forEach(function (v) {
+    var pre = v[0]
+    var what = v[1]
+    var wanted = v[2]
+    var loose = v[3]
+    var id = v[4]
+    var found = inc(pre, what, loose, id)
+    var cmd = 'inc(' + pre + ', ' + what + ', ' + id + ')'
+    t.equal(found, wanted, cmd + ' === ' + wanted)
 
-    var parsed = semver.parse(pre, loose);
+    var parsed = semver.parse(pre, loose)
     if (wanted) {
-      parsed.inc(what, id);
-      t.equal(parsed.version, wanted, cmd + ' object version updated');
-      t.equal(parsed.raw, wanted, cmd + ' object raw field updated');
+      parsed.inc(what, id)
+      t.equal(parsed.version, wanted, cmd + ' object version updated')
+      t.equal(parsed.raw, wanted, cmd + ' object raw field updated')
     } else if (parsed) {
       t.throws(function () {
         parsed.inc(what, id)
@@ -469,12 +467,12 @@ test('\nincrement versions test', function(t) {
     } else {
       t.equal(parsed, null)
     }
-  });
+  })
 
-  t.end();
-});
+  t.end()
+})
 
-test('\ndiff versions test', function(t) {
+test('\ndiff versions test', function (t) {
 //  [version1, version2, result]
 //  diff(version1, version2) -> result
   [['1.2.3', '0.2.3', 'major'],
@@ -490,19 +488,19 @@ test('\ndiff versions test', function(t) {
     ['1.1.0-pre-1', '1.1.0-pre-2', 'prerelease'],
     ['1.0.0', '1.0.0', null]
 
-  ].forEach(function(v) {
-    var version1 = v[0];
-    var version2 = v[1];
-    var wanted = v[2];
-    var found = diff(version1, version2);
-    var cmd = 'diff(' + version1 + ', ' + version2 + ')';
-    t.equal(found, wanted, cmd + ' === ' + wanted);
-  });
+  ].forEach(function (v) {
+    var version1 = v[0]
+    var version2 = v[1]
+    var wanted = v[2]
+    var found = diff(version1, version2)
+    var cmd = 'diff(' + version1 + ', ' + version2 + ')'
+    t.equal(found, wanted, cmd + ' === ' + wanted)
+  })
 
-  t.end();
-});
+  t.end()
+})
 
-test('\nvalid range test', function(t) {
+test('\nvalid range test', function (t) {
   // [range, result]
   // validRange(range) -> result
   // translate ranges into their canonical form
@@ -529,7 +527,7 @@ test('\nvalid range test', function(t) {
     ['<= 2.0.0', '<=2.0.0'],
     ['<=  2.0.0', '<=2.0.0'],
     ['<    2.0.0', '<2.0.0'],
-    ['<	2.0.0', '<2.0.0'],
+    ['<\t2.0.0', '<2.0.0'],
     ['>=0.1.97', '>=0.1.97'],
     ['>=0.1.97', '>=0.1.97'],
     ['0.1.20 || 1.2.4', '0.1.20||1.2.4'],
@@ -578,19 +576,19 @@ test('\nvalid range test', function(t) {
     ['~1.2.3beta', '>=1.2.3-beta <1.3.0', true],
     ['~1.2.3beta', null],
     ['^ 1.2 ^ 1', '>=1.2.0 <2.0.0 >=1.0.0 <2.0.0']
-  ].forEach(function(v) {
-    var pre = v[0];
-    var wanted = v[1];
-    var loose = v[2];
-    var found = validRange(pre, loose);
+  ].forEach(function (v) {
+    var pre = v[0]
+    var wanted = v[1]
+    var loose = v[2]
+    var found = validRange(pre, loose)
 
-    t.equal(found, wanted, 'validRange(' + pre + ') === ' + wanted);
-  });
+    t.equal(found, wanted, 'validRange(' + pre + ') === ' + wanted)
+  })
 
-  t.end();
-});
+  t.end()
+})
 
-test('\ncomparators test', function(t) {
+test('\ncomparators test', function (t) {
   // [range, comparators]
   // turn range into a set of individual comparators
   [['1.0.0 - 2.0.0', [['>=1.0.0', '<=2.0.0']]],
@@ -662,105 +660,105 @@ test('\ncomparators test', function(t) {
     ['1.2.3 - 3', [['>=1.2.3', '<4.0.0']]],
     ['>*', [['<0.0.0']]],
     ['<*', [['<0.0.0']]]
-  ].forEach(function(v) {
-    var pre = v[0];
-    var wanted = v[1];
-    var found = toComparators(v[0]);
-    var jw = JSON.stringify(wanted);
-    t.equivalent(found, wanted, 'toComparators(' + pre + ') === ' + jw);
-  });
+  ].forEach(function (v) {
+    var pre = v[0]
+    var wanted = v[1]
+    var found = toComparators(v[0])
+    var jw = JSON.stringify(wanted)
+    t.equivalent(found, wanted, 'toComparators(' + pre + ') === ' + jw)
+  })
 
-  t.end();
-});
+  t.end()
+})
 
-test('\ninvalid version numbers', function(t) {
+test('\ninvalid version numbers', function (t) {
   ['1.2.3.4',
-   'NOT VALID',
-   1.2,
-   null,
-   'Infinity.NaN.Infinity'
-  ].forEach(function(v) {
-    t.throws(function() {
-      new SemVer(v);
-    }, {name:'TypeError', message:'Invalid Version: ' + v});
-  });
+    'NOT VALID',
+    1.2,
+    null,
+    'Infinity.NaN.Infinity'
+  ].forEach(function (v) {
+    t.throws(function () {
+      new SemVer(v) // eslint-disable-line no-new
+    }, { name: 'TypeError', message: 'Invalid Version: ' + v })
+  })
 
-  t.end();
-});
+  t.end()
+})
 
-test('\nstrict vs loose version numbers', function(t) {
+test('\nstrict vs loose version numbers', function (t) {
   [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
     ['   =1.2.3', '1.2.3'],
     ['1.2.3foo', '1.2.3-foo']
-  ].forEach(function(v) {
-    var loose = v[0];
-    var strict = v[1];
-    t.throws(function() {
-      new SemVer(loose);
-    });
-    var lv = new SemVer(loose, true);
-    t.equal(lv.version, strict);
-    t.ok(eq(loose, strict, true));
-    t.throws(function() {
-      eq(loose, strict);
-    });
-    t.throws(function() {
-      new SemVer(strict).compare(loose);
-    });
-    t.equal(semver.compareLoose(v[0], v[1]), 0);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var loose = v[0]
+    var strict = v[1]
+    t.throws(function () {
+      new SemVer(loose) // eslint-disable-line no-new
+    })
+    var lv = new SemVer(loose, true)
+    t.equal(lv.version, strict)
+    t.ok(eq(loose, strict, true))
+    t.throws(function () {
+      eq(loose, strict)
+    })
+    t.throws(function () {
+      new SemVer(strict).compare(loose)
+    })
+    t.equal(semver.compareLoose(v[0], v[1]), 0)
+  })
+  t.end()
+})
 
-test('\nstrict vs loose ranges', function(t) {
+test('\nstrict vs loose ranges', function (t) {
   [['>=01.02.03', '>=1.2.3'],
     ['~1.02.03beta', '>=1.2.3-beta <1.3.0']
-  ].forEach(function(v) {
-    var loose = v[0];
-    var comps = v[1];
-    t.throws(function() {
-      new Range(loose);
-    });
-    t.equal(new Range(loose, true).range, comps);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var loose = v[0]
+    var comps = v[1]
+    t.throws(function () {
+      new Range(loose) // eslint-disable-line no-new
+    })
+    t.equal(new Range(loose, true).range, comps)
+  })
+  t.end()
+})
 
-test('\nmax satisfying', function(t) {
+test('\nmax satisfying', function (t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.4'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.4'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.6'],
     [['1.1.0', '1.2.0', '1.2.1', '1.3.0', '2.0.0b1', '2.0.0b2', '2.0.0b3', '2.0.0', '2.1.0'], '~2.0.0', '2.0.0', true]
-  ].forEach(function(v) {
-    var versions = v[0];
-    var range = v[1];
-    var expect = v[2];
-    var loose = v[3];
-    var actual = semver.maxSatisfying(versions, range, loose);
-    t.equal(actual, expect);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var versions = v[0]
+    var range = v[1]
+    var expect = v[2]
+    var loose = v[3]
+    var actual = semver.maxSatisfying(versions, range, loose)
+    t.equal(actual, expect)
+  })
+  t.end()
+})
 
-test('\nmin satisfying', function(t) {
+test('\nmin satisfying', function (t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.3'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.3'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.3'],
     [['1.1.0', '1.2.0', '1.2.1', '1.3.0', '2.0.0b1', '2.0.0b2', '2.0.0b3', '2.0.0', '2.1.0'], '~2.0.0', '2.0.0', true]
-  ].forEach(function(v) {
-    var versions = v[0];
-    var range = v[1];
-    var expect = v[2];
-    var loose = v[3];
-    var actual = semver.minSatisfying(versions, range, loose);
-    t.equal(actual, expect);
-  });
-  t.end();
-});
+  ].forEach(function (v) {
+    var versions = v[0]
+    var range = v[1]
+    var expect = v[2]
+    var loose = v[3]
+    var actual = semver.minSatisfying(versions, range, loose)
+    t.equal(actual, expect)
+  })
+  t.end()
+})
 
-test('\nintersect comparators', function(t) {
+test('\nintersect comparators', function (t) {
   [
     // One is a Version
     ['1.3.0', '>=1.3.0', true],
@@ -792,43 +790,44 @@ test('\nintersect comparators', function(t) {
     ['>1.0.0', '<=2.0.0', true],
     ['<=2.0.0', '>1.0.0', true],
     ['<=1.0.0', '>=2.0.0', false]
-  ].forEach(function(v) {
-    var comparator1 = new Comparator(v[0]);
-    var comparator2 = new Comparator(v[1]);
-    var expect = v[2];
+  ].forEach(function (v) {
+    var comparator1 = new Comparator(v[0])
+    var comparator2 = new Comparator(v[1])
+    var expect = v[2]
 
-    var actual1 = comparator1.intersects(comparator2);
-    var actual2 = comparator2.intersects(comparator1);
-    var actual3 = semver.intersects(comparator1, comparator2);
-    var actual4 = semver.intersects(comparator2, comparator1);
-    var actual4 = semver.intersects(comparator1, comparator2, true);
-    var actual5 = semver.intersects(comparator2, comparator1, true);
-    var actual6 = semver.intersects(v[0], v[1]);
-    var actual7 = semver.intersects(v[1], v[0]);
-    var actual8 = semver.intersects(v[0], v[1], true);
-    var actual9 = semver.intersects(v[1], v[0], true);
-    t.equal(actual1, expect);
-    t.equal(actual2, expect);
-    t.equal(actual3, expect);
-    t.equal(actual4, expect);
-    t.equal(actual5, expect);
-    t.equal(actual6, expect);
-    t.equal(actual7, expect);
-    t.equal(actual8, expect);
-    t.equal(actual9, expect);
-  });
-  t.end();
-});
+    var actual1 = comparator1.intersects(comparator2)
+    var actual2 = comparator2.intersects(comparator1)
+    var actual3 = semver.intersects(comparator1, comparator2)
+    var actual4 = semver.intersects(comparator2, comparator1)
+    var actual5 = semver.intersects(comparator1, comparator2, true)
+    var actual6 = semver.intersects(comparator2, comparator1, true)
+    var actual7 = semver.intersects(v[0], v[1])
+    var actual8 = semver.intersects(v[1], v[0])
+    var actual9 = semver.intersects(v[0], v[1], true)
+    var actual10 = semver.intersects(v[1], v[0], true)
+    t.equal(actual1, expect)
+    t.equal(actual2, expect)
+    t.equal(actual3, expect)
+    t.equal(actual4, expect)
+    t.equal(actual5, expect)
+    t.equal(actual6, expect)
+    t.equal(actual7, expect)
+    t.equal(actual8, expect)
+    t.equal(actual9, expect)
+    t.equal(actual10, expect)
+  })
+  t.end()
+})
 
-test('\nmissing comparator parameter in intersect comparators', function(t) {
-  t.throws(function() {
-      new Comparator('>1.0.0').intersects();
-    }, new TypeError('a Comparator is required'),
-    'throws type error');
-  t.end();
-});
+test('\nmissing comparator parameter in intersect comparators', function (t) {
+  t.throws(function () {
+    new Comparator('>1.0.0').intersects()
+  }, new TypeError('a Comparator is required'),
+  'throws type error')
+  t.end()
+})
 
-test('\nranges intersect', function(t) {
+test('\nranges intersect', function (t) {
   [
     ['1.3.0 || <1.0.0 >2.0.0', '1.3.0 || <1.0.0 >2.0.0', true],
     ['<1.0.0 >2.0.0', '>0.0.0', true],
@@ -837,96 +836,96 @@ test('\nranges intersect', function(t) {
     ['>1.0.0 <=2.0.0', '2.0.0', true],
     ['<1.0.0 >=2.0.0', '2.1.0', false],
     ['<1.0.0 >=2.0.0', '>1.4.0 <1.6.0 || 2.0.0', false]
-  ].forEach(function(v) {
-    var range1 = new Range(v[0]);
-    var range2 = new Range(v[1]);
-    var expect = v[2];
-    var actual1 = range1.intersects(range2);
-    var actual2 = range2.intersects(range1);
-    var actual3 = semver.intersects(v[1], v[0]);
-    var actual4 = semver.intersects(v[0], v[1]);
-    var actual5 = semver.intersects(v[1], v[0], true);
-    var actual6 = semver.intersects(v[0], v[1], true);
-    var actual7 = semver.intersects(range1, range2);
-    var actual8 = semver.intersects(range2, range1);
-    var actual9 = semver.intersects(range1, range2, true);
-    var actual0 = semver.intersects(range2, range1, true);
-    t.equal(actual1, expect);
-    t.equal(actual2, expect);
-    t.equal(actual3, expect);
-    t.equal(actual4, expect);
-    t.equal(actual5, expect);
-    t.equal(actual6, expect);
-    t.equal(actual7, expect);
-    t.equal(actual8, expect);
-    t.equal(actual9, expect);
-    t.equal(actual0, expect);
-  });
-  t.end();
-});
-
-test('\nmissing range parameter in range intersect', function(t) {
-  t.throws(function() {
-      new Range('1.0.0').intersects();
-    }, new TypeError('a Range is required'),
-    'throws type error');
-  t.end();
-});
-
-test('outside with bad hilo throws', function(t) {
-  t.throws(function() {
-    semver.outside('1.2.3', '>1.5.0', 'blerg', true)
-  }, new TypeError('Must provide a hilo val of "<" or ">"'));
+  ].forEach(function (v) {
+    var range1 = new Range(v[0])
+    var range2 = new Range(v[1])
+    var expect = v[2]
+    var actual1 = range1.intersects(range2)
+    var actual2 = range2.intersects(range1)
+    var actual3 = semver.intersects(v[1], v[0])
+    var actual4 = semver.intersects(v[0], v[1])
+    var actual5 = semver.intersects(v[1], v[0], true)
+    var actual6 = semver.intersects(v[0], v[1], true)
+    var actual7 = semver.intersects(range1, range2)
+    var actual8 = semver.intersects(range2, range1)
+    var actual9 = semver.intersects(range1, range2, true)
+    var actual0 = semver.intersects(range2, range1, true)
+    t.equal(actual1, expect)
+    t.equal(actual2, expect)
+    t.equal(actual3, expect)
+    t.equal(actual4, expect)
+    t.equal(actual5, expect)
+    t.equal(actual6, expect)
+    t.equal(actual7, expect)
+    t.equal(actual8, expect)
+    t.equal(actual9, expect)
+    t.equal(actual0, expect)
+  })
   t.end()
 })
 
-test('comparator testing', function(t) {
-  var c = new Comparator('>=1.2.3');
-  t.ok(c.test('1.2.4'));
-  var c2 = new Comparator(c);
-  t.ok(c2.test('1.2.4'));
-  var c3 = new Comparator(c, true);
-  t.ok(c3.test('1.2.4'));
+test('\nmissing range parameter in range intersect', function (t) {
+  t.throws(function () {
+    new Range('1.0.0').intersects()
+  }, new TypeError('a Range is required'),
+  'throws type error')
   t.end()
-});
+})
 
-test('tostrings', function(t) {
+test('outside with bad hilo throws', function (t) {
+  t.throws(function () {
+    semver.outside('1.2.3', '>1.5.0', 'blerg', true)
+  }, new TypeError('Must provide a hilo val of "<" or ">"'))
+  t.end()
+})
+
+test('comparator testing', function (t) {
+  var c = new Comparator('>=1.2.3')
+  t.ok(c.test('1.2.4'))
+  var c2 = new Comparator(c)
+  t.ok(c2.test('1.2.4'))
+  var c3 = new Comparator(c, true)
+  t.ok(c3.test('1.2.4'))
+  t.end()
+})
+
+test('tostrings', function (t) {
   t.equal(Range('>= v1.2.3').toString(), '>=1.2.3')
   t.equal(Comparator('>= v1.2.3').toString(), '>=1.2.3')
   t.end()
 })
 
-test('invalid cmp usage', function(t) {
-  t.throws(function() {
-    cmp('1.2.3', 'a frog', '4.5.6');
-  }, new TypeError('Invalid operator: a frog'));
-  t.end();
-});
+test('invalid cmp usage', function (t) {
+  t.throws(function () {
+    cmp('1.2.3', 'a frog', '4.5.6')
+  }, new TypeError('Invalid operator: a frog'))
+  t.end()
+})
 
-test('sorting', function(t) {
+test('sorting', function (t) {
   var list = [
     '1.2.3',
     '5.9.6',
     '0.1.2'
-  ];
+  ]
   var sorted = [
     '0.1.2',
     '1.2.3',
     '5.9.6'
-  ];
+  ]
   var rsorted = [
     '5.9.6',
     '1.2.3',
     '0.1.2'
-  ];
-  t.same(semver.sort(list), sorted);
-  t.same(semver.rsort(list), rsorted);
-  t.end();
-});
+  ]
+  t.same(semver.sort(list), sorted)
+  t.same(semver.rsort(list), rsorted)
+  t.end()
+})
 
-test('bad ranges in max/min satisfying', function(t) {
-  var r = 'some frogs and sneks-v2.5.6';
-  t.equal(semver.maxSatisfying([], r), null);
-  t.equal(semver.minSatisfying([], r), null);
-  t.end();
-});
+test('bad ranges in max/min satisfying', function (t) {
+  var r = 'some frogs and sneks-v2.5.6'
+  t.equal(semver.maxSatisfying([], r), null)
+  t.equal(semver.minSatisfying([], r), null)
+  t.end()
+})
