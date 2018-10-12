@@ -1,21 +1,21 @@
-var tap = require('tap');
-var test = tap.test;
-var semver = require('../semver.js');
-var coerce = semver.coerce;
-var valid = semver.valid;
+var tap = require('tap')
+var test = tap.test
+var semver = require('../semver.js')
+var coerce = semver.coerce
+var valid = semver.valid
 
-function r(text) {
+function r (text) {
   return function (count) {
-    return text.repeat(count);
-  };
+    return text.repeat(count)
+  }
 }
 
-test('\ncoerce tests', function(t) {
+test('\ncoerce tests', function (t) {
   // Expected to be null (cannot be coerced).
   [
     null,
-    {version: '1.2.3'},
-    function () { return '1.2.3'; },
+    { version: '1.2.3' },
+    function () { return '1.2.3' },
     '',
     '.',
     'version one',
@@ -88,11 +88,11 @@ test('\ncoerce tests', function(t) {
     ['1.' + r('2')(17) + '.3.4', '1.0.0'],
     ['1.2.' + r('3')(17) + '.4', '1.2.0'],
     [r('1')(17) + '.' + r('2')(16) + '.' + r('3')(16),
-     r('2')(16) + '.' + r('3')(16) + '.0'],
+      r('2')(16) + '.' + r('3')(16) + '.0'],
     [r('1')(16) + '.' + r('2')(17) + '.' + r('3')(16),
-     r('1')(16) + '.0.0'],
+      r('1')(16) + '.0.0'],
     [r('1')(16) + '.' + r('2')(16) + '.' + r('3')(17),
-     r('1')(16) + '.' + r('2')(16) + '.0'],
+      r('1')(16) + '.' + r('2')(16) + '.0'],
     ['11' + r('.1')(126), '11.1.1'],
     [r('1')(16), r('1')(16) + '.0.0'],
     ['a' + r('1')(16), r('1')(16) + '.0.0'],
@@ -100,7 +100,7 @@ test('\ncoerce tests', function(t) {
     ['1.' + r('2')(16) + '.3.4', '1.' + r('2')(16) + '.3'],
     ['1.2.' + r('3')(16) + '.4', '1.2.' + r('3')(16)],
     [r('1')(16) + '.' + r('2')(16) + '.' + r('3')(16),
-     r('1')(16) + '.' + r('2')(16) + '.' + r('3')(16)],
+      r('1')(16) + '.' + r('2')(16) + '.' + r('3')(16)],
     ['1.2.3.' + r('4')(252) + '.5', '1.2.3'],
     ['1.2.3.' + r('4')(1024), '1.2.3'],
     [r('1')(17) + '.4.7.4', '4.7.4']
@@ -109,10 +109,10 @@ test('\ncoerce tests', function(t) {
     var expected = tuple[1]
     var msg = 'coerce(' + input + ') should become ' + expected
     t.same((coerce(input) || {}).version, expected, msg)
-  });
+  })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
   t.same(valid(coerce('v2')), '2.0.0')
 
-  t.done();
-});
+  t.done()
+})

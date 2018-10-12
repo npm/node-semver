@@ -1,9 +1,9 @@
-var tap = require('tap');
-var test = tap.test;
-var semver = require('../semver.js');
-var gtr = semver.gtr;
+var tap = require('tap')
+var test = tap.test
+var semver = require('../semver.js')
+var gtr = semver.gtr
 
-test('\ngtr tests', function(t) {
+test('\ngtr tests', function (t) {
   // [range, version, loose]
   // Version should be greater than range
   [
@@ -67,17 +67,17 @@ test('\ngtr tests', function(t) {
     ['< 1', '1.0.0beta', true],
     ['=0.7.x', '0.8.2'],
     ['<0.7.x', '0.7.2']
-  ].forEach(function(tuple) {
-    var range = tuple[0];
-    var version = tuple[1];
-    var loose = tuple[2] || false;
-    var msg = 'gtr(' + version + ', ' + range + ', ' + loose + ')';
-    t.ok(gtr(version, range, loose), msg);
-  });
-  t.end();
-});
+  ].forEach(function (tuple) {
+    var range = tuple[0]
+    var version = tuple[1]
+    var loose = tuple[2] || false
+    var msg = 'gtr(' + version + ', ' + range + ', ' + loose + ')'
+    t.ok(gtr(version, range, loose), msg)
+  })
+  t.end()
+})
 
-test('\nnegative gtr tests', function(t) {
+test('\nnegative gtr tests', function (t) {
   // [range, version, loose]
   // Version should NOT be greater than range
   [
@@ -162,12 +162,12 @@ test('\nnegative gtr tests', function(t) {
     ['^0.1.0 || ~3.0.1 || 5.0.0', '1.0.0beta', true],
     ['^0.1.0 || ~3.0.1 || 5.0.0', '5.0.0-0', true],
     ['^0.1.0 || ~3.0.1 || >4 <=5.0.0', '3.5.0']
-  ].forEach(function(tuple) {
-    var range = tuple[0];
-    var version = tuple[1];
-    var loose = tuple[2] || false;
-    var msg = '!gtr(' + version + ', ' + range + ', ' + loose + ')';
-    t.notOk(gtr(version, range, loose), msg);
-  });
-  t.end();
-});
+  ].forEach(function (tuple) {
+    var range = tuple[0]
+    var version = tuple[1]
+    var loose = tuple[2] || false
+    var msg = '!gtr(' + version + ', ' + range + ', ' + loose + ')'
+    t.notOk(gtr(version, range, loose), msg)
+  })
+  t.end()
+})
