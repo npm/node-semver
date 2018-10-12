@@ -4,7 +4,7 @@ var semver = require('../')
 test('long version is too long', function (t) {
   var v = '1.2.' + new Array(256).join('1')
   t.throws(function () {
-    new semver.SemVer(v)
+    new semver.SemVer(v) // eslint-disable-line no-new
   })
   t.equal(semver.valid(v, false), null)
   t.equal(semver.valid(v, true), null)
@@ -15,7 +15,7 @@ test('long version is too long', function (t) {
 test('big number is like too long version', function (t) {
   var v = '1.2.' + new Array(100).join('1')
   t.throws(function () {
-    new semver.SemVer(v)
+    new semver.SemVer(v) // eslint-disable-line no-new
   })
   t.equal(semver.valid(v, false), null)
   t.equal(semver.valid(v, true), null)
