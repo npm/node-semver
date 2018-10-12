@@ -4,7 +4,8 @@
   "description": "The semantic version parser used by npm.",
   "main": "semver.js",
   "scripts": {
-    "test": "standard bin/semver *.js **/*.js && tap test/*.js --cov -J"
+    "test": "tap test/*.js --cov -J",
+    "posttest": "standard bin/semver *.js **/*.js"
   },
   "devDependencies": {
     "standard": "^12.0.1",
