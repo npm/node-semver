@@ -137,6 +137,13 @@ the user is indicating that they are aware of the risk.  However, it
 is still not appropriate to assume that they have opted into taking a
 similar risk on the *next* set of prerelease versions.
 
+Note that this behavior can be suppressed (treating all prerelease
+versions as if they were normal versions, for the purpose of range
+matching) by setting the `includePrerelease` flag on the options
+object to any
+[functions](https://github.com/npm/node-semver#functions) that do
+range matching.
+
 #### Prerelease Identifiers
 
 The method `.inc` takes an additional `identifier` string argument that
