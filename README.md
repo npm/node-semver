@@ -412,3 +412,19 @@ The maximum  length for any semver component considered for coercion is 16 chara
 longer components will be ignored (`10000000000000000.4.7.4` becomes `4.7.4`).
 The maximum value for any semver component is `Integer.MAX_SAFE_INTEGER || (2**53 - 1)`;
 higher value components are invalid (`9999999999999999.4.7.4` is likely invalid).
+
+### Clean
+
+* `clean(version)`: Clean a string to be a valid semver if possible
+
+This will return a cleaned and trimmed semver version. If the provided version is not valid a null will be returned. This does not work for ranges. 
+
+ex.
+* `s.clean(' = v 2.1.5foo')`: `null`
+* `s.clean(' = v 2.1.5foo', { loose: true })`: `'2.1.5-foo'`
+* `s.clean(' = v 2.1.5-foo')`: `null`
+* `s.clean(' = v 2.1.5-foo', { loose: true })`: `'2.1.5-foo'`
+* `s.clean('=v2.1.5')`: `'2.1.5'`
+* `s.clean('  =v2.1.5')`: `2.1.5`
+* `s.clean('      2.1.5   ')`: `'2.1.5'`
+* `s.clean('~1.0.0')`: `null`
