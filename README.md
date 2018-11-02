@@ -413,9 +413,9 @@ This will return a cleaned and trimmed semver version. If the provided version i
 
 ex.
 * `s.clean(' = v 2.1.5foo')`: `null`
-* `s.clean(' = v 2.1.5foo', true)`: `'2.1.5-foo'`
+* `s.clean(' = v 2.1.5foo', { loose: true })`: `'2.1.5-foo'`
 * `s.clean(' = v 2.1.5-foo')`: `null`
-* `s.clean(' = v 2.1.5-foo', true)`: `'2.1.5-foo'`
+* `s.clean(' = v 2.1.5-foo', { loose: true })`: `'2.1.5-foo'`
 * `s.clean('=v2.1.5')`: `'2.1.5'`
 * `s.clean('  =v2.1.5')`: `2.1.5`
 * `s.clean('      2.1.5   ')`: `'2.1.5'`
