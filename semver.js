@@ -1240,10 +1240,6 @@ function subset (r1, r2, loose) {
 
     if (rightValue) {
       // there's not infinite endpoints
-      if (leftValue.operator.indexOf('=') === -1) {
-        // (v, v]
-        left = OPEN
-      }
       if (rightValue.operator.indexOf('=') === -1) {
         // [v, v)
         right = OPEN
@@ -1332,14 +1328,9 @@ function subset (r1, r2, loose) {
     } else if (orderGt(interval1.rightValue, interval2.rightValue)) {
       return false
     } else if (orderEq(interval1.rightValue, interval2.rightValue)) {
-      if (interval1.right > interval2.right) {
-        // v] > v)
-        return false
-      } else {
-        // v] = v]
-        // v) < v]
-        return true
-      }
+      // v] = v]
+      // v) < v]
+      return true
     } else {
       return true
     }
