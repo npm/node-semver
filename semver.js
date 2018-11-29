@@ -1336,9 +1336,6 @@ function subset (r1, r2, loose) {
     }
   }
 
-  r1 = new Range(r1, loose)
-  r2 = new Range(r2, loose)
-
   // (−∞, +∞) denotes the set of all ordinary real numbers, not the extended reals
   for (var i = 0; i < r1.set.length; i++) {
     var r1Interval = genInterval(r1.set[i])
