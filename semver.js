@@ -1226,9 +1226,12 @@ function intersects (r1, r2, options) {
 }
 
 exports.subset = subset
-function subset (r1, r2, loose) {
+function subset (subRange, superRange, loose) {
   var OPEN = 0; var CLOSE = 1
-  var INF = 'infinite'
+  // +∞ ASCII 047
+  var POS_INF = ':'
+  // −∞ ASCII 058
+  var NEG_INF = '/'
 
   // from comparators to interval
   function genInterval (comparators) {
@@ -1248,8 +1251,14 @@ function subset (r1, r2, loose) {
       if (leftValue.operator === '') {
         // just a point
         rightValue = leftValue
+      } else if (leftValue.operator === undefined) {
+        // any
+        left = OPEN
+        right = OPEN
+        leftValue = NEG_INF
+        rightValue = POS_INF
       } else if (leftValue.operator.indexOf('>') !== -1) {
-        rightValue = INF
+        rightValue = POS_INF
         right = OPEN
         if (leftValue.operator.indexOf('=') !== -1) {
           // [v, +∞)
@@ -1260,7 +1269,7 @@ function subset (r1, r2, loose) {
         }
       } else {
         rightValue = leftValue
-        leftValue = INF
+        leftValue = NEG_INF
         left = OPEN
         if (rightValue.operator.indexOf('=') !== -1) {
           // (−∞, v]
@@ -1280,24 +1289,39 @@ function subset (r1, r2, loose) {
   }
 
   function orderEq (v1, v2) {
-    return (
-      (v1 === INF && v2 === INF) ||
-      (v1 !== INF && v2 !== INF && v1.semver.version === v2.semver.version)
-    )
+    if (v1.semver) {
+      if (v2.semver) {
+        return eq(v1.semver.version, v2.semver.version)
+      } else {
+        return false
+      }
+    } else {
+      if (v2.semver) {
+        return false
+      } else {
+        return v1 === v2
+      }
+    }
   }
 
   function orderGt (v1, v2) {
-    return (
-      (v1 === INF && v2 !== INF) ||
-      (v1 !== INF && v2 !== INF && gt(v1.semver.version, v2.semver.version))
-    )
+    if (v1.semver) {
+      if (v2.semver) {
+        return gt(v1.semver.version, v2.semver.version)
+      } else {
+        return v1.semver.version > v2
+      }
+    } else {
+      if (v2.semver) {
+        return v1 > v2.semver.version
+      } else {
+        return v1 > v2
+      }
+    }
   }
 
   function orderLt (v1, v2) {
-    return (
-      (v1 !== INF && v2 === INF) ||
-      (v1 !== INF && v2 !== INF && lt(v1.semver.version, v2.semver.version))
-    )
+    return (!orderEq(v1, v2) && !orderGt(v1, v2))
   }
 
   function isSubset (interval1, interval2) {
@@ -1337,12 +1361,12 @@ function subset (r1, r2, loose) {
   }
 
   // (−∞, +∞) denotes the set of all ordinary real numbers, not the extended reals
-  for (var i = 0; i < r1.set.length; i++) {
-    var r1Interval = genInterval(r1.set[i])
+  for (var i = 0; i < subRange.set.length; i++) {
+    var subInterval = genInterval(subRange.set[i])
     var exist = false
-    for (var j = 0; j < r2.set.length; j++) {
-      var r2Interval = genInterval(r2.set[j])
-      if (isSubset(r1Interval, r2Interval)) {
+    for (var j = 0; j < superRange.set.length; j++) {
+      var superInterval = genInterval(superRange.set[j])
+      if (isSubset(subInterval, superInterval)) {
         exist = true
         break
       }
