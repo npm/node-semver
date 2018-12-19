@@ -1519,7 +1519,7 @@ function intersects (r1, r2, options) {
 }
 
 exports.coerce = coerce
-function coerce (version) {
+function coerce (version, options) {
   if (version instanceof SemVer) {
     return version
   }
@@ -1536,5 +1536,5 @@ function coerce (version) {
 
   return parse(match[1] +
     '.' + (match[2] || '0') +
-    '.' + (match[3] || '0'))
+    '.' + (match[3] || '0'), options)
 }
