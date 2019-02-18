@@ -4,7 +4,7 @@ semver(1) -- The semantic versioner for npm
 ## Install
 
 ```bash
-npm install --save semver
+npm install semver
 ````
 
 ## Usage
