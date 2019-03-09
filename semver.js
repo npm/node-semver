@@ -785,7 +785,7 @@ Comparator.prototype.parse = function (comp) {
     throw new TypeError('Invalid comparator: ' + comp)
   }
 
-  this.operator = m[1]
+  this.operator = m[1] !== undefined ? m[1] : ''
   if (this.operator === '=') {
     this.operator = ''
   }
@@ -805,7 +805,7 @@ Comparator.prototype.toString = function () {
 Comparator.prototype.test = function (version) {
   debug('Comparator.test', version, this.options.loose)
 
-  if (this.semver === ANY) {
+  if (this.semver === ANY || version === ANY) {
     return true
   }
 
@@ -831,9 +831,15 @@ Comparator.prototype.intersects = function (comp, options) {
   var rangeTmp
 
   if (this.operator === '') {
+    if (this.value === '') {
+      return true
+    }
     rangeTmp = new Range(comp.value, options)
     return satisfies(this.value, rangeTmp, options)
   } else if (comp.operator === '') {
+    if (comp.value === '') {
+      return true
+    }
     rangeTmp = new Range(this.value, options)
     return satisfies(comp.semver, rangeTmp, options)
   }
@@ -1250,10 +1256,6 @@ function hyphenReplace ($0,
 
 // if ANY of the sets match ALL of its comparators, then pass
 Range.prototype.test = function (version) {
-  if (!version) {
-    return false
-  }
-
   if (typeof version === 'string') {
     version = new SemVer(version, this.options)
   }

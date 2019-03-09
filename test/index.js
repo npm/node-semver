@@ -52,7 +52,7 @@ test('comparison tests', function (t) {
     ['1.2.3-a.b', '1.2.3-a'],
     ['1.2.3-a.b.c.10.d.5', '1.2.3-a.b.c.5.d.100'],
     ['1.2.3-r2', '1.2.3-r100'],
-    ['1.2.3-r100', '1.2.3-R2']
+    ['1.2.3-r100', '1.2.3-R2'],
   ].forEach(function (v) {
     var v0 = v[0]
     var v1 = v[1]
@@ -333,7 +333,6 @@ test('negative range tests', function (t) {
     ['blerg', '1.2.3'],
     ['git+https://user:password0123@github.com/foo', '123.0.0', true],
     ['^1.2.3', '2.0.0-pre'],
-    ['^1.2.3', false]
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
@@ -919,31 +918,74 @@ test('ranges intersect', function (t) {
     ['<1.6.16 || >=1.7.0 <1.7.11 || >=1.8.0 <1.8.2', '>=1.6.16 <1.7.0 || >=1.7.11 <1.8.0 || >=1.8.2', false],
     ['<=1.6.16 || >=1.7.0 <1.7.11 || >=1.8.0 <1.8.2', '>=1.6.16 <1.7.0 || >=1.7.11 <1.8.0 || >=1.8.2', true],
     ['>=1.0.0', '<=1.0.0', true],
-    ['>1.0.0 <1.0.0', '<=0.0.0', false]
+    ['>1.0.0 <1.0.0', '<=0.0.0', false],
+    ['*', '0.0.1', true],
+    ['*', '>=1.0.0', true],
+    ['*', '>1.0.0', true],
+    ['*', '~1.0.0', true],
+    ['*', '<1.6.0', true],
+    ['*', '<=1.6.0', true],
+    ['1.*', '0.0.1', false],
+    ['1.*', '2.0.0', false],
+    ['1.*', '1.0.0', true],
+    ['1.*', '<2.0.0', true],
+    ['1.*', '>1.0.0', true],
+    ['1.*', '<=1.0.0', true],
+    ['1.*', '^1.0.0', true],
+    ['1.0.*', '0.0.1', false],
+    ['1.0.*', '<0.0.1', false],
+    ['1.0.*', '>0.0.1', true],
+    ['*', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['1.3.0 || <1.0.0 >2.0.0', '*', true],
+    ['1.*', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['x', '0.0.1', true],
+    ['x', '>=1.0.0', true],
+    ['x', '>1.0.0', true],
+    ['x', '~1.0.0', true],
+    ['x', '<1.6.0', true],
+    ['x', '<=1.6.0', true],
+    ['1.x', '0.0.1', false],
+    ['1.x', '2.0.0', false],
+    ['1.x', '1.0.0', true],
+    ['1.x', '<2.0.0', true],
+    ['1.x', '>1.0.0', true],
+    ['1.x', '<=1.0.0', true],
+    ['1.x', '^1.0.0', true],
+    ['1.0.x', '0.0.1', false],
+    ['1.0.x', '<0.0.1', false],
+    ['1.0.x', '>0.0.1', true],
+    ['x', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['1.3.0 || <1.0.0 >2.0.0', 'x', true],
+    ['1.x', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['*', '*', true],
+    ['x', '', true],
   ].forEach(function (v) {
-    var range1 = new Range(v[0])
-    var range2 = new Range(v[1])
-    var expect = v[2]
-    var actual1 = range1.intersects(range2)
-    var actual2 = range2.intersects(range1)
-    var actual3 = semver.intersects(v[1], v[0])
-    var actual4 = semver.intersects(v[0], v[1])
-    var actual5 = semver.intersects(v[1], v[0], true)
-    var actual6 = semver.intersects(v[0], v[1], true)
-    var actual7 = semver.intersects(range1, range2)
-    var actual8 = semver.intersects(range2, range1)
-    var actual9 = semver.intersects(range1, range2, true)
-    var actual0 = semver.intersects(range2, range1, true)
-    t.equal(actual1, expect)
-    t.equal(actual2, expect)
-    t.equal(actual3, expect)
-    t.equal(actual4, expect)
-    t.equal(actual5, expect)
-    t.equal(actual6, expect)
-    t.equal(actual7, expect)
-    t.equal(actual8, expect)
-    t.equal(actual9, expect)
-    t.equal(actual0, expect)
+    t.test(v[0] + ' <~> ' + v[1], t => {
+      var range1 = new Range(v[0])
+      var range2 = new Range(v[1])
+      var expect = v[2]
+      var actual1 = range1.intersects(range2)
+      var actual2 = range2.intersects(range1)
+      var actual3 = semver.intersects(v[1], v[0])
+      var actual4 = semver.intersects(v[0], v[1])
+      var actual5 = semver.intersects(v[1], v[0], true)
+      var actual6 = semver.intersects(v[0], v[1], true)
+      var actual7 = semver.intersects(range1, range2)
+      var actual8 = semver.intersects(range2, range1)
+      var actual9 = semver.intersects(range1, range2, true)
+      var actual0 = semver.intersects(range2, range1, true)
+      t.equal(actual1, expect)
+      t.equal(actual2, expect)
+      t.equal(actual3, expect)
+      t.equal(actual4, expect)
+      t.equal(actual5, expect)
+      t.equal(actual6, expect)
+      t.equal(actual7, expect)
+      t.equal(actual8, expect)
+      t.equal(actual9, expect)
+      t.equal(actual0, expect)
+      t.end()
+    })
   })
   t.end()
 })
