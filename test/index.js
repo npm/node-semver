@@ -839,6 +839,7 @@ test('\nranges intersect', function (t) {
     ['*', '0.0.1', true],
     ['*', '>=1.0.0', true],
     ['*', '>1.0.0', true],
+    ['*', '~1.0.0', true],
     ['*', '<1.6.0', true],
     ['*', '<=1.6.0', true],
     ['1.*', '0.0.1', false],
@@ -857,6 +858,7 @@ test('\nranges intersect', function (t) {
     ['x', '0.0.1', true],
     ['x', '>=1.0.0', true],
     ['x', '>1.0.0', true],
+    ['x', '~1.0.0', true],
     ['x', '<1.6.0', true],
     ['x', '<=1.6.0', true],
     ['1.x', '0.0.1', false],
@@ -871,7 +873,7 @@ test('\nranges intersect', function (t) {
     ['1.0.x', '>0.0.1', true],
     ['x', '1.3.0 || <1.0.0 >2.0.0', true],
     ['1.3.0 || <1.0.0 >2.0.0', 'x', true],
-    ['1.x', '1.3.0 || <1.0.0 >2.0.0', true],
+    ['1.x', '1.3.0 || <1.0.0 >2.0.0', true]
   ].forEach(function (v) {
     var range1 = new Range(v[0])
     var range2 = new Range(v[1])
