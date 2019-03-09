@@ -640,7 +640,7 @@ Comparator.prototype.parse = function (comp) {
 
   if (!m) { throw new TypeError('Invalid comparator: ' + comp) }
 
-  this.operator = m[1] != undefined ? m[1] : ''
+  this.operator = m[1] !== undefined ? m[1] : ''
   if (this.operator === '=') { this.operator = '' }
 
   // if it literally is just '>' or '' then allow anything.
@@ -1027,7 +1027,7 @@ function hyphenReplace ($0,
 
 // if ANY of the sets match ALL of its comparators, then pass
 Range.prototype.test = function (version) {
-  if (version === "" || version === ANY) { return true }
+  if (version === '' || version === ANY) { return true }
   if (!version) { return false }
 
   if (typeof version === 'string') { version = new SemVer(version, this.options) }
