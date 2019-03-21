@@ -934,8 +934,8 @@ Range.prototype.intersects = function (range, options) {
   }
 
   return this.set.some(function (thisComparators) {
-    return thisComparators.every(function (thisComparator) {
-      return range.set.some(function (rangeComparators) {
+    return range.set.some(function (rangeComparators) {
+      return thisComparators.every(function (thisComparator) {
         return rangeComparators.every(function (rangeComparator) {
           return thisComparator.intersects(rangeComparator, options)
         })
