@@ -934,13 +934,19 @@ Range.prototype.intersects = function (range, options) {
   }
 
   return this.set.some(function (thisComparators) {
-    return range.set.some(function (rangeComparators) {
-      return isSatisfiable(thisComparators, options) && thisComparators.every(function (thisComparator) {
-        return isSatisfiable(rangeComparators, options) && rangeComparators.every(function (rangeComparator) {
-          return thisComparator.intersects(rangeComparator, options)
-        })
+    return (
+      isSatisfiable(thisComparators, options) &&
+      range.set.some(function (rangeComparators) {
+        return (
+          isSatisfiable(rangeComparators, options) &&
+          thisComparators.every(function (thisComparator) {
+            return rangeComparators.every(function (rangeComparator) {
+              return thisComparator.intersects(rangeComparator, options)
+            })
+          })
+        )
       })
-    })
+    )
   })
 }
 
