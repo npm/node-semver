@@ -935,13 +935,31 @@ Range.prototype.intersects = function (range, options) {
 
   return this.set.some(function (thisComparators) {
     return range.set.some(function (rangeComparators) {
-      return thisComparators.every(function (thisComparator) {
-        return rangeComparators.every(function (rangeComparator) {
+      return isSatisfiable(thisComparators, options) && thisComparators.every(function (thisComparator) {
+        return isSatisfiable(rangeComparators, options) && rangeComparators.every(function (rangeComparator) {
           return thisComparator.intersects(rangeComparator, options)
         })
       })
     })
   })
+}
+
+// take a set of comparators and determine whether there
+// exists a version which can satisfy it
+function isSatisfiable (comparators, options) {
+  var result = true
+  var remainingComparators = comparators.slice()
+  var testComparator = remainingComparators.pop()
+
+  while (result && remainingComparators.length) {
+    result = remainingComparators.every(function (otherComparator) {
+      return testComparator.intersects(otherComparator, options)
+    })
+
+    testComparator = remainingComparators.pop()
+  }
+
+  return result
 }
 
 // Mostly just for testing and legacy API reasons
