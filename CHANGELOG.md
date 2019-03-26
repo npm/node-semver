@@ -1,5 +1,13 @@
 # changes log
 
+## 6.0
+
+* Fix `intersects` logic.
+
+    This is technically a bug fix, but since it is also a change to behavior
+    that may require users updating their code, it is marked as a major
+    version increment.
+
 ## 5.7
 
 * Add `minVersion` method
