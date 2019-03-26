@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "standard": "^12.0.1",
-    "tap": "^12.0.1"
+    "tap": "^13.0.0-rc.18"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
