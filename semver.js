@@ -1,22 +1,19 @@
 exports = module.exports = SemVer
 
-/* eslint-disable no-multi-spaces, indent */
-// The debug function is excluded entirely from the minified version.
-/* nomin */ var debug
-/* nomin */ /* istanbul ignore next */
-/* nomin */ if (typeof process === 'object' &&
-/* nomin */     process.env &&
-/* nomin */     process.env.NODE_DEBUG &&
-/* nomin */     /\bsemver\b/i.test(process.env.NODE_DEBUG)) {
-/* nomin */   debug = function () {
-/* nomin */     var args = Array.prototype.slice.call(arguments, 0)
-/* nomin */     args.unshift('SEMVER')
-/* nomin */     console.log.apply(console, args)
-/* nomin */   }
-/* nomin */ } else {
-/* nomin */   debug = function () {}
-/* nomin */ }
-/* eslint-enable no-multi-spaces, indent */
+var debug
+/* istanbul ignore next */
+if (typeof process === 'object' &&
+    process.env &&
+    process.env.NODE_DEBUG &&
+    /\bsemver\b/i.test(process.env.NODE_DEBUG)) {
+  debug = function () {
+    var args = Array.prototype.slice.call(arguments, 0)
+    args.unshift('SEMVER')
+    console.log.apply(console, args)
+  }
+} else {
+  debug = function () {}
+}
 
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.
