@@ -333,6 +333,8 @@ strings that they parse.
 * `patch(v)`: Return the patch version number.
 * `intersects(r1, r2, loose)`: Return true if the two supplied ranges
   or comparators intersect.
+* `parse(v)`: Attempt to parse a string as a semantic version, returning either
+  a `SemVer` object or `null`.
 
 ### Comparison
 
