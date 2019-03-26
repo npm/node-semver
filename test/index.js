@@ -19,7 +19,7 @@ var SemVer = semver.SemVer
 var Range = semver.Range
 var Comparator = semver.Comparator
 
-test('\ncomparison tests', function (t) {
+test('comparison tests', function (t) {
   // [version1, version2]
   // version1 should be greater than version2
   [['0.0.0', '0.0.0-foo'],
@@ -72,7 +72,7 @@ test('\ncomparison tests', function (t) {
   t.end()
 })
 
-test('\nequality tests', function (t) {
+test('equality tests', function (t) {
   // [version1, version2]
   // version1 should be equivalent to version2
   [['1.2.3', 'v1.2.3', true],
@@ -121,7 +121,17 @@ test('\nequality tests', function (t) {
     t.ok(cmp(v0, '==', v1, loose), 'cmp(' + v0 + '==' + v1 + ')')
     t.ok(!cmp(v0, '!=', v1, loose), '!cmp(' + v0 + '!=' + v1 + ')')
     t.ok(!cmp(v0, '===', v1, loose), '!cmp(' + v0 + '===' + v1 + ')')
+
+    // also test with an object. they are === because obj.version matches
+    t.ok(cmp(new SemVer(v0, { loose: loose }), '===',
+      new SemVer(v1, { loose: loose })),
+      '!cmp(' + v0 + '===' + v1 + ') object')
+
     t.ok(cmp(v0, '!==', v1, loose), 'cmp(' + v0 + '!==' + v1 + ')')
+
+    t.ok(!cmp(new SemVer(v0, loose), '!==', new SemVer(v1, loose)),
+      'cmp(' + v0 + '!==' + v1 + ') object')
+
     t.ok(!gt(v0, v1, loose), "!gt('" + v0 + "', '" + v1 + "')")
     t.ok(gte(v0, v1, loose), "gte('" + v0 + "', '" + v1 + "')")
     t.ok(!lt(v0, v1, loose), "!lt('" + v0 + "', '" + v1 + "')")
@@ -130,7 +140,7 @@ test('\nequality tests', function (t) {
   t.end()
 })
 
-test('\nrange tests', function (t) {
+test('range tests', function (t) {
   // [range, version]
   // version should be included by range
   [['1.0.0 - 2.0.0', '1.2.3'],
@@ -198,6 +208,7 @@ test('\nrange tests', function (t) {
     ['~1.0', '1.0.2'], // >=1.0.0 <1.1.0,
     ['~ 1.0', '1.0.2'],
     ['~ 1.0.3', '1.0.12'],
+    ['~ 1.0.3alpha', '1.0.12', { loose: true }],
     ['>=1', '1.0.0'],
     ['>= 1', '1.0.0'],
     ['<1.2', '1.1.1'],
@@ -244,7 +255,7 @@ test('\nrange tests', function (t) {
   t.end()
 })
 
-test('\nnegative range tests', function (t) {
+test('negative range tests', function (t) {
   // [range, version]
   // version should not be included by range
   [['1.0.0 - 2.0.0', '2.2.3'],
@@ -327,7 +338,7 @@ test('\nnegative range tests', function (t) {
   t.end()
 })
 
-test('\nunlocked prerelease range tests', function (t) {
+test('unlocked prerelease range tests', function (t) {
   // [range, version]
   // version should be included by range
   [['*', '1.0.0-rc1'],
@@ -345,7 +356,7 @@ test('\nunlocked prerelease range tests', function (t) {
   t.end()
 })
 
-test('\nnegative unlocked prerelease range tests', function (t) {
+test('negative unlocked prerelease range tests', function (t) {
   // [range, version]
   // version should not be included by range
   [['^1.0.0', '1.0.0-rc1'],
@@ -360,7 +371,7 @@ test('\nnegative unlocked prerelease range tests', function (t) {
   t.end()
 })
 
-test('\nincrement versions test', function (t) {
+test('increment versions test', function (t) {
 //  [version, inc, result, identifier]
 //  inc(version, inc) -> result
   [['1.2.3', 'major', '2.0.0'],
@@ -442,7 +453,7 @@ test('\nincrement versions test', function (t) {
     ['1.2.0', 'premajor', '2.0.0-dev.0', false, 'dev'],
     ['1.2.3-1', 'premajor', '2.0.0-dev.0', false, 'dev'],
     ['1.2.0-1', 'minor', '1.2.0', false, 'dev'],
-    ['1.0.0-1', 'major', '1.0.0', false, 'dev'],
+    ['1.0.0-1', 'major', '1.0.0', 'dev'],
     ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev']
 
   ].forEach(function (v) {
@@ -472,7 +483,7 @@ test('\nincrement versions test', function (t) {
   t.end()
 })
 
-test('\ndiff versions test', function (t) {
+test('diff versions test', function (t) {
 //  [version1, version2, result]
 //  diff(version1, version2) -> result
   [['1.2.3', '0.2.3', 'major'],
@@ -500,7 +511,7 @@ test('\ndiff versions test', function (t) {
   t.end()
 })
 
-test('\nvalid range test', function (t) {
+test('valid range test', function (t) {
   // [range, result]
   // validRange(range) -> result
   // translate ranges into their canonical form
@@ -588,7 +599,7 @@ test('\nvalid range test', function (t) {
   t.end()
 })
 
-test('\ncomparators test', function (t) {
+test('comparators test', function (t) {
   // [range, comparators]
   // turn range into a set of individual comparators
   [['1.0.0 - 2.0.0', [['>=1.0.0', '<=2.0.0']]],
@@ -671,7 +682,7 @@ test('\ncomparators test', function (t) {
   t.end()
 })
 
-test('\ninvalid version numbers', function (t) {
+test('invalid version numbers', function (t) {
   ['1.2.3.4',
     'NOT VALID',
     1.2,
@@ -686,7 +697,7 @@ test('\ninvalid version numbers', function (t) {
   t.end()
 })
 
-test('\nstrict vs loose version numbers', function (t) {
+test('strict vs loose version numbers', function (t) {
   [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
@@ -696,7 +707,7 @@ test('\nstrict vs loose version numbers', function (t) {
     var loose = v[0]
     var strict = v[1]
     t.throws(function () {
-      new SemVer(loose) // eslint-disable-line no-new
+      SemVer(loose) // eslint-disable-line no-new
     })
     var lv = new SemVer(loose, true)
     t.equal(lv.version, strict)
@@ -712,7 +723,41 @@ test('\nstrict vs loose version numbers', function (t) {
   t.end()
 })
 
-test('\nstrict vs loose ranges', function (t) {
+test('compare main vs pre', function (t) {
+  var s = new SemVer('1.2.3')
+  t.equal(s.compareMain('2.3.4'), -1)
+  t.equal(s.compareMain('1.2.4'), -1)
+  t.equal(s.compareMain('0.1.2'), 1)
+  t.equal(s.compareMain('1.2.2'), 1)
+  t.equal(s.compareMain('1.2.3-pre'), 0)
+
+  const p = new SemVer('1.2.3-alpha.0.pr.1')
+  t.equal(p.comparePre('9.9.9-alpha.0.pr.1'), 0)
+  t.equal(p.comparePre('1.2.3'), -1)
+  t.equal(p.comparePre('1.2.3-alpha.0.pr.2'), -1)
+  t.equal(p.comparePre('1.2.3-alpha.0.2'), 1)
+
+  t.end()
+})
+
+test('rcompareIdentifiers and compareIdentifiers', function (t) {
+  var set = [
+    ['1', '2'],
+    ['alpha', 'beta'],
+    ['0', 'beta'],
+  ]
+  set.forEach(function (ab) {
+    var a = ab[0]
+    var b = ab[1]
+    t.equal(semver.compareIdentifiers(a, b), -1)
+    t.equal(semver.rcompareIdentifiers(a, b), 1)
+  })
+  t.equal(semver.compareIdentifiers('0', '0'), 0)
+  t.equal(semver.rcompareIdentifiers('0', '0'), 0)
+  t.end()
+})
+
+test('strict vs loose ranges', function (t) {
   [['>=01.02.03', '>=1.2.3'],
     ['~1.02.03beta', '>=1.2.3-beta <1.3.0']
   ].forEach(function (v) {
@@ -726,7 +771,7 @@ test('\nstrict vs loose ranges', function (t) {
   t.end()
 })
 
-test('\nmax satisfying', function (t) {
+test('max satisfying', function (t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.4'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.4'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.6'],
@@ -742,7 +787,7 @@ test('\nmax satisfying', function (t) {
   t.end()
 })
 
-test('\nmin satisfying', function (t) {
+test('min satisfying', function (t) {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.3'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.3'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.3'],
@@ -758,7 +803,7 @@ test('\nmin satisfying', function (t) {
   t.end()
 })
 
-test('\nintersect comparators', function (t) {
+test('intersect comparators', function (t) {
   [
     // One is a Version
     ['1.3.0', '>=1.3.0', true],
@@ -795,8 +840,8 @@ test('\nintersect comparators', function (t) {
     var comparator2 = new Comparator(v[1])
     var expect = v[2]
 
-    var actual1 = comparator1.intersects(comparator2)
-    var actual2 = comparator2.intersects(comparator1)
+    var actual1 = comparator1.intersects(comparator2, false)
+    var actual2 = comparator2.intersects(comparator1, { loose: false })
     var actual3 = semver.intersects(comparator1, comparator2)
     var actual4 = semver.intersects(comparator2, comparator1)
     var actual5 = semver.intersects(comparator1, comparator2, true)
@@ -819,7 +864,7 @@ test('\nintersect comparators', function (t) {
   t.end()
 })
 
-test('\nmissing comparator parameter in intersect comparators', function (t) {
+test('missing comparator parameter in intersect comparators', function (t) {
   t.throws(function () {
     new Comparator('>1.0.0').intersects()
   }, new TypeError('a Comparator is required'),
@@ -827,7 +872,7 @@ test('\nmissing comparator parameter in intersect comparators', function (t) {
   t.end()
 })
 
-test('\nranges intersect', function (t) {
+test('ranges intersect', function (t) {
   [
     ['1.3.0 || <1.0.0 >2.0.0', '1.3.0 || <1.0.0 >2.0.0', true],
     ['<1.0.0 >2.0.0', '>0.0.0', true],
@@ -864,7 +909,7 @@ test('\nranges intersect', function (t) {
   t.end()
 })
 
-test('\nmissing range parameter in range intersect', function (t) {
+test('missing range parameter in range intersect', function (t) {
   t.throws(function () {
     new Range('1.0.0').intersects()
   }, new TypeError('a Range is required'),
@@ -927,5 +972,11 @@ test('bad ranges in max/min satisfying', function (t) {
   var r = 'some frogs and sneks-v2.5.6'
   t.equal(semver.maxSatisfying([], r), null)
   t.equal(semver.minSatisfying([], r), null)
+  t.end()
+})
+
+test('really big numeric prerelease value', function (t) {
+  var r = SemVer('1.2.3-beta.' + Number.MAX_SAFE_INTEGER + '0')
+  t.strictSame(r.prerelease, [ 'beta', '90071992547409910' ])
   t.end()
 })
