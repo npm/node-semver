@@ -1,5 +1,9 @@
 # changes log
 
+## 5.7
+
+* Add `minVersion` method
+
 ## 5.6
 
 * Move boolean `loose` param to an options object, with
