@@ -740,6 +740,32 @@ test('compare main vs pre', function (t) {
   t.end()
 })
 
+test('compareBuild', function (t) {
+  var noBuild = new SemVer('1.0.0')
+  var build0 = new SemVer('1.0.0+0')
+  var build1 = new SemVer('1.0.0+1')
+  var build10 = new SemVer('1.0.0+1.0')
+  t.equal(noBuild.compareBuild(build0), -1)
+  t.equal(build0.compareBuild(build0), 0)
+  t.equal(build0.compareBuild(noBuild), 1)
+
+  t.equal(build0.compareBuild('1.0.0+0.0'), -1)
+  t.equal(build0.compareBuild(build1), -1)
+  t.equal(build1.compareBuild(build0), 1)
+  t.equal(build10.compareBuild(build1), 1)
+
+  t.end()
+})
+
+test('rcompare', function (t) {
+  t.equal(semver.rcompare('1.0.0', '1.0.1'), 1)
+  t.equal(semver.rcompare('1.0.0', '1.0.0'), 0)
+  t.equal(semver.rcompare('1.0.0+0', '1.0.0'), 0)
+  t.equal(semver.rcompare('1.0.1', '1.0.0'), -1)
+
+  t.end()
+})
+
 test('rcompareIdentifiers and compareIdentifiers', function (t) {
   var set = [
     ['1', '2'],
@@ -956,6 +982,8 @@ test('invalid cmp usage', function (t) {
 
 test('sorting', function (t) {
   var list = [
+    '1.2.3+1',
+    '1.2.3+0',
     '1.2.3',
     '5.9.6',
     '0.1.2'
@@ -963,10 +991,14 @@ test('sorting', function (t) {
   var sorted = [
     '0.1.2',
     '1.2.3',
+    '1.2.3+0',
+    '1.2.3+1',
     '5.9.6'
   ]
   var rsorted = [
     '5.9.6',
+    '1.2.3+1',
+    '1.2.3+0',
     '1.2.3',
     '0.1.2'
   ]
