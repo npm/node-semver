@@ -1256,6 +1256,10 @@ function hyphenReplace ($0,
 
 // if ANY of the sets match ALL of its comparators, then pass
 Range.prototype.test = function (version) {
+  if (!version) {
+    return false
+  }
+
   if (typeof version === 'string') {
     version = new SemVer(version, this.options)
   }

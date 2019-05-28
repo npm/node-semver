@@ -248,7 +248,7 @@ test('range tests', function (t) {
     ['x - 1.x', '0.9.7'],
     ['1.0.0 - x', '1.9.7'],
     ['1.x - x', '1.9.7'],
-    ['<=7.x', '7.9.9']
+    ['<=7.x', '7.9.9'],
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
@@ -333,6 +333,8 @@ test('negative range tests', function (t) {
     ['blerg', '1.2.3'],
     ['git+https://user:password0123@github.com/foo', '123.0.0', true],
     ['^1.2.3', '2.0.0-pre'],
+    ['0.x', undefined],
+    ['*', undefined],
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
