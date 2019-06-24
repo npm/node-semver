@@ -810,7 +810,11 @@ Comparator.prototype.test = function (version) {
   }
 
   if (typeof version === 'string') {
-    version = new SemVer(version, this.options)
+    try {
+      version = new SemVer(version, this.options)
+    } catch (er) {
+      return false
+    }
   }
 
   return cmp(version, this.operator, this.semver, this.options)
@@ -1261,7 +1265,11 @@ Range.prototype.test = function (version) {
   }
 
   if (typeof version === 'string') {
-    version = new SemVer(version, this.options)
+    try {
+      version = new SemVer(version, this.options)
+    } catch (er) {
+      return false
+    }
   }
 
   for (var i = 0; i < this.set.length; i++) {

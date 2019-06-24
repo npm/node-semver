@@ -335,6 +335,9 @@ test('negative range tests', function (t) {
     ['^1.2.3', '2.0.0-pre'],
     ['0.x', undefined],
     ['*', undefined],
+    // invalid versions never satisfy, but shouldn't throw
+    ['*', 'not a version'],
+    ['>=2', 'glorp'],
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
@@ -1014,6 +1017,9 @@ test('comparator testing', function (t) {
   t.ok(c2.test('1.2.4'))
   var c3 = new Comparator(c, true)
   t.ok(c3.test('1.2.4'))
+  // test an invalid version, should not throw
+  var c4 = new Comparator(c)
+  t.notOk(c4.test('not a version string'))
   t.end()
 })
 
