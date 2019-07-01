@@ -1164,10 +1164,14 @@ function replaceXRange (comp, options) {
       gtlt = ''
     }
 
+    // if we're including prereleases in the match, then we need
+    // to fix this to -0, the lowest possible prerelease value
+    pr = options.includePrerelease ? '-0' : ''
+
     if (xM) {
       if (gtlt === '>' || gtlt === '<') {
         // nothing is allowed
-        ret = '<0.0.0'
+        ret = '<0.0.0-0'
       } else {
         // nothing is forbidden
         ret = '*'
