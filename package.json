@@ -10,12 +10,12 @@
     "postpublish": "git push origin --follow-tags"
   },
   "devDependencies": {
-    "tap": "^14.1.6"
+    "tap": "^14.3.1"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
   "bin": {
-    "semver": "./bin/semver"
+    "semver": "./bin/semver.js"
   },
   "files": [
     "bin",
