@@ -60,6 +60,12 @@ Options:
         Coerce a string into SemVer if possible
         (does not imply --loose)
 
+--rtl
+        Coerce version strings right to left
+
+--ltr
+        Coerce version strings left to right (default)
+
 Program exits successfully if any valid version satisfies
 all supplied ranges, and prints all satisfying versions.
 
@@ -399,19 +405,26 @@ range, use the `satisfies(version, range)` function.
 
 ### Coercion
 
-* `coerce(version)`: Coerces a string to semver if possible
+* `coerce(version, options)`: Coerces a string to semver if possible
 
-This aims to provide a very forgiving translation of a non-semver
-string to semver. It looks for the first digit in a string, and
-consumes all remaining characters which satisfy at least a partial semver
-(e.g., `1`, `1.2`, `1.2.3`) up to the max permitted length (256 characters).
-Longer versions are simply truncated (`4.6.3.9.2-alpha2` becomes `4.6.3`).
-All surrounding text is simply ignored (`v3.4 replaces v3.3.1` becomes `3.4.0`).
-Only text which lacks digits will fail coercion (`version one` is not valid).
-The maximum  length for any semver component considered for coercion is 16 characters;
-longer components will be ignored (`10000000000000000.4.7.4` becomes `4.7.4`).
-The maximum value for any semver component is `Integer.MAX_SAFE_INTEGER || (2**53 - 1)`;
-higher value components are invalid (`9999999999999999.4.7.4` is likely invalid).
+This aims to provide a very forgiving translation of a non-semver string to
+semver. It looks for the first digit in a string, and consumes all
+remaining characters which satisfy at least a partial semver (e.g., `1`,
+`1.2`, `1.2.3`) up to the max permitted length (256 characters).  Longer
+versions are simply truncated (`4.6.3.9.2-alpha2` becomes `4.6.3`).  All
+surrounding text is simply ignored (`v3.4 replaces v3.3.1` becomes
+`3.4.0`).  Only text which lacks digits will fail coercion (`version one`
+is not valid).  The maximum  length for any semver component considered for
+coercion is 16 characters; longer components will be ignored
+(`10000000000000000.4.7.4` becomes `4.7.4`).  The maximum value for any
+semver component is `Integer.MAX_SAFE_INTEGER || (2**53 - 1)`; higher value
+components are invalid (`9999999999999999.4.7.4` is likely invalid).
+
+If the `options.rtl` flag is set, then `coerce` will return the right-most
+coercible tuple that does not share an ending index with a longer coercible
+tuple.  For example, `1.2.3.4` will return `2.3.4` in rtl mode, not
+`4.0.0`.  `1.2.3/4` will return `4.0.0`, because the `4` is not a part of
+any other overlapping SemVer tuple.
 
 ### Clean
 
