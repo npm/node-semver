@@ -249,11 +249,13 @@ test('range tests', function (t) {
     ['1.0.0 - x', '1.9.7'],
     ['1.x - x', '1.9.7'],
     ['<=7.x', '7.9.9'],
+    ['2.x', '2.0.0-pre.0', { includePrerelease: true }],
+    ['2.x', '2.1.0-pre.0', { includePrerelease: true }],
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
-    var loose = v[2]
-    t.ok(satisfies(ver, range, loose), range + ' satisfied by ' + ver)
+    var options = v[2]
+    t.ok(satisfies(ver, range, options), range + ' satisfied by ' + ver)
   })
   t.end()
 })
@@ -338,11 +340,12 @@ test('negative range tests', function (t) {
     // invalid versions never satisfy, but shouldn't throw
     ['*', 'not a version'],
     ['>=2', 'glorp'],
+    ['2.x', '3.0.0-pre.0', { includePrerelease: true }],
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
-    var loose = v[2]
-    var found = satisfies(ver, range, loose)
+    var options = v[2]
+    var found = satisfies(ver, range, options)
     t.ok(!found, ver + ' not satisfied by ' + range)
   })
   t.end()
