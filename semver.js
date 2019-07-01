@@ -1541,6 +1541,10 @@ function coerce (version, options) {
     return version
   }
 
+  if (typeof version === 'number') {
+    version = String(version)
+  }
+
   if (typeof version !== 'string') {
     return null
   }
