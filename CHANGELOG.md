@@ -1,5 +1,28 @@
 # changes log
 
+## 6.2.0
+
+* Coerce numbers to strings when passed to semver.coerce()
+* Add `rtl` option to coerce from right to left
+
+## 6.1.3
+
+* Handle X-ranges properly in includePrerelease mode
+
+## 6.1.2
+
+* Do not throw when testing invalid version strings
+
+## 6.1.1
+
+* Add options support for semver.coerce()
+* Handle undefined version passed to Range.test
+
+## 6.1.0
+
+* Add semver.compareBuild function
+* Support `*` in semver.intersects
+
 ## 6.0
 
 * Fix `intersects` logic.
