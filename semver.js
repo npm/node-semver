@@ -18,6 +18,15 @@ if (typeof process === 'object' &&
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.
 exports.SEMVER_SPEC_VERSION = '2.0.0'
+exports.RELEASE_TYPES = [
+    "major",
+    "premajor",
+    "minor",
+    "preminor",
+    "patch",
+    "prepatch",
+    "prerelease"
+];
 
 var MAX_LENGTH = 256
 var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER ||
