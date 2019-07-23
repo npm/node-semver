@@ -19,6 +19,20 @@ var SemVer = semver.SemVer
 var Range = semver.Range
 var Comparator = semver.Comparator
 
+test('has a list of src, re, and tokens', function (t) {
+  t.match(Object.assign({}, semver), {
+    src: Array,
+    re: Array,
+    tokens: Object
+  })
+  semver.re.forEach(r => t.match(r, RegExp, 'regexps are regexps'))
+  semver.src.forEach(s => t.match(s, String, 'src is strings'))
+  for (const i in semver.tokens) {
+    t.match(semver.tokens[i], Number, 'tokens are numbers')
+  }
+  t.end()
+})
+
 test('comparison tests', function (t) {
   // [version1, version2]
   // version1 should be greater than version2
