@@ -417,7 +417,7 @@ surrounding text is simply ignored (`v3.4 replaces v3.3.1` becomes
 is not valid).  The maximum  length for any semver component considered for
 coercion is 16 characters; longer components will be ignored
 (`10000000000000000.4.7.4` becomes `4.7.4`).  The maximum value for any
-semver component is `Integer.MAX_SAFE_INTEGER || (2**53 - 1)`; higher value
+semver component is `Number.MAX_SAFE_INTEGER || (2**53 - 1)`; higher value
 components are invalid (`9999999999999999.4.7.4` is likely invalid).
 
 If the `options.rtl` flag is set, then `coerce` will return the right-most
