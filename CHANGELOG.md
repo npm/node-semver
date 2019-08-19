@@ -1,5 +1,9 @@
 # changes log
 
+## 6.3.0
+
+* Expose the token enum on the exports
+
 ## 6.2.0
 
 * Coerce numbers to strings when passed to semver.coerce()
