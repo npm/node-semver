@@ -1,7 +1,6 @@
 var debug = require('./debug');
 var { MAX_LENGTH, MAX_SAFE_INTEGER } = require('./constants');
-var { re, tokens } = require('./re');
-var t = tokens;
+var { re, t } = require('./re');
 
 var { compareIdentifiers } = require('./identifiers');
 

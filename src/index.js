@@ -2,13 +2,12 @@ var debug = require('./debug');
 var SemVer = require('./SemVer');
 var { compareIdentifiers, rcompareIdentifiers } = require('./identifiers');
 var { MAX_LENGTH, SEMVER_SPEC_VERSION } = require('./constants');
-var { re, src, tokens, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('./re');
+var { re, src, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('./re');
 
 exports = module.exports = SemVer
 exports.re = re;
 exports.src = src;
-exports.tokens = tokens;
-var t = tokens;
+exports.tokens = t;
 
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.

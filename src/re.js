@@ -5,7 +5,7 @@ exports = module.exports = {}
 // The actual regexps go on exports.re
 var re = exports.re = []
 var src = exports.src = []
-var t = exports.tokens = {}
+var t = exports.t = {}
 var R = 0
 
 function tok (n) {
