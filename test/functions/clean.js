@@ -1,9 +1,7 @@
-var tap = require('tap')
-var test = tap.test
-var semver = require('../semver.js')
-var clean = semver.clean
+const { test } = require('tap')
+const clean = require('../../functions/clean')
 
-test('\nclean tests', function (t) {
+test('clean tests', (t) => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -19,10 +17,10 @@ test('\nclean tests', function (t) {
     ['~1.2.3', null],
     ['<=1.2.3', null],
     ['1.2.x', null]
-  ].forEach(function (tuple) {
-    var range = tuple[0]
-    var version = tuple[1]
-    var msg = 'clean(' + range + ') = ' + version
+  ].forEach((tuple) => {
+    const range = tuple[0]
+    const version = tuple[1]
+    const msg = `clean(${  range  }) = ${  version}`
     t.equal(clean(range), version, msg)
   })
   t.end()

@@ -2,7 +2,7 @@
   "name": "semver",
   "version": "6.3.0",
   "description": "The semantic version parser used by npm.",
-  "main": "semver.js",
+  "main": "index.js",
   "scripts": {
     "test": "tap",
     "preversion": "npm test",

@@ -1,5 +1,5 @@
 'use strict'
-var t = require('tap')
+const t = require('tap')
 
 const thisVersion = require('../package.json').version
 t.cleanSnapshot = str => str.split(thisVersion).join('@@VERSION@@')

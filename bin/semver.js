@@ -3,39 +3,39 @@
 // Exits successfully and prints matching version(s) if
 // any supplied version is valid and passes all tests.
 
-var argv = process.argv.slice(2)
+const argv = process.argv.slice(2)
 
-var versions = []
+let versions = []
 
-var range = []
+const range = []
 
-var inc = null
+let inc = null
 
-var version = require('../package.json').version
+const version = require('../package.json').version
 
-var loose = false
+let loose = false
 
-var includePrerelease = false
+let includePrerelease = false
 
-var coerce = false
+let coerce = false
 
-var rtl = false
+let rtl = false
 
-var identifier
+let identifier
 
-var semver = require('../semver')
+const semver = require('../')
 
-var reverse = false
+let reverse = false
 
-var options = {}
+const options = {}
 
 main()
 
 function main () {
   if (!argv.length) return help()
   while (argv.length) {
-    var a = argv.shift()
-    var indexOfEqualSign = a.indexOf('=')
+    let a = argv.shift()
+    const indexOfEqualSign = a.indexOf('=')
     if (indexOfEqualSign !== -1) {
       a = a.slice(0, indexOfEqualSign)
       argv.unshift(a.slice(indexOfEqualSign + 1))
@@ -87,18 +87,18 @@ function main () {
     }
   }
 
-  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }
+  const options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }
 
-  versions = versions.map(function (v) {
+  versions = versions.map((v) => {
     return coerce ? (semver.coerce(v, options) || { version: v }).version : v
-  }).filter(function (v) {
+  }).filter((v) => {
     return semver.valid(v)
   })
   if (!versions.length) return fail()
   if (inc && (versions.length !== 1 || range.length)) { return failInc() }
 
-  for (var i = 0, l = range.length; i < l; i++) {
-    versions = versions.filter(function (v) {
+  for (let i = 0, l = range.length; i < l; i++) {
+    versions = versions.filter((v) => {
       return semver.satisfies(v, range[i], options)
     })
     if (!versions.length) return fail()
@@ -114,18 +114,18 @@ function failInc () {
 function fail () { process.exit(1) }
 
 function success () {
-  var compare = reverse ? 'rcompare' : 'compare'
-  versions.sort(function (a, b) {
+  const compare = reverse ? 'rcompare' : 'compare'
+  versions.sort((a, b) => {
     return semver[compare](a, b, options)
-  }).map(function (v) {
+  }).map((v) => {
     return semver.clean(v, options)
-  }).map(function (v) {
+  }).map((v) => {
     return inc ? semver.inc(v, inc, options, identifier) : v
-  }).forEach(function (v, i, _) { console.log(v) })
+  }).forEach((v, i, _) => { console.log(v) })
 }
 
 function help () {
-  console.log(['SemVer ' + version,
+  console.log([`SemVer ${  version}`,
     '',
     'A JavaScript implementation of the https://semver.org/ specification',
     'Copyright Isaac Z. Schlueter',
