@@ -1,6 +1,6 @@
-var debug = require('../debug');
+var debug = require('../../internal/debug');
 var SemVer = require('../SemVer');
-var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../re');
+var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../../internal/re');
 var cmp = require('../functions/cmp');
 
 module.exports = exports = {};

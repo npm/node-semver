@@ -1,7 +1,7 @@
 var SemVer = require('./src/SemVer');
-var { compareIdentifiers, rcompareIdentifiers } = require('./src/identifiers');
-var { SEMVER_SPEC_VERSION } = require('./src/constants');
-var { re, src, t } = require('./src/re');
+var { compareIdentifiers, rcompareIdentifiers } = require('./internal/identifiers');
+var { SEMVER_SPEC_VERSION } = require('./internal/constants');
+var { re, src, t } = require('./internal/re');
 
 exports = module.exports = SemVer
 exports.re = re;

@@ -1,8 +1,8 @@
-var debug = require('./debug');
-var { MAX_LENGTH, MAX_SAFE_INTEGER } = require('./constants');
-var { re, t } = require('./re');
+var debug = require('../internal/debug');
+var { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../internal/constants');
+var { re, t } = require('../internal/re');
 
-var { compareIdentifiers } = require('./identifiers');
+var { compareIdentifiers } = require('../internal/identifiers');
 
 function SemVer (version, options) {
     if (!options || typeof options !== 'object') {
