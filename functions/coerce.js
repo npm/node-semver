@@ -1,5 +1,5 @@
 var SemVer = require('../SemVer');
-var {re, t} = require('../../internal/re');
+var {re, t} = require('../internal/re');
 
 module.exports = function coerce (version, options) {
     if (version instanceof SemVer) {

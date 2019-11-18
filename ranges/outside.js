@@ -1,5 +1,5 @@
 var SemVer = require('../SemVer');
-var { Comparator, Range, satisfies } = require('./')
+var { Comparator, Range, satisfies } = require('.')
 
 module.exports = function outside (version, range, hilo, options) {
   version = new SemVer(version, options)

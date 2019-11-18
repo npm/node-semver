@@ -1,5 +1,5 @@
-var {MAX_LENGTH} = require('../../internal/constants');
-var { re, t } = require('../../internal/re');
+var {MAX_LENGTH} = require('../internal/constants');
+var { re, t } = require('../internal/re');
 var SemVer = require('../SemVer');
 
 module.exports = function parse (version, options) {
