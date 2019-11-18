@@ -1,6 +1,6 @@
 var tap = require('tap')
 var test = tap.test
-var semver = require('../semver.js')
+var semver = require('../')
 var clean = semver.clean
 
 test('\nclean tests', function (t) {

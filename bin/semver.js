@@ -23,7 +23,7 @@ var rtl = false
 
 var identifier
 
-var semver = require('../semver')
+var semver = require('../')
 
 var reverse = false
 

@@ -2,7 +2,7 @@
 
 var tap = require('tap')
 var test = tap.test
-var semver = require('../semver.js')
+var semver = require('../')
 var eq = semver.eq
 var gt = semver.gt
 var lt = semver.lt

@@ -1,6 +1,6 @@
 var tap = require('tap')
 var test = tap.test
-var semver = require('../semver.js')
+var semver = require('../')
 
 test('\nmajor tests', function (t) {
   // [range, version]
