@@ -1,6 +1,6 @@
-var SemVer = require('../semver');
-var { Range } = require('./index');
-var gt = require('../functions/gt');
+var SemVer = require('../semver')
+var { Range } = require('./index')
+var gt = require('../functions/gt')
 
 module.exports = function minVersion (range, loose) {
   range = new Range(range, loose)

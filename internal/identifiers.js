@@ -22,4 +22,4 @@ function rcompareIdentifiers (a, b) {
 module.exports = {
     compareIdentifiers,
     rcompareIdentifiers
-};
+}

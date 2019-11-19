@@ -1,4 +1,4 @@
-var parse = require('./parse');
+var parse = require('./parse')
 
 module.exports =function prerelease (version, options) {
   var parsed = parse(version, options)

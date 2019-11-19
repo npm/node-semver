@@ -14,4 +14,4 @@ if (typeof process === 'object' &&
   debug = function () {}
 }
 
-module.exports = debug;
+module.exports = debug

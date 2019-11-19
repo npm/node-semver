@@ -1,5 +1,5 @@
-var parse = require('./parse');
-var eq = require('./eq');
+var parse = require('./parse')
+var eq = require('./eq')
 
 module.exports = function diff (version1, version2) {
   if (eq(version1, version2)) {

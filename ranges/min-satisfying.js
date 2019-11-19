@@ -1,5 +1,5 @@
-var SemVer = require('../semver');
-var { Range } = require('./index');
+var SemVer = require('../semver')
+var { Range } = require('./index')
 
 module.exports = function minSatisfying (versions, range, options) {
     var min = null

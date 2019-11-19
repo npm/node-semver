@@ -1,5 +1,5 @@
-var SemVer = require('../semver');
-var { Range } = require('./index');
+var SemVer = require('../semver')
+var { Range } = require('./index')
 
 module.exports = function maxSatisfying (versions, range, options) {
     var max = null

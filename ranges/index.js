@@ -1,9 +1,9 @@
-var debug = require('../internal/debug');
-var SemVer = require('../semver');
-var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re');
-var cmp = require('../functions/cmp');
+var debug = require('../internal/debug')
+var SemVer = require('../semver')
+var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re')
+var cmp = require('../functions/cmp')
 
-module.exports = exports = {};
+module.exports = exports = {}
 exports.Comparator = Comparator
 function Comparator (comp, options) {
   if (!options || typeof options !== 'object') {

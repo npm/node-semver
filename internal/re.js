@@ -1,5 +1,5 @@
-var { MAX_SAFE_COMPONENT_LENGTH } = require('./constants');
-var debug = require('./debug');
+var { MAX_SAFE_COMPONENT_LENGTH } = require('./constants')
+var debug = require('./debug')
 exports = module.exports = {}
 
 // The actual regexps go on exports.re
