@@ -1,11 +1,12 @@
-var SemVer = require('../semver')
-var { Range } = require('./index')
+const SemVer = require('../semver')
+const { Range } = require('./index')
 
 module.exports = function maxSatisfying (versions, range, options) {
-    var max = null
-    var maxSV = null
+    let max = null
+    let maxSV = null
+    let rangeObj = null
     try {
-      var rangeObj = new Range(range, options)
+      rangeObj = new Range(range, options)
     } catch (er) {
       return null
     }

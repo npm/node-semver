@@ -1,4 +1,4 @@
-var { Range } = require('./index')
+const { Range } = require('./index')
 
 // Mostly just for testing and legacy API reasons
 module.exports = function toComparators (range, options) {

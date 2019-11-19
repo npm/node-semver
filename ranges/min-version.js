@@ -1,11 +1,11 @@
-var SemVer = require('../semver')
-var { Range } = require('./index')
-var gt = require('../functions/gt')
+const SemVer = require('../semver')
+const { Range } = require('./index')
+const gt = require('../functions/gt')
 
 module.exports = function minVersion (range, loose) {
   range = new Range(range, loose)
 
-  var minver = new SemVer('0.0.0')
+  let minver = new SemVer('0.0.0')
   if (range.test(minver)) {
     return minver
   }
@@ -16,12 +16,12 @@ module.exports = function minVersion (range, loose) {
   }
 
   minver = null
-  for (var i = 0; i < range.set.length; ++i) {
-    var comparators = range.set[i]
+  for (let i = 0; i < range.set.length; ++i) {
+    const comparators = range.set[i]
 
     comparators.forEach(function (comparator) {
       // Clone to avoid manipulating the comparator's semver object.
-      var compver = new SemVer(comparator.semver.version)
+      const compver = new SemVer(comparator.semver.version)
       switch (comparator.operator) {
         case '>':
           if (compver.prerelease.length === 0) {

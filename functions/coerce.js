@@ -1,5 +1,5 @@
-var SemVer = require('../semver')
-var {re, t} = require('../internal/re')
+const SemVer = require('../semver')
+const {re, t} = require('../internal/re')
 
 module.exports = function coerce (version, options) {
     if (version instanceof SemVer) {
@@ -16,7 +16,7 @@ module.exports = function coerce (version, options) {
   
     options = options || {}
   
-    var match = null
+    let match = null
     if (!options.rtl) {
       match = version.match(re[t.COERCE])
     } else {
@@ -28,7 +28,7 @@ module.exports = function coerce (version, options) {
       // Manually set the index so as to pick up overlapping matches.
       // Stop when we get a match that ends at the string end, since no
       // coercible string can be more right-ward without the same terminus.
-      var next
+      let next
       while ((next = re[t.COERCERTL].exec(version)) &&
         (!match || match.index + match[0].length !== version.length)
       ) {

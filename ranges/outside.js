@@ -1,11 +1,11 @@
-var SemVer = require('../semver')
-var { Comparator, Range, satisfies } = require('.')
+const SemVer = require('../semver')
+const { Comparator, Range, satisfies } = require('.')
 
 module.exports = function outside (version, range, hilo, options) {
   version = new SemVer(version, options)
   range = new Range(range, options)
 
-  var gtfn, ltefn, ltfn, comp, ecomp
+  let gtfn, ltefn, ltfn, comp, ecomp
   switch (hilo) {
     case '>':
       gtfn = gt
@@ -33,11 +33,11 @@ module.exports = function outside (version, range, hilo, options) {
   // From now on, variable terms are as if we're in "gtr" mode.
   // but note that everything is flipped for the "ltr" function.
 
-  for (var i = 0; i < range.set.length; ++i) {
-    var comparators = range.set[i]
+  for (let i = 0; i < range.set.length; ++i) {
+    const comparators = range.set[i]
 
-    var high = null
-    var low = null
+    let high = null
+    let low = null
 
     comparators.forEach(function (comparator) {
       if (comparator.semver === ANY) {

@@ -1,7 +1,7 @@
-var numeric = /^[0-9]+$/
+const numeric = /^[0-9]+$/
 function compareIdentifiers (a, b) {
-  var anum = numeric.test(a)
-  var bnum = numeric.test(b)
+  const anum = numeric.test(a)
+  const bnum = numeric.test(b)
 
   if (anum && bnum) {
     a = +a

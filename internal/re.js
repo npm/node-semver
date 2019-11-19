@@ -1,12 +1,12 @@
-var { MAX_SAFE_COMPONENT_LENGTH } = require('./constants')
-var debug = require('./debug')
+const { MAX_SAFE_COMPONENT_LENGTH } = require('./constants')
+const debug = require('./debug')
 exports = module.exports = {}
 
 // The actual regexps go on exports.re
-var re = exports.re = []
-var src = exports.src = []
-var t = exports.t = {}
-var R = 0
+const re = exports.re = []
+const src = exports.src = []
+const t = exports.t = {}
+let R = 0
 
 function tok (n) {
   t[n] = R++
@@ -219,7 +219,7 @@ src[t.STAR] = '(<|>)?=?\\s*\\*'
 
 // Compile to actual regexp objects.
 // All are flag-free, unless they were created above with a flag.
-for (var i = 0; i < R; i++) {
+for (let i = 0; i < R; i++) {
   debug(i, src[i])
   if (!re[i]) {
     re[i] = new RegExp(src[i])

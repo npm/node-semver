@@ -1,7 +1,7 @@
-var debug = require('../internal/debug')
-var SemVer = require('../semver')
-var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re')
-var cmp = require('../functions/cmp')
+const debug = require('../internal/debug')
+const SemVer = require('../semver')
+const { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re')
+const cmp = require('../functions/cmp')
 
 module.exports = exports = {}
 exports.Comparator = Comparator
@@ -41,8 +41,8 @@ function Comparator (comp, options) {
 
 exports.ANY = ANY = {}
 Comparator.prototype.parse = function (comp) {
-  var r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
-  var m = comp.match(r)
+  const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
+  const m = comp.match(r)
 
   if (!m) {
     throw new TypeError('Invalid comparator: ' + comp)
@@ -95,7 +95,7 @@ Comparator.prototype.intersects = function (comp, options) {
     }
   }
 
-  var rangeTmp
+  let rangeTmp
 
   if (this.operator === '') {
     if (this.value === '') {
@@ -111,21 +111,21 @@ Comparator.prototype.intersects = function (comp, options) {
     return satisfies(comp.semver, rangeTmp, options)
   }
 
-  var sameDirectionIncreasing =
+  const sameDirectionIncreasing =
     (this.operator === '>=' || this.operator === '>') &&
     (comp.operator === '>=' || comp.operator === '>')
-  var sameDirectionDecreasing =
+  const sameDirectionDecreasing =
     (this.operator === '<=' || this.operator === '<') &&
     (comp.operator === '<=' || comp.operator === '<')
-  var sameSemVer = this.semver.version === comp.semver.version
-  var differentDirectionsInclusive =
+  const sameSemVer = this.semver.version === comp.semver.version
+  const differentDirectionsInclusive =
     (this.operator === '>=' || this.operator === '<=') &&
     (comp.operator === '>=' || comp.operator === '<=')
-  var oppositeDirectionsLessThan =
+  const oppositeDirectionsLessThan =
     cmp(this.semver, '<', comp.semver, options) &&
     ((this.operator === '>=' || this.operator === '>') &&
     (comp.operator === '<=' || comp.operator === '<'))
-  var oppositeDirectionsGreaterThan =
+  const oppositeDirectionsGreaterThan =
     cmp(this.semver, '>', comp.semver, options) &&
     ((this.operator === '<=' || this.operator === '<') &&
     (comp.operator === '>=' || comp.operator === '>'))
@@ -193,10 +193,10 @@ Range.prototype.toString = function () {
 }
 
 Range.prototype.parseRange = function (range) {
-  var loose = this.options.loose
+  const loose = this.options.loose
   range = range.trim()
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-  var hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
+  const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
   range = range.replace(hr, hyphenReplace)
   debug('hyphen replace', range)
   // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
@@ -215,8 +215,8 @@ Range.prototype.parseRange = function (range) {
   // At this point, the range is completely trimmed and
   // ready to be split into comparators.
 
-  var compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
-  var set = range.split(' ').map(function (comp) {
+  const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
+  let set = range.split(' ').map(function (comp) {
     return parseComparator(comp, this.options)
   }, this).join(' ').split(/\s+/)
   if (this.options.loose) {
@@ -257,9 +257,9 @@ Range.prototype.intersects = function (range, options) {
 // take a set of comparators and determine whether there
 // exists a version which can satisfy it
 function isSatisfiable (comparators, options) {
-  var result = true
-  var remainingComparators = comparators.slice()
-  var testComparator = remainingComparators.pop()
+  let result = true
+  const remainingComparators = comparators.slice()
+  let testComparator = remainingComparators.pop()
 
   while (result && remainingComparators.length) {
     result = remainingComparators.every(function (otherComparator) {
@@ -305,10 +305,10 @@ function replaceTildes (comp, options) {
 }
 
 function replaceTilde (comp, options) {
-  var r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE]
+  const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE]
   return comp.replace(r, function (_, M, m, p, pr) {
     debug('tilde', comp, _, M, m, p, pr)
-    var ret
+    let ret
 
     if (isX(M)) {
       ret = ''
@@ -346,10 +346,10 @@ function replaceCarets (comp, options) {
 
 function replaceCaret (comp, options) {
   debug('caret', comp, options)
-  var r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
+  const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
   return comp.replace(r, function (_, M, m, p, pr) {
     debug('caret', comp, _, M, m, p, pr)
-    var ret
+    let ret
 
     if (isX(M)) {
       ret = ''
@@ -405,13 +405,13 @@ function replaceXRanges (comp, options) {
 
 function replaceXRange (comp, options) {
   comp = comp.trim()
-  var r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE]
+  const r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE]
   return comp.replace(r, function (ret, gtlt, M, m, p, pr) {
     debug('xRange', comp, ret, gtlt, M, m, p, pr)
-    var xM = isX(M)
-    var xm = xM || isX(m)
-    var xp = xm || isX(p)
-    var anyX = xp
+    const xM = isX(M)
+    const xm = xM || isX(m)
+    const xp = xm || isX(p)
+    const anyX = xp
 
     if (gtlt === '=' && anyX) {
       gtlt = ''
@@ -530,7 +530,7 @@ Range.prototype.test = function (version) {
     }
   }
 
-  for (var i = 0; i < this.set.length; i++) {
+  for (let i = 0; i < this.set.length; i++) {
     if (testSet(this.set[i], version, this.options)) {
       return true
     }
@@ -539,7 +539,7 @@ Range.prototype.test = function (version) {
 } 
 
 function testSet (set, version, options) {
-  for (var i = 0; i < set.length; i++) {
+  for (let i = 0; i < set.length; i++) {
     if (!set[i].test(version)) {
       return false
     }
@@ -558,7 +558,7 @@ function testSet (set, version, options) {
       }
 
       if (set[i].semver.prerelease.length > 0) {
-        var allowed = set[i].semver
+        const allowed = set[i].semver
         if (allowed.major === version.major &&
             allowed.minor === version.minor &&
             allowed.patch === version.patch) {

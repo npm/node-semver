@@ -1,8 +1,8 @@
-var debug = require('./internal/debug')
-var { MAX_LENGTH, MAX_SAFE_INTEGER } = require('./internal/constants')
-var { re, t } = require('./internal/re')
+const debug = require('./internal/debug')
+const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('./internal/constants')
+const { re, t } = require('./internal/re')
 
-var { compareIdentifiers } = require('./internal/identifiers')
+const { compareIdentifiers } = require('./internal/identifiers')
 
 function SemVer (version, options) {
     if (!options || typeof options !== 'object') {
@@ -33,7 +33,7 @@ function SemVer (version, options) {
     this.options = options
     this.loose = !!options.loose
   
-    var m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
+    const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
   
     if (!m) {
       throw new TypeError('Invalid Version: ' + version)
@@ -64,7 +64,7 @@ function SemVer (version, options) {
     } else {
       this.prerelease = m[4].split('.').map(function (id) {
         if (/^[0-9]+$/.test(id)) {
-          var num = +id
+          const num = +id
           if (num >= 0 && num < MAX_SAFE_INTEGER) {
             return num
           }
@@ -122,10 +122,10 @@ function SemVer (version, options) {
       return 0
     }
   
-    var i = 0
+    let i = 0
     do {
-      var a = this.prerelease[i]
-      var b = other.prerelease[i]
+      const a = this.prerelease[i]
+      const b = other.prerelease[i]
       debug('prerelease compare', i, a, b)
       if (a === undefined && b === undefined) {
         return 0
@@ -146,10 +146,10 @@ function SemVer (version, options) {
       other = new SemVer(other, this.options)
     }
   
-    var i = 0
+    let i = 0
     do {
-      var a = this.build[i]
-      var b = other.build[i]
+      const a = this.build[i]
+      const b = other.build[i]
       debug('prerelease compare', i, a, b)
       if (a === undefined && b === undefined) {
         return 0
@@ -240,7 +240,7 @@ function SemVer (version, options) {
         if (this.prerelease.length === 0) {
           this.prerelease = [0]
         } else {
-          var i = this.prerelease.length
+          let i = this.prerelease.length
           while (--i >= 0) {
             if (typeof this.prerelease[i] === 'number') {
               this.prerelease[i]++

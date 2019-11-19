@@ -1,7 +1,7 @@
-var SemVer = require('./semver')
-var { compareIdentifiers, rcompareIdentifiers } = require('./internal/identifiers')
-var { SEMVER_SPEC_VERSION } = require('./internal/constants')
-var { re, src, t } = require('./internal/re')
+const SemVer = require('./semver')
+const { compareIdentifiers, rcompareIdentifiers } = require('./internal/identifiers')
+const { SEMVER_SPEC_VERSION } = require('./internal/constants')
+const { re, src, t } = require('./internal/re')
 
 exports = module.exports = SemVer
 exports.re = re
@@ -37,7 +37,7 @@ exports.lte = lte = require('./functions/lte')
 exports.cmp = cmp = require('./functions/cmp')
 exports.coerce = coerce = require('./functions/coerce')
 
-var { Comparator, Range, satisfies} = require('./ranges')
+const { Comparator, Range, satisfies} = require('./ranges')
 exports.Comparator = Comparator
 exports.Range = Range
 exports.satisfies = satisfies

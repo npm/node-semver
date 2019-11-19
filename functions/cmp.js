@@ -1,9 +1,9 @@
-var eq = require('./eq')
-var neq = require('./neq')
-var gt = require('./gt')
-var gte = require('./gte')
-var lt = require('./lt')
-var lte = require('./lte')
+const eq = require('./eq')
+const neq = require('./neq')
+const gt = require('./gt')
+const gte = require('./gte')
+const lt = require('./lt')
+const lte = require('./lte')
 
 module.exports = function cmp (a, op, b, loose) {
     switch (op) {

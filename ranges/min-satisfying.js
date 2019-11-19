@@ -1,11 +1,12 @@
-var SemVer = require('../semver')
-var { Range } = require('./index')
+const SemVer = require('../semver')
+const { Range } = require('./index')
 
 module.exports = function minSatisfying (versions, range, options) {
-    var min = null
-    var minSV = null
+    let min = null
+    let minSV = null
+    let rangeObj = null
     try {
-      var rangeObj = new Range(range, options)
+      rangeObj = new Range(range, options)
     } catch (er) {
       return null
     }

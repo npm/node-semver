@@ -1,4 +1,4 @@
-var compareBuild = require('./compare-build')
+const compareBuild = require('./compare-build')
 
 module.exports = function rsort (list, loose) {
     return list.sort(function (a, b) {

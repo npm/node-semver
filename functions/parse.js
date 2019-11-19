@@ -1,6 +1,6 @@
-var {MAX_LENGTH} = require('../internal/constants')
-var { re, t } = require('../internal/re')
-var SemVer = require('../semver')
+const {MAX_LENGTH} = require('../internal/constants')
+const { re, t } = require('../internal/re')
+const SemVer = require('../semver')
 
 module.exports = function parse (version, options) {
   if (!options || typeof options !== 'object') {
@@ -22,7 +22,7 @@ module.exports = function parse (version, options) {
     return null
   }
 
-  var r = options.loose ? re[t.LOOSE] : re[t.FULL]
+  const r = options.loose ? re[t.LOOSE] : re[t.FULL]
   if (!r.test(version)) {
     return null
   }

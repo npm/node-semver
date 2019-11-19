@@ -1,4 +1,4 @@
-var { Range } = require('./index')
+const { Range } = require('./index')
 module.exports = function validRange (range, options) {
     try {
       // Return '*' instead of '' so that truthiness works.
