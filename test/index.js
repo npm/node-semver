@@ -1041,8 +1041,8 @@ test('comparator testing', function (t) {
 })
 
 test('tostrings', function (t) {
-  t.equal(Range('>= v1.2.3').toString(), '>=1.2.3')
-  t.equal(Comparator('>= v1.2.3').toString(), '>=1.2.3')
+  t.equal(new Range('>= v1.2.3').toString(), '>=1.2.3')
+  t.equal(new Comparator('>= v1.2.3').toString(), '>=1.2.3')
   t.end()
 })
 
@@ -1088,7 +1088,7 @@ test('bad ranges in max/min satisfying', function (t) {
 })
 
 test('really big numeric prerelease value', function (t) {
-  var r = SemVer('1.2.3-beta.' + Number.MAX_SAFE_INTEGER + '0')
+  var r = new SemVer('1.2.3-beta.' + Number.MAX_SAFE_INTEGER + '0')
   t.strictSame(r.prerelease, [ 'beta', '90071992547409910' ])
   t.end()
 })

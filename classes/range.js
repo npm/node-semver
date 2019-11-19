@@ -4,251 +4,293 @@ const { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = req
 const cmp = require('../functions/cmp')
 
 const ANY = {}
-function Comparator (comp, options) {
-  if (!options || typeof options !== 'object') {
-    options = {
-      loose: !!options,
-      includePrerelease: false
+class Comparator {
+  constructor(comp, options) {
+    if (!options || typeof options !== "object") {
+      options = {
+        loose: !!options,
+        includePrerelease: false
+      };
     }
-  }
 
-  if (comp instanceof Comparator) {
-    if (comp.loose === !!options.loose) {
-      return comp
+    if (comp instanceof Comparator) {
+      if (comp.loose === !!options.loose) {
+        return comp;
+      } else {
+        comp = comp.value;
+      }
+    }
+
+    if (!(this instanceof Comparator)) {
+      return new Comparator(comp, options);
+    }
+
+    debug("comparator", comp, options);
+    this.options = options;
+    this.loose = !!options.loose;
+    this.parse(comp);
+
+    if (this.semver === ANY) {
+      this.value = "";
     } else {
-      comp = comp.value
+      this.value = this.operator + this.semver.version;
     }
+
+    debug("comp", this);
   }
 
-  if (!(this instanceof Comparator)) {
-    return new Comparator(comp, options)
-  }
+  parse(comp) {
+    const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
+    const m = comp.match(r);
 
-  debug('comparator', comp, options)
-  this.options = options
-  this.loose = !!options.loose
-  this.parse(comp)
-
-  if (this.semver === ANY) {
-    this.value = ''
-  } else {
-    this.value = this.operator + this.semver.version
-  }
-
-  debug('comp', this)
-}
-
-Comparator.prototype.parse = function (comp) {
-  const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
-  const m = comp.match(r)
-
-  if (!m) {
-    throw new TypeError('Invalid comparator: ' + comp)
-  }
-
-  this.operator = m[1] !== undefined ? m[1] : ''
-  if (this.operator === '=') {
-    this.operator = ''
-  }
-
-  // if it literally is just '>' or '' then allow anything.
-  if (!m[2]) {
-    this.semver = ANY
-  } else {
-    this.semver = new SemVer(m[2], this.options.loose)
-  }
-}
-
-Comparator.prototype.toString = function () {
-  return this.value
-}
-
-Comparator.prototype.test = function (version) {
-  debug('Comparator.test', version, this.options.loose)
-
-  if (this.semver === ANY || version === ANY) {
-    return true
-  }
-
-  if (typeof version === 'string') {
-    try {
-      version = new SemVer(version, this.options)
-    } catch (er) {
-      return false
+    if (!m) {
+      throw new TypeError("Invalid comparator: " + comp);
     }
-  }
 
-  return cmp(version, this.operator, this.semver, this.options)
-}
-
-Comparator.prototype.intersects = function (comp, options) {
-  if (!(comp instanceof Comparator)) {
-    throw new TypeError('a Comparator is required')
-  }
-
-  if (!options || typeof options !== 'object') {
-    options = {
-      loose: !!options,
-      includePrerelease: false
+    this.operator = m[1] !== undefined ? m[1] : "";
+    if (this.operator === "=") {
+      this.operator = "";
     }
-  }
 
-  let rangeTmp
-
-  if (this.operator === '') {
-    if (this.value === '') {
-      return true
-    }
-    rangeTmp = new Range(comp.value, options)
-    return satisfies(this.value, rangeTmp, options)
-  } else if (comp.operator === '') {
-    if (comp.value === '') {
-      return true
-    }
-    rangeTmp = new Range(this.value, options)
-    return satisfies(comp.semver, rangeTmp, options)
-  }
-
-  const sameDirectionIncreasing =
-    (this.operator === '>=' || this.operator === '>') &&
-    (comp.operator === '>=' || comp.operator === '>')
-  const sameDirectionDecreasing =
-    (this.operator === '<=' || this.operator === '<') &&
-    (comp.operator === '<=' || comp.operator === '<')
-  const sameSemVer = this.semver.version === comp.semver.version
-  const differentDirectionsInclusive =
-    (this.operator === '>=' || this.operator === '<=') &&
-    (comp.operator === '>=' || comp.operator === '<=')
-  const oppositeDirectionsLessThan =
-    cmp(this.semver, '<', comp.semver, options) &&
-    ((this.operator === '>=' || this.operator === '>') &&
-    (comp.operator === '<=' || comp.operator === '<'))
-  const oppositeDirectionsGreaterThan =
-    cmp(this.semver, '>', comp.semver, options) &&
-    ((this.operator === '<=' || this.operator === '<') &&
-    (comp.operator === '>=' || comp.operator === '>'))
-
-  return sameDirectionIncreasing || sameDirectionDecreasing ||
-    (sameSemVer && differentDirectionsInclusive) ||
-    oppositeDirectionsLessThan || oppositeDirectionsGreaterThan
-}
-
-function Range (range, options) {
-  if (!options || typeof options !== 'object') {
-    options = {
-      loose: !!options,
-      includePrerelease: false
-    }
-  }
-
-  if (range instanceof Range) {
-    if (range.loose === !!options.loose &&
-        range.includePrerelease === !!options.includePrerelease) {
-      return range
+    // if it literally is just '>' or '' then allow anything.
+    if (!m[2]) {
+      this.semver = ANY;
     } else {
-      return new Range(range.raw, options)
+      this.semver = new SemVer(m[2], this.options.loose);
     }
   }
 
-  if (range instanceof Comparator) {
-    return new Range(range.value, options)
+  toString() {
+    return this.value;
   }
 
-  if (!(this instanceof Range)) {
-    return new Range(range, options)
+  test(version) {
+    debug("Comparator.test", version, this.options.loose);
+
+    if (this.semver === ANY || version === ANY) {
+      return true;
+    }
+
+    if (typeof version === "string") {
+      try {
+        version = new SemVer(version, this.options);
+      } catch (er) {
+        return false;
+      }
+    }
+
+    return cmp(version, this.operator, this.semver, this.options);
   }
 
-  this.options = options
-  this.loose = !!options.loose
-  this.includePrerelease = !!options.includePrerelease
+  intersects(comp, options) {
+    if (!(comp instanceof Comparator)) {
+      throw new TypeError("a Comparator is required");
+    }
 
-  // First, split based on boolean or ||
-  this.raw = range
-  this.set = range.split(/\s*\|\|\s*/).map(function (range) {
-    return this.parseRange(range.trim())
-  }, this).filter(function (c) {
-    // throw out any that are not relevant for whatever reason
-    return c.length
-  })
+    if (!options || typeof options !== "object") {
+      options = {
+        loose: !!options,
+        includePrerelease: false
+      };
+    }
 
-  if (!this.set.length) {
-    throw new TypeError('Invalid SemVer Range: ' + range)
-  }
+    let rangeTmp;
 
-  this.format()
-}
+    if (this.operator === "") {
+      if (this.value === "") {
+        return true;
+      }
+      rangeTmp = new Range(comp.value, options);
+      return satisfies(this.value, rangeTmp, options);
+    } else if (comp.operator === "") {
+      if (comp.value === "") {
+        return true;
+      }
+      rangeTmp = new Range(this.value, options);
+      return satisfies(comp.semver, rangeTmp, options);
+    }
 
-Range.prototype.format = function () {
-  this.range = this.set.map(function (comps) {
-    return comps.join(' ').trim()
-  }).join('||').trim()
-  return this.range
-}
+    const sameDirectionIncreasing =
+      (this.operator === ">=" || this.operator === ">") &&
+      (comp.operator === ">=" || comp.operator === ">");
+    const sameDirectionDecreasing =
+      (this.operator === "<=" || this.operator === "<") &&
+      (comp.operator === "<=" || comp.operator === "<");
+    const sameSemVer = this.semver.version === comp.semver.version;
+    const differentDirectionsInclusive =
+      (this.operator === ">=" || this.operator === "<=") &&
+      (comp.operator === ">=" || comp.operator === "<=");
+    const oppositeDirectionsLessThan =
+      cmp(this.semver, "<", comp.semver, options) &&
+      (this.operator === ">=" || this.operator === ">") &&
+        (comp.operator === "<=" || comp.operator === "<");
+    const oppositeDirectionsGreaterThan =
+      cmp(this.semver, ">", comp.semver, options) &&
+      (this.operator === "<=" || this.operator === "<") &&
+        (comp.operator === ">=" || comp.operator === ">");
 
-Range.prototype.toString = function () {
-  return this.range
-}
-
-Range.prototype.parseRange = function (range) {
-  const loose = this.options.loose
-  range = range.trim()
-  // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-  const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
-  range = range.replace(hr, hyphenReplace)
-  debug('hyphen replace', range)
-  // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
-  range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace)
-  debug('comparator trim', range, re[t.COMPARATORTRIM])
-
-  // `~ 1.2.3` => `~1.2.3`
-  range = range.replace(re[t.TILDETRIM], tildeTrimReplace)
-
-  // `^ 1.2.3` => `^1.2.3`
-  range = range.replace(re[t.CARETTRIM], caretTrimReplace)
-
-  // normalize spaces
-  range = range.split(/\s+/).join(' ')
-
-  // At this point, the range is completely trimmed and
-  // ready to be split into comparators.
-
-  const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
-  let set = range.split(' ').map(function (comp) {
-    return parseComparator(comp, this.options)
-  }, this).join(' ').split(/\s+/)
-  if (this.options.loose) {
-    // in loose mode, throw out any that are not valid comparators
-    set = set.filter(function (comp) {
-      return !!comp.match(compRe)
-    })
-  }
-  set = set.map(function (comp) {
-    return new Comparator(comp, this.options)
-  }, this)
-
-  return set
-}
-
-Range.prototype.intersects = function (range, options) {
-  if (!(range instanceof Range)) {
-    throw new TypeError('a Range is required')
-  }
-
-  return this.set.some(function (thisComparators) {
     return (
-      isSatisfiable(thisComparators, options) &&
-      range.set.some(function (rangeComparators) {
-        return (
-          isSatisfiable(rangeComparators, options) &&
-          thisComparators.every(function (thisComparator) {
-            return rangeComparators.every(function (rangeComparator) {
-              return thisComparator.intersects(rangeComparator, options)
-            })
-          })
-        )
+      sameDirectionIncreasing ||
+      sameDirectionDecreasing ||
+      (sameSemVer && differentDirectionsInclusive) ||
+      oppositeDirectionsLessThan ||
+      oppositeDirectionsGreaterThan
+    );
+  }
+}
+
+class Range {
+  constructor(range, options) {
+    if (!options || typeof options !== "object") {
+      options = {
+        loose: !!options,
+        includePrerelease: false
+      };
+    }
+
+    if (range instanceof Range) {
+      if (
+        range.loose === !!options.loose &&
+        range.includePrerelease === !!options.includePrerelease
+      ) {
+        return range;
+      } else {
+        return new Range(range.raw, options);
+      }
+    }
+
+    if (range instanceof Comparator) {
+      return new Range(range.value, options);
+    }
+
+    if (!(this instanceof Range)) {
+      return new Range(range, options);
+    }
+
+    this.options = options;
+    this.loose = !!options.loose;
+    this.includePrerelease = !!options.includePrerelease;
+
+    // First, split based on boolean or ||
+    this.raw = range;
+    this.set = range
+      .split(/\s*\|\|\s*/)
+      .map(function(range) {
+        return this.parseRange(range.trim());
+      }, this)
+      .filter(function(c) {
+        // throw out any that are not relevant for whatever reason
+        return c.length;
+      });
+
+    if (!this.set.length) {
+      throw new TypeError("Invalid SemVer Range: " + range);
+    }
+
+    this.format();
+  }
+
+  format() {
+    this.range = this.set
+      .map(function(comps) {
+        return comps.join(" ").trim();
       })
-    )
-  })
+      .join("||")
+      .trim();
+    return this.range;
+  }
+
+  toString() {
+    return this.range;
+  }
+
+  parseRange(range) {
+    const loose = this.options.loose;
+    range = range.trim();
+    // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
+    const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE];
+    range = range.replace(hr, hyphenReplace);
+    debug("hyphen replace", range);
+    // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
+    range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace);
+    debug("comparator trim", range, re[t.COMPARATORTRIM]);
+
+    // `~ 1.2.3` => `~1.2.3`
+    range = range.replace(re[t.TILDETRIM], tildeTrimReplace);
+
+    // `^ 1.2.3` => `^1.2.3`
+    range = range.replace(re[t.CARETTRIM], caretTrimReplace);
+
+    // normalize spaces
+    range = range.split(/\s+/).join(" ");
+
+    // At this point, the range is completely trimmed and
+    // ready to be split into comparators.
+
+    const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
+    let set = range
+      .split(" ")
+      .map(function(comp) {
+        return parseComparator(comp, this.options);
+      }, this)
+      .join(" ")
+      .split(/\s+/);
+    if (this.options.loose) {
+      // in loose mode, throw out any that are not valid comparators
+      set = set.filter(function(comp) {
+        return !!comp.match(compRe);
+      });
+    }
+    set = set.map(function(comp) {
+      return new Comparator(comp, this.options);
+    }, this);
+
+    return set;
+  }
+
+  intersects(range, options) {
+    if (!(range instanceof Range)) {
+      throw new TypeError("a Range is required");
+    }
+
+    return this.set.some(function(thisComparators) {
+      return (
+        isSatisfiable(thisComparators, options) &&
+        range.set.some(function(rangeComparators) {
+          return (
+            isSatisfiable(rangeComparators, options) &&
+            thisComparators.every(function(thisComparator) {
+              return rangeComparators.every(function(rangeComparator) {
+                return thisComparator.intersects(rangeComparator, options);
+              });
+            })
+          );
+        })
+      );
+    });
+  }
+
+  // if ANY of the sets match ALL of its comparators, then pass
+  test(version) {
+    if (!version) {
+      return false;
+    }
+
+    if (typeof version === "string") {
+      try {
+        version = new SemVer(version, this.options);
+      } catch (er) {
+        return false;
+      }
+    }
+
+    for (let i = 0; i < this.set.length; i++) {
+      if (testSet(this.set[i], version, this.options)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 // take a set of comparators and determine whether there
@@ -512,28 +554,6 @@ function hyphenReplace ($0,
 
   return (from + ' ' + to).trim()
 }
-
-// if ANY of the sets match ALL of its comparators, then pass
-Range.prototype.test = function (version) {
-  if (!version) {
-    return false
-  }
-
-  if (typeof version === 'string') {
-    try {
-      version = new SemVer(version, this.options)
-    } catch (er) {
-      return false
-    }
-  }
-
-  for (let i = 0; i < this.set.length; i++) {
-    if (testSet(this.set[i], version, this.options)) {
-      return true
-    }
-  }
-  return false
-} 
 
 function testSet (set, version, options) {
   for (let i = 0; i < set.length; i++) {
