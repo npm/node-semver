@@ -1,10 +1,9 @@
 const debug = require('../internal/debug')
-const SemVer = require('../semver')
+const SemVer = require('../classes/semver')
 const { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re')
 const cmp = require('../functions/cmp')
 
-module.exports = exports = {}
-exports.Comparator = Comparator
+const ANY = {}
 function Comparator (comp, options) {
   if (!options || typeof options !== 'object') {
     options = {
@@ -39,7 +38,6 @@ function Comparator (comp, options) {
   debug('comp', this)
 }
 
-exports.ANY = ANY = {}
 Comparator.prototype.parse = function (comp) {
   const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
   const m = comp.match(r)
@@ -135,7 +133,6 @@ Comparator.prototype.intersects = function (comp, options) {
     oppositeDirectionsLessThan || oppositeDirectionsGreaterThan
 }
 
-exports.Range = Range
 function Range (range, options) {
   if (!options || typeof options !== 'object') {
     options = {
@@ -574,7 +571,6 @@ function testSet (set, version, options) {
   return true
 }
 
-exports.satisfies = satisfies
 function satisfies (version, range, options) {
   try {
     range = new Range(range, options)
@@ -583,3 +579,9 @@ function satisfies (version, range, options) {
   }
   return range.test(version)
 } 
+
+module.exports = exports = {}
+exports.Comparator = Comparator
+exports.satisfies = satisfies
+exports.Range = Range
+exports.ANY = ANY

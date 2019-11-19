@@ -1,4 +1,5 @@
-const SemVer = require('../semver')
+const SemVer = require('../classes/semver')
+const parse = require('./parse')
 const {re, t} = require('../internal/re')
 
 module.exports = function coerce (version, options) {

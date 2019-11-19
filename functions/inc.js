@@ -1,4 +1,4 @@
-const SemVer = require('../semver')
+const SemVer = require('../classes/semver')
 
 module.exports = function inc (version, release, loose, identifier) {
   if (typeof (loose) === 'string') {

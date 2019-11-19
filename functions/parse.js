@@ -1,6 +1,6 @@
 const {MAX_LENGTH} = require('../internal/constants')
 const { re, t } = require('../internal/re')
-const SemVer = require('../semver')
+const SemVer = require('../classes/semver')
 
 module.exports = function parse (version, options) {
   if (!options || typeof options !== 'object') {

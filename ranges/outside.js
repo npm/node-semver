@@ -1,5 +1,9 @@
-const SemVer = require('../semver')
-const { Comparator, Range, satisfies } = require('.')
+const SemVer = require('../classes/semver')
+const { Comparator, Range, ANY, satisfies } = require('../classes/range')
+const gt = require('../functions/gt')
+const lt = require('../functions/lt')
+const lte = require('../functions/lte')
+const gte = require('../functions/gte')
 
 module.exports = function outside (version, range, hilo, options) {
   version = new SemVer(version, options)

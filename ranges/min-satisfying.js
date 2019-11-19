@@ -1,5 +1,5 @@
-const SemVer = require('../semver')
-const { Range } = require('./index')
+const SemVer = require('../classes/semver')
+const { Range } = require('../classes/range')
 
 module.exports = function minSatisfying (versions, range, options) {
     let min = null

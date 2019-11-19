@@ -1,8 +1,8 @@
-const debug = require('./internal/debug')
-const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('./internal/constants')
-const { re, t } = require('./internal/re')
+const debug = require('../internal/debug')
+const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../internal/constants')
+const { re, t } = require('../internal/re')
 
-const { compareIdentifiers } = require('./internal/identifiers')
+const { compareIdentifiers } = require('../internal/identifiers')
 
 function SemVer (version, options) {
     if (!options || typeof options !== 'object') {
