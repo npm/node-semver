@@ -560,7 +560,7 @@ function testSet (set, version, options) {
     // That should allow `1.2.3-pr.2` to pass.
     // However, `1.2.4-alpha.notready` should NOT be allowed,
     // even though it's within the range set by the comparators.
-    for (i = 0; i < set.length; i++) {
+    for (let i = 0; i < set.length; i++) {
       debug(set[i].semver)
       if (set[i].semver === ANY) {
         continue
@@ -592,8 +592,9 @@ function satisfies (version, range, options) {
   return range.test(version)
 } 
 
-module.exports = exports = {}
-exports.Comparator = Comparator
-exports.satisfies = satisfies
-exports.Range = Range
-exports.ANY = ANY
+module.exports = {
+  Comparator,
+  satisfies,
+  Range,
+  ANY
+};
