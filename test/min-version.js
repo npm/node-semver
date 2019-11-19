@@ -2,7 +2,7 @@ var tap = require('tap')
 var test = tap.test
 var semver = require('../')
 
-test('\nminimum version in range tests', function (t) {
+test('\nminimum version in range tests', (t) => {
   // [range, minimum, loose]
   [
     // Stars
@@ -64,7 +64,7 @@ test('\nminimum version in range tests', function (t) {
 
     // Impossible range
     ['>4 <3', null]
-  ].forEach(function (tuple) {
+  ].forEach((tuple) => {
     var range = tuple[0]
     var version = tuple[1]
     var loose = tuple[2] || false

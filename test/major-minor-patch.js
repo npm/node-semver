@@ -2,7 +2,7 @@ var tap = require('tap')
 var test = tap.test
 var semver = require('../')
 
-test('\nmajor tests', function (t) {
+test('\nmajor tests', (t) => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -15,7 +15,7 @@ test('\nmajor tests', function (t) {
     ['\t13.2.3', 13],
     ['=21.2.3', 21, true],
     ['v=34.2.3', 34, true]
-  ].forEach(function (tuple) {
+  ].forEach((tuple) => {
     var range = tuple[0]
     var version = tuple[1]
     var loose = tuple[2] || false
@@ -25,7 +25,7 @@ test('\nmajor tests', function (t) {
   t.end()
 })
 
-test('\nminor tests', function (t) {
+test('\nminor tests', (t) => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -38,7 +38,7 @@ test('\nminor tests', function (t) {
     ['\t1.13.3', 13],
     ['=1.21.3', 21, true],
     ['v=1.34.3', 34, true]
-  ].forEach(function (tuple) {
+  ].forEach((tuple) => {
     var range = tuple[0]
     var version = tuple[1]
     var loose = tuple[2] || false
@@ -48,7 +48,7 @@ test('\nminor tests', function (t) {
   t.end()
 })
 
-test('\npatch tests', function (t) {
+test('\npatch tests', (t) => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -61,7 +61,7 @@ test('\npatch tests', function (t) {
     ['\t1.2.13', 13],
     ['=1.2.21', 21, true],
     ['v=1.2.34', 34, true]
-  ].forEach(function (tuple) {
+  ].forEach((tuple) => {
     var range = tuple[0]
     var version = tuple[1]
     var loose = tuple[2] || false

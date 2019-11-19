@@ -3,7 +3,7 @@ var test = tap.test
 var semver = require('../')
 var prerelease = semver.prerelease
 
-test('\nprerelease', function (t) {
+test('\nprerelease', (t) => {
   // [prereleaseParts, version, loose]
   [
     [['alpha', 1], '1.2.2-alpha.1'],
@@ -15,7 +15,7 @@ test('\nprerelease', function (t) {
     [null, '1.0.0', true],
     [null, '~2.0.0-alpha.1', false],
     [null, 'invalid version']
-  ].forEach(function (tuple) {
+  ].forEach((tuple) => {
     var expected = tuple[0]
     var version = tuple[1]
     var loose = tuple[2]

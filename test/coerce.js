@@ -10,7 +10,7 @@ function r (text) {
   }
 }
 
-test('\ncoerce tests', function (t) {
+test('\ncoerce tests', (t) => {
   // Expected to be null (cannot be coerced).
   [
     null,
@@ -29,7 +29,7 @@ test('\ncoerce tests', function (t) {
     r('9')(16) + '.' + r('2')(16) + '.' + r('3')(16),
     r('1')(16) + '.' + r('9')(16) + '.' + r('3')(16),
     r('1')(16) + '.' + r('2')(16) + '.' + r('9')(16)
-  ].forEach(function (input) {
+  ].forEach((input) => {
     var msg = 'coerce(' + input + ') should be null'
     t.same(coerce(input), null, msg)
   });
@@ -114,7 +114,7 @@ test('\ncoerce tests', function (t) {
     ['1.2.3/6', '6.0.0', { rtl: true }],
     ['1.2.3.4', '2.3.4', { rtl: true }],
     ['1.2.3.4xyz', '2.3.4', { rtl: true }],
-  ].forEach(function (tuple, i) {
+  ].forEach((tuple, i) => {
     var input = tuple[0]
     var expected = tuple[1]
     var options = tuple[2]
