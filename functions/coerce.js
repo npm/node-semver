@@ -1,4 +1,4 @@
-var SemVer = require('../SemVer');
+var SemVer = require('../semver');
 var {re, t} = require('../internal/re');
 
 module.exports = function coerce (version, options) {

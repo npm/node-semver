@@ -1,5 +1,5 @@
 var debug = require('../internal/debug');
-var SemVer = require('../SemVer');
+var SemVer = require('../semver');
 var { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re');
 var cmp = require('../functions/cmp');
 

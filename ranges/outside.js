@@ -1,4 +1,4 @@
-var SemVer = require('../SemVer');
+var SemVer = require('../semver');
 var { Comparator, Range, satisfies } = require('.')
 
 module.exports = function outside (version, range, hilo, options) {

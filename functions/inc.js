@@ -1,4 +1,4 @@
-var SemVer = require('../SemVer');
+var SemVer = require('../semver');
 
 module.exports = function inc (version, release, loose, identifier) {
   if (typeof (loose) === 'string') {

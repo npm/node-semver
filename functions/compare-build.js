@@ -1,4 +1,4 @@
-var SemVer = require('../SemVer');
+var SemVer = require('../semver');
 
 module.exports = function compareBuild (a, b, loose) {
   var versionA = new SemVer(a, loose)
