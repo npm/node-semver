@@ -18,12 +18,12 @@ class SemVer {
         version = version.version;
       }
     } else if (typeof version !== "string") {
-      throw new TypeError("Invalid Version: " + version);
+      throw new TypeError(`Invalid Version: ${  version}`);
     }
 
     if (version.length > MAX_LENGTH) {
       throw new TypeError(
-        "version is longer than " + MAX_LENGTH + " characters"
+        `version is longer than ${  MAX_LENGTH  } characters`
       );
     }
 
@@ -34,7 +34,7 @@ class SemVer {
     const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL]);
 
     if (!m) {
-      throw new TypeError("Invalid Version: " + version);
+      throw new TypeError(`Invalid Version: ${  version}`);
     }
 
     this.raw = version;
@@ -76,9 +76,9 @@ class SemVer {
   }
 
   format() {
-    this.version = this.major + "." + this.minor + "." + this.patch;
+    this.version = `${this.major  }.${  this.minor  }.${  this.patch}`;
     if (this.prerelease.length) {
-      this.version += "-" + this.prerelease.join(".");
+      this.version += `-${  this.prerelease.join(".")}`;
     }
     return this.version;
   }
@@ -268,7 +268,7 @@ class SemVer {
         break;
 
       default:
-        throw new Error("invalid increment argument: " + release);
+        throw new Error(`invalid increment argument: ${  release}`);
     }
     this.format();
     this.raw = this.version;

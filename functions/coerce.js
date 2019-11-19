@@ -47,7 +47,7 @@ module.exports = function coerce (version, options) {
       return null
     }
   
-    return parse(match[2] +
-      '.' + (match[3] || '0') +
-      '.' + (match[4] || '0'), options)
+    return parse(`${match[2] 
+      }.${  match[3] || '0' 
+      }.${  match[4] || '0'}`, options)
   }

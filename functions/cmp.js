@@ -42,6 +42,6 @@ module.exports = function cmp (a, op, b, loose) {
         return lte(a, b, loose)
   
       default:
-        throw new TypeError('Invalid operator: ' + op)
+        throw new TypeError(`Invalid operator: ${  op}`)
     }
   }

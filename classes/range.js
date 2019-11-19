@@ -40,7 +40,7 @@ class Comparator {
     const m = comp.match(r);
 
     if (!m) {
-      throw new TypeError("Invalid comparator: " + comp);
+      throw new TypeError(`Invalid comparator: ${  comp}`);
     }
 
     this.operator = m[1] !== undefined ? m[1] : "";
@@ -176,7 +176,7 @@ class Range {
       });
 
     if (!this.set.length) {
-      throw new TypeError("Invalid SemVer Range: " + range);
+      throw new TypeError(`Invalid SemVer Range: ${  range}`);
     }
 
     this.format();
@@ -344,18 +344,18 @@ function replaceTilde (comp, options) {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0'
+      ret = `>=${  M  }.0.0 <${  +M + 1  }.0.0`
     } else if (isX(p)) {
       // ~1.2 == >=1.2.0 <1.3.0
-      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0'
+      ret = `>=${  M  }.${  m  }.0 <${  M  }.${  +m + 1  }.0`
     } else if (pr) {
       debug('replaceTilde pr', pr)
-      ret = '>=' + M + '.' + m + '.' + p + '-' + pr +
-            ' <' + M + '.' + (+m + 1) + '.0'
+      ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
+            } <${  M  }.${  +m + 1  }.0`
     } else {
       // ~1.2.3 == >=1.2.3 <1.3.0
-      ret = '>=' + M + '.' + m + '.' + p +
-            ' <' + M + '.' + (+m + 1) + '.0'
+      ret = `>=${  M  }.${  m  }.${  p 
+            } <${  M  }.${  +m + 1  }.0`
     }
 
     debug('tilde return', ret)
@@ -385,40 +385,40 @@ function replaceCaret (comp, options) {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0'
+      ret = `>=${  M  }.0.0 <${  +M + 1  }.0.0`
     } else if (isX(p)) {
       if (M === '0') {
-        ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0'
+        ret = `>=${  M  }.${  m  }.0 <${  M  }.${  +m + 1  }.0`
       } else {
-        ret = '>=' + M + '.' + m + '.0 <' + (+M + 1) + '.0.0'
+        ret = `>=${  M  }.${  m  }.0 <${  +M + 1  }.0.0`
       }
     } else if (pr) {
       debug('replaceCaret pr', pr)
       if (M === '0') {
         if (m === '0') {
-          ret = '>=' + M + '.' + m + '.' + p + '-' + pr +
-                ' <' + M + '.' + m + '.' + (+p + 1)
+          ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
+                } <${  M  }.${  m  }.${  +p + 1}`
         } else {
-          ret = '>=' + M + '.' + m + '.' + p + '-' + pr +
-                ' <' + M + '.' + (+m + 1) + '.0'
+          ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
+                } <${  M  }.${  +m + 1  }.0`
         }
       } else {
-        ret = '>=' + M + '.' + m + '.' + p + '-' + pr +
-              ' <' + (+M + 1) + '.0.0'
+        ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
+              } <${  +M + 1  }.0.0`
       }
     } else {
       debug('no pr')
       if (M === '0') {
         if (m === '0') {
-          ret = '>=' + M + '.' + m + '.' + p +
-                ' <' + M + '.' + m + '.' + (+p + 1)
+          ret = `>=${  M  }.${  m  }.${  p 
+                } <${  M  }.${  m  }.${  +p + 1}`
         } else {
-          ret = '>=' + M + '.' + m + '.' + p +
-                ' <' + M + '.' + (+m + 1) + '.0'
+          ret = `>=${  M  }.${  m  }.${  p 
+                } <${  M  }.${  +m + 1  }.0`
         }
       } else {
-        ret = '>=' + M + '.' + m + '.' + p +
-              ' <' + (+M + 1) + '.0.0'
+        ret = `>=${  M  }.${  m  }.${  p 
+              } <${  +M + 1  }.0.0`
       }
     }
 
@@ -492,12 +492,12 @@ function replaceXRange (comp, options) {
         }
       }
 
-      ret = gtlt + M + '.' + m + '.' + p + pr
+      ret = `${gtlt + M  }.${  m  }.${  p  }${pr}`
     } else if (xm) {
-      ret = '>=' + M + '.0.0' + pr + ' <' + (+M + 1) + '.0.0' + pr
+      ret = `>=${  M  }.0.0${  pr  } <${  +M + 1  }.0.0${  pr}`
     } else if (xp) {
-      ret = '>=' + M + '.' + m + '.0' + pr +
-        ' <' + M + '.' + (+m + 1) + '.0' + pr
+      ret = `>=${  M  }.${  m  }.0${  pr 
+        } <${  M  }.${  +m + 1  }.0${  pr}`
     }
 
     debug('xRange return', ret)
@@ -525,26 +525,26 @@ function hyphenReplace ($0,
   if (isX(fM)) {
     from = ''
   } else if (isX(fm)) {
-    from = '>=' + fM + '.0.0'
+    from = `>=${  fM  }.0.0`
   } else if (isX(fp)) {
-    from = '>=' + fM + '.' + fm + '.0'
+    from = `>=${  fM  }.${  fm  }.0`
   } else {
-    from = '>=' + from
+    from = `>=${  from}`
   }
 
   if (isX(tM)) {
     to = ''
   } else if (isX(tm)) {
-    to = '<' + (+tM + 1) + '.0.0'
+    to = `<${  +tM + 1  }.0.0`
   } else if (isX(tp)) {
-    to = '<' + tM + '.' + (+tm + 1) + '.0'
+    to = `<${  tM  }.${  +tm + 1  }.0`
   } else if (tpr) {
-    to = '<=' + tM + '.' + tm + '.' + tp + '-' + tpr
+    to = `<=${  tM  }.${  tm  }.${  tp  }-${  tpr}`
   } else {
-    to = '<=' + to
+    to = `<=${  to}`
   }
 
-  return (from + ' ' + to).trim()
+  return (`${from  } ${  to}`).trim()
 }
 
 function testSet (set, version, options) {

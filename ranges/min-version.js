@@ -43,7 +43,7 @@ module.exports = function minVersion (range, loose) {
           break
         /* istanbul ignore next */
         default:
-          throw new Error('Unexpected operation: ' + comparator.operator)
+          throw new Error(`Unexpected operation: ${  comparator.operator}`)
       }
     })
   }
