@@ -64,7 +64,7 @@ class SemVer {
     if (!m[4]) {
       this.prerelease = [];
     } else {
-      this.prerelease = m[4].split(".").map(function(id) {
+      this.prerelease = m[4].split(".").map((id) => {
         if (/^[0-9]+$/.test(id)) {
           const num = +id;
           if (num >= 0 && num < MAX_SAFE_INTEGER) {

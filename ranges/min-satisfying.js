@@ -10,7 +10,7 @@ module.exports = function minSatisfying (versions, range, options) {
     } catch (er) {
       return null
     }
-    versions.forEach(function (v) {
+    versions.forEach((v) => {
       if (rangeObj.test(v)) {
         // satisfies(v, range, options)
         if (!min || minSV.compare(v) === 1) {

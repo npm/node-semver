@@ -43,7 +43,7 @@ module.exports = function outside (version, range, hilo, options) {
     let high = null
     let low = null
 
-    comparators.forEach(function (comparator) {
+    comparators.forEach((comparator) => {
       if (comparator.semver === ANY) {
         comparator = new Comparator('>=0.0.0')
       }

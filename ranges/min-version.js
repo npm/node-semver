@@ -19,7 +19,7 @@ module.exports = function minVersion (range, loose) {
   for (let i = 0; i < range.set.length; ++i) {
     const comparators = range.set[i]
 
-    comparators.forEach(function (comparator) {
+    comparators.forEach((comparator) => {
       // Clone to avoid manipulating the comparator's semver object.
       const compver = new SemVer(comparator.semver.version)
       switch (comparator.operator) {

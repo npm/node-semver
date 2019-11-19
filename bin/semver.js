@@ -89,16 +89,16 @@ function main () {
 
   var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }
 
-  versions = versions.map(function (v) {
+  versions = versions.map((v) => {
     return coerce ? (semver.coerce(v, options) || { version: v }).version : v
-  }).filter(function (v) {
+  }).filter((v) => {
     return semver.valid(v)
   })
   if (!versions.length) return fail()
   if (inc && (versions.length !== 1 || range.length)) { return failInc() }
 
   for (var i = 0, l = range.length; i < l; i++) {
-    versions = versions.filter(function (v) {
+    versions = versions.filter((v) => {
       return semver.satisfies(v, range[i], options)
     })
     if (!versions.length) return fail()
@@ -115,13 +115,13 @@ function fail () { process.exit(1) }
 
 function success () {
   var compare = reverse ? 'rcompare' : 'compare'
-  versions.sort(function (a, b) {
+  versions.sort((a, b) => {
     return semver[compare](a, b, options)
-  }).map(function (v) {
+  }).map((v) => {
     return semver.clean(v, options)
-  }).map(function (v) {
+  }).map((v) => {
     return inc ? semver.inc(v, inc, options, identifier) : v
-  }).forEach(function (v, i, _) { console.log(v) })
+  }).forEach((v, i, _) => { console.log(v) })
 }
 
 function help () {

@@ -178,7 +178,7 @@ class Range {
       .map(function(range) {
         return this.parseRange(range.trim());
       }, this)
-      .filter(function(c) {
+      .filter((c) => {
         // throw out any that are not relevant for whatever reason
         return c.length;
       });
@@ -192,7 +192,7 @@ class Range {
 
   format() {
     this.range = this.set
-      .map(function(comps) {
+      .map((comps) => {
         return comps.join(" ").trim();
       })
       .join("||")
@@ -237,7 +237,7 @@ class Range {
       .split(/\s+/);
     if (this.options.loose) {
       // in loose mode, throw out any that are not valid comparators
-      set = set.filter(function(comp) {
+      set = set.filter((comp) => {
         return !!comp.match(compRe);
       });
     }
@@ -253,14 +253,14 @@ class Range {
       throw new TypeError("a Range is required");
     }
 
-    return this.set.some(function(thisComparators) {
+    return this.set.some((thisComparators) => {
       return (
         isSatisfiable(thisComparators, options) &&
-        range.set.some(function(rangeComparators) {
+        range.set.some((rangeComparators) => {
           return (
             isSatisfiable(rangeComparators, options) &&
-            thisComparators.every(function(thisComparator) {
-              return rangeComparators.every(function(rangeComparator) {
+            thisComparators.every((thisComparator) => {
+              return rangeComparators.every((rangeComparator) => {
                 return thisComparator.intersects(rangeComparator, options);
               });
             })
@@ -301,7 +301,7 @@ function isSatisfiable (comparators, options) {
   let testComparator = remainingComparators.pop()
 
   while (result && remainingComparators.length) {
-    result = remainingComparators.every(function (otherComparator) {
+    result = remainingComparators.every((otherComparator) => {
       return testComparator.intersects(otherComparator, options)
     })
 
@@ -338,14 +338,14 @@ function isX (id) {
 // ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
 // ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
 function replaceTildes (comp, options) {
-  return comp.trim().split(/\s+/).map(function (comp) {
+  return comp.trim().split(/\s+/).map((comp) => {
     return replaceTilde(comp, options)
   }).join(' ')
 }
 
 function replaceTilde (comp, options) {
   const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE]
-  return comp.replace(r, function (_, M, m, p, pr) {
+  return comp.replace(r, (_, M, m, p, pr) => {
     debug('tilde', comp, _, M, m, p, pr)
     let ret
 
@@ -378,7 +378,7 @@ function replaceTilde (comp, options) {
 // ^1.2.3 --> >=1.2.3 <2.0.0
 // ^1.2.0 --> >=1.2.0 <2.0.0
 function replaceCarets (comp, options) {
-  return comp.trim().split(/\s+/).map(function (comp) {
+  return comp.trim().split(/\s+/).map((comp) => {
     return replaceCaret(comp, options)
   }).join(' ')
 }
@@ -386,7 +386,7 @@ function replaceCarets (comp, options) {
 function replaceCaret (comp, options) {
   debug('caret', comp, options)
   const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
-  return comp.replace(r, function (_, M, m, p, pr) {
+  return comp.replace(r, (_, M, m, p, pr) => {
     debug('caret', comp, _, M, m, p, pr)
     let ret
 
@@ -437,7 +437,7 @@ function replaceCaret (comp, options) {
 
 function replaceXRanges (comp, options) {
   debug('replaceXRanges', comp, options)
-  return comp.split(/\s+/).map(function (comp) {
+  return comp.split(/\s+/).map((comp) => {
     return replaceXRange(comp, options)
   }).join(' ')
 }
@@ -445,7 +445,7 @@ function replaceXRanges (comp, options) {
 function replaceXRange (comp, options) {
   comp = comp.trim()
   const r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE]
-  return comp.replace(r, function (ret, gtlt, M, m, p, pr) {
+  return comp.replace(r, (ret, gtlt, M, m, p, pr) => {
     debug('xRange', comp, ret, gtlt, M, m, p, pr)
     const xM = isX(M)
     const xm = xM || isX(m)
