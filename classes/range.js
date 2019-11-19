@@ -21,10 +21,6 @@ class Comparator {
       }
     }
 
-    if (!(this instanceof Comparator)) {
-      return new Comparator(comp, options);
-    }
-
     debug("comparator", comp, options);
     this.options = options;
     this.loose = !!options.loose;
@@ -161,10 +157,6 @@ class Range {
 
     if (range instanceof Comparator) {
       return new Range(range.value, options);
-    }
-
-    if (!(this instanceof Range)) {
-      return new Range(range, options);
     }
 
     this.options = options;

@@ -27,10 +27,6 @@ class SemVer {
       );
     }
 
-    if (!(this instanceof SemVer)) {
-      return new SemVer(version, options);
-    }
-
     debug("SemVer", version, options);
     this.options = options;
     this.loose = !!options.loose;
