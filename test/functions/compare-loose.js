@@ -1,6 +1,6 @@
 const { test } = require('tap')
 const compareLoose = require('../../functions/compare-loose')
-const SemVer = require('../../classes/SemVer')
+const SemVer = require('../../classes/semver')
 const eq = require('../../functions/eq')
 
 test('strict vs loose version numbers', (t) => {
