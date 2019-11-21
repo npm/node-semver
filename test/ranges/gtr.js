@@ -1,9 +1,7 @@
-var tap = require('tap')
-var test = tap.test
-var semver = require('../')
-var gtr = semver.gtr
+const { test } = require('tap')
+const gtr = require('../../ranges/gtr')
 
-test('\ngtr tests', (t) => {
+test('gtr tests', (t) => {
   // [range, version, loose]
   // Version should be greater than range
   [
@@ -68,16 +66,16 @@ test('\ngtr tests', (t) => {
     ['=0.7.x', '0.8.2'],
     ['<0.7.x', '0.7.2']
   ].forEach((tuple) => {
-    var range = tuple[0]
-    var version = tuple[1]
-    var loose = tuple[2] || false
-    var msg = 'gtr(' + version + ', ' + range + ', ' + loose + ')'
+    const range = tuple[0]
+    const version = tuple[1]
+    const loose = tuple[2] || false
+    const msg = `gtr(${  version  }, ${  range  }, ${  loose  })`
     t.ok(gtr(version, range, loose), msg)
   })
   t.end()
 })
 
-test('\nnegative gtr tests', (t) => {
+test('negative gtr tests', (t) => {
   // [range, version, loose]
   // Version should NOT be greater than range
   [
@@ -163,10 +161,10 @@ test('\nnegative gtr tests', (t) => {
     ['^0.1.0 || ~3.0.1 || 5.0.0', '5.0.0-0', true],
     ['^0.1.0 || ~3.0.1 || >4 <=5.0.0', '3.5.0']
   ].forEach((tuple) => {
-    var range = tuple[0]
-    var version = tuple[1]
-    var loose = tuple[2] || false
-    var msg = '!gtr(' + version + ', ' + range + ', ' + loose + ')'
+    const range = tuple[0]
+    const version = tuple[1]
+    const loose = tuple[2] || false
+    const msg = `!gtr(${  version  }, ${  range  }, ${  loose  })`
     t.notOk(gtr(version, range, loose), msg)
   })
   t.end()

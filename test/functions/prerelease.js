@@ -1,9 +1,7 @@
-var tap = require('tap')
-var test = tap.test
-var semver = require('../')
-var prerelease = semver.prerelease
+const { test } = require('tap')
+const prerelease = require('../../functions/prerelease')
 
-test('\nprerelease', (t) => {
+test('prerelease', (t) => {
   // [prereleaseParts, version, loose]
   [
     [['alpha', 1], '1.2.2-alpha.1'],
@@ -16,10 +14,10 @@ test('\nprerelease', (t) => {
     [null, '~2.0.0-alpha.1', false],
     [null, 'invalid version']
   ].forEach((tuple) => {
-    var expected = tuple[0]
-    var version = tuple[1]
-    var loose = tuple[2]
-    var msg = 'prerelease(' + version + ')'
+    const expected = tuple[0]
+    const version = tuple[1]
+    const loose = tuple[2]
+    const msg = `prerelease(${  version  })`
     t.same(prerelease(version, loose), expected, msg)
   })
   t.end()
