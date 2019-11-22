@@ -21,7 +21,11 @@
   "files": [
     "bin",
     "range.bnf",
-    "semver.js"
+    "classes",
+    "functions",
+    "internal",
+    "ranges",
+    "index.js"
   ],
   "tap": {
     "check-coverage": true,
