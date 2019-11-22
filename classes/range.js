@@ -20,7 +20,11 @@ class Range {
     }
 
     if (range instanceof Comparator) {
-      return new Range(range.value, options)
+      // just put it in the set and return
+      this.raw = range.value
+      this.set = [[range]]
+      this.format()
+      return this
     }
 
     this.options = options
@@ -31,11 +35,12 @@ class Range {
     this.raw = range
     this.set = range
       .split(/\s*\|\|\s*/)
+      // map the range to a 2d array of comparators
       .map(range => this.parseRange(range.trim()))
-      .filter((c) => {
-        // throw out any that are not relevant for whatever reason
-        return c.length
-      })
+      // throw out any comparator lists that are empty
+      // this generally means that it was not a valid range, which is allowed
+      // in loose mode, but will still throw if the WHOLE range is invalid.
+      .filter(c => c.length)
 
     if (!this.set.length) {
       throw new TypeError(`Invalid SemVer Range: ${range}`)
@@ -331,7 +336,6 @@ const replaceXRange = (comp, options) => {
       if (gtlt === '>') {
         // >1 => >=2.0.0
         // >1.2 => >=1.3.0
-        // >1.2.3 => >= 1.2.4
         gtlt = '>='
         if (xm) {
           M = +M + 1
