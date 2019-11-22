@@ -1,13 +1,13 @@
 const SemVer = require('../classes/semver')
 
-const inc = (version, release, loose, identifier) => {
-  if (typeof (loose) === 'string') {
-    identifier = loose
-    loose = undefined
+const inc = (version, release, options, identifier) => {
+  if (typeof (options) === 'string') {
+    identifier = options
+    options = undefined
   }
 
   try {
-    return new SemVer(version, loose).inc(release, identifier).version
+    return new SemVer(version, options).inc(release, identifier).version
   } catch (er) {
     return null
   }

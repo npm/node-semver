@@ -12,7 +12,8 @@ class SemVer {
       }
     }
     if (version instanceof SemVer) {
-      if (version.loose === options.loose) {
+      if (version.loose === !!options.loose &&
+          version.includePrerelease === !!options.includePrerelease) {
         return version
       } else {
         version = version.version
@@ -30,6 +31,9 @@ class SemVer {
     debug('SemVer', version, options)
     this.options = options
     this.loose = !!options.loose
+    // this isn't actually relevant for versions, but keep it so that we
+    // don't run into trouble passing this.options around.
+    this.includePrerelease = !!options.includePrerelease
 
     const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
 
@@ -90,7 +94,14 @@ class SemVer {
   compare (other) {
     debug('SemVer.compare', this.version, this.options, other)
     if (!(other instanceof SemVer)) {
+      if (typeof other === 'string' && other === this.version) {
+        return 0
+      }
       other = new SemVer(other, this.options)
+    }
+
+    if (other.version === this.version) {
+      return 0
     }
 
     return this.compareMain(other) || this.comparePre(other)

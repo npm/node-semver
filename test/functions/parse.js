@@ -1,18 +1,12 @@
 const t = require('tap')
 const parse = require('../../functions/parse')
 const SemVer = require('../../classes/semver')
-const {MAX_LENGTH, MAX_SAFE_INTEGER} = require('../../internal/constants')
+const invalidVersions = require('../fixtures/invalid-versions')
 
 t.test('returns null instead of throwing when presented with garbage', t => {
-  t.equal(parse(new Array(MAX_LENGTH).join('1') + '.0.0'), null, 'too long')
-  t.equal(parse(`${MAX_SAFE_INTEGER}0.0.0`), null, 'too big')
-  t.equal(parse('hello, world'), null, 'not a version')
-  t.equal(parse('hello, world', true), null, 'even loose, its still junk')
-  t.equal(parse('xyz', { loose: true }), null, 'even loose as an opt, same')
-  t.equal(parse(/a regexp/), null, 'regexp is not a string')
-  t.equal(parse(/1.2.3/), null, 'semver-ish regexp is not a string')
-  t.equal(parse({toString: () => '1.2.3'}), null, 'obj with a tostring is not a string')
-  t.end()
+  t.plan(invalidVersions.length)
+  invalidVersions.forEach(([v, msg, opts]) =>
+    t.equal(parse(v, opts), null, msg))
 })
 
 t.test('parse a version into a SemVer object', t => {
