@@ -1,6 +1,6 @@
 const SemVer = require('../classes/semver')
 
-module.exports = function inc (version, release, loose, identifier) {
+const inc = (version, release, loose, identifier) => {
   if (typeof (loose) === 'string') {
     identifier = loose
     loose = undefined
@@ -12,3 +12,4 @@ module.exports = function inc (version, release, loose, identifier) {
     return null
   }
 }
+module.exports = inc

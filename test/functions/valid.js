@@ -1,0 +1,25 @@
+const t = require('tap')
+const valid = require('../../functions/valid')
+const SemVer = require('../../classes/semver')
+const {MAX_LENGTH, MAX_SAFE_INTEGER} = require('../../internal/constants')
+
+t.test('returns null instead of throwing when presented with garbage', t => {
+  t.equal(valid(new Array(MAX_LENGTH).join('1') + '.0.0'), null, 'too long')
+  t.equal(valid(`${MAX_SAFE_INTEGER}0.0.0`), null, 'too big')
+  t.equal(valid('hello, world'), null, 'not a version')
+  t.equal(valid('hello, world', true), null, 'even loose, its still junk')
+  t.equal(valid('xyz', { loose: true }), null, 'even loose as an opt, same')
+  t.equal(valid(/a regexp/), null, 'regexp is not a string')
+  t.equal(valid(/1.2.3/), null, 'semver-ish regexp is not a string')
+  t.equal(valid({toString: () => '1.2.3'}), null, 'obj with a tostring is not a string')
+  t.end()
+})
+
+t.test('validate a version into a SemVer object', t => {
+  t.equal(valid('1.2.3'), '1.2.3')
+  const s = new SemVer('4.5.6')
+  t.equal(valid(s), '4.5.6', 'return the version if a SemVer obj')
+  t.equal(valid('4.2.0foo', true), '4.2.0-foo', 'looseness as a boolean')
+  t.equal(valid('4.2.0foo', { loose: true }), '4.2.0-foo', 'looseness as an option')
+  t.end()
+})

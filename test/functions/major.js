@@ -18,7 +18,7 @@ test('major tests', (t) => {
     const range = tuple[0]
     const version = tuple[1]
     const loose = tuple[2] || false
-    const msg = `major(${  range  }) = ${  version}`
+    const msg = `major(${range}) = ${version}`
     t.equal(major(range, loose), version, msg)
   })
   t.end()

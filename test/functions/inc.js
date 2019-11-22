@@ -94,14 +94,14 @@ test('increment versions test', (t) => {
     const loose = v[3]
     const id = v[4]
     const found = inc(pre, what, loose, id)
-    const cmd = `inc(${  pre  }, ${  what  }, ${  id  })`
-    t.equal(found, wanted, `${cmd  } === ${  wanted}`)
+    const cmd = `inc(${pre}, ${what}, ${id})`
+    t.equal(found, wanted, `${cmd} === ${wanted}`)
 
     const parsed = parse(pre, loose)
     if (wanted) {
       parsed.inc(what, id)
-      t.equal(parsed.version, wanted, `${cmd  } object version updated`)
-      t.equal(parsed.raw, wanted, `${cmd  } object raw field updated`)
+      t.equal(parsed.version, wanted, `${cmd} object version updated`)
+      t.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
     } else if (parsed) {
       t.throws(() => {
         parsed.inc(what, id)

@@ -2,7 +2,7 @@ const { test } = require('tap')
 const semver = require('../')
 
 test('long version is too long', (t) => {
-  const v = `1.2.${  new Array(256).join('1')}`
+  const v = `1.2.${new Array(256).join('1')}`
   t.throws(() => {
     new semver.SemVer(v) // eslint-disable-line no-new
   })
@@ -13,7 +13,7 @@ test('long version is too long', (t) => {
 })
 
 test('big number is like too long version', (t) => {
-  const v = `1.2.${  new Array(100).join('1')}`
+  const v = `1.2.${new Array(100).join('1')}`
   t.throws(() => {
     new semver.SemVer(v) // eslint-disable-line no-new
   })

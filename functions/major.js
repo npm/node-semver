@@ -1,5 +1,3 @@
 const SemVer = require('../classes/semver')
-
-module.exports = function major (a, loose) {
-  return new SemVer(a, loose).major
-}
+const major = (a, loose) => new SemVer(a, loose).major
+module.exports = major

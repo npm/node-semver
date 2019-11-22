@@ -29,9 +29,7 @@ let reverse = false
 
 const options = {}
 
-main()
-
-function main () {
+const main = () => {
   if (!argv.length) return help()
   while (argv.length) {
     let a = argv.shift()
@@ -106,14 +104,15 @@ function main () {
   return success(versions)
 }
 
-function failInc () {
+
+const failInc = () => {
   console.error('--inc can only be used on a single version with no range')
   fail()
 }
 
-function fail () { process.exit(1) }
+const fail = () => process.exit(1)
 
-function success () {
+const success = () => {
   const compare = reverse ? 'rcompare' : 'compare'
   versions.sort((a, b) => {
     return semver[compare](a, b, options)
@@ -124,51 +123,51 @@ function success () {
   }).forEach((v, i, _) => { console.log(v) })
 }
 
-function help () {
-  console.log([`SemVer ${  version}`,
-    '',
-    'A JavaScript implementation of the https://semver.org/ specification',
-    'Copyright Isaac Z. Schlueter',
-    '',
-    'Usage: semver [options] <version> [<version> [...]]',
-    'Prints valid versions sorted by SemVer precedence',
-    '',
-    'Options:',
-    '-r --range <range>',
-    '        Print versions that match the specified range.',
-    '',
-    '-i --increment [<level>]',
-    '        Increment a version by the specified level.  Level can',
-    '        be one of: major, minor, patch, premajor, preminor,',
-    "        prepatch, or prerelease.  Default level is 'patch'.",
-    '        Only one version may be specified.',
-    '',
-    '--preid <identifier>',
-    '        Identifier to be used to prefix premajor, preminor,',
-    '        prepatch or prerelease version increments.',
-    '',
-    '-l --loose',
-    '        Interpret versions and ranges loosely',
-    '',
-    '-p --include-prerelease',
-    '        Always include prerelease versions in range matching',
-    '',
-    '-c --coerce',
-    '        Coerce a string into SemVer if possible',
-    '        (does not imply --loose)',
-    '',
-    '--rtl',
-    '        Coerce version strings right to left',
-    '',
-    '--ltr',
-    '        Coerce version strings left to right (default)',
-    '',
-    'Program exits successfully if any valid version satisfies',
-    'all supplied ranges, and prints all satisfying versions.',
-    '',
-    'If no satisfying versions are found, then exits failure.',
-    '',
-    'Versions are printed in ascending order, so supplying',
-    'multiple versions to the utility will just sort them.'
-  ].join('\n'))
-}
+const help = () => console.log(
+`SemVer ${version}
+
+A JavaScript implementation of the https://semver.org/ specification
+Copyright Isaac Z. Schlueter
+
+Usage: semver [options] <version> [<version> [...]]
+Prints valid versions sorted by SemVer precedence
+
+Options:
+-r --range <range>
+        Print versions that match the specified range.
+
+-i --increment [<level>]
+        Increment a version by the specified level.  Level can
+        be one of: major, minor, patch, premajor, preminor,
+        prepatch, or prerelease.  Default level is 'patch'.
+        Only one version may be specified.
+
+--preid <identifier>
+        Identifier to be used to prefix premajor, preminor,
+        prepatch or prerelease version increments.
+
+-l --loose
+        Interpret versions and ranges loosely
+
+-p --include-prerelease
+        Always include prerelease versions in range matching
+
+-c --coerce
+        Coerce a string into SemVer if possible
+        (does not imply --loose)
+
+--rtl
+        Coerce version strings right to left
+
+--ltr
+        Coerce version strings left to right (default)
+
+Program exits successfully if any valid version satisfies
+all supplied ranges, and prints all satisfying versions.
+
+If no satisfying versions are found, then exits failure.
+
+Versions are printed in ascending order, so supplying
+multiple versions to the utility will just sort them.`)
+
+main()

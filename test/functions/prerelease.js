@@ -17,7 +17,7 @@ test('prerelease', (t) => {
     const expected = tuple[0]
     const version = tuple[1]
     const loose = tuple[2]
-    const msg = `prerelease(${  version  })`
+    const msg = `prerelease(${version})`
     t.same(prerelease(version, loose), expected, msg)
   })
   t.end()

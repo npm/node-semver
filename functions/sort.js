@@ -1,7 +1,3 @@
 const compareBuild = require('./compare-build')
-
-module.exports = function sort (list, loose) {
-    return list.sort((a, b) => {
-      return compareBuild(a, b, loose)
-    })
-  }
+const sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose))
+module.exports = sort

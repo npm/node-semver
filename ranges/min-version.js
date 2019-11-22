@@ -1,8 +1,8 @@
 const SemVer = require('../classes/semver')
-const { Range } = require('../classes/range')
+const Range = require('../classes/range')
 const gt = require('../functions/gt')
 
-module.exports = function minVersion (range, loose) {
+const minVersion = (range, loose) => {
   range = new Range(range, loose)
 
   let minver = new SemVer('0.0.0')
@@ -43,7 +43,7 @@ module.exports = function minVersion (range, loose) {
           break
         /* istanbul ignore next */
         default:
-          throw new Error(`Unexpected operation: ${  comparator.operator}`)
+          throw new Error(`Unexpected operation: ${comparator.operator}`)
       }
     })
   }
@@ -54,3 +54,4 @@ module.exports = function minVersion (range, loose) {
 
   return null
 }
+module.exports = minVersion

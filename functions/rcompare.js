@@ -1,5 +1,3 @@
 const compare = require('./compare')
-
-module.exports = function rcompare (a, b, loose) {
-  return compare(b, a, loose)
-}
+const rcompare = (a, b, loose) => compare(b, a, loose)
+module.exports = rcompare

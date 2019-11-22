@@ -1,5 +1,3 @@
 const compare = require('./compare')
-
-module.exports = function neq (a, b, loose) {
-  return compare(a, b, loose) !== 0
-}
+const neq = (a, b, loose) => compare(a, b, loose) !== 0
+module.exports = neq

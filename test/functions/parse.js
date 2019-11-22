@@ -1,0 +1,26 @@
+const t = require('tap')
+const parse = require('../../functions/parse')
+const SemVer = require('../../classes/semver')
+const {MAX_LENGTH, MAX_SAFE_INTEGER} = require('../../internal/constants')
+
+t.test('returns null instead of throwing when presented with garbage', t => {
+  t.equal(parse(new Array(MAX_LENGTH).join('1') + '.0.0'), null, 'too long')
+  t.equal(parse(`${MAX_SAFE_INTEGER}0.0.0`), null, 'too big')
+  t.equal(parse('hello, world'), null, 'not a version')
+  t.equal(parse('hello, world', true), null, 'even loose, its still junk')
+  t.equal(parse('xyz', { loose: true }), null, 'even loose as an opt, same')
+  t.equal(parse(/a regexp/), null, 'regexp is not a string')
+  t.equal(parse(/1.2.3/), null, 'semver-ish regexp is not a string')
+  t.equal(parse({toString: () => '1.2.3'}), null, 'obj with a tostring is not a string')
+  t.end()
+})
+
+t.test('parse a version into a SemVer object', t => {
+  t.match(parse('1.2.3'), new SemVer('1.2.3'))
+  const s = new SemVer('4.5.6')
+  t.equal(parse(s), s, 'just return it if its a SemVer obj')
+  const loose = new SemVer('4.2.0', { loose: true })
+  t.match(parse('4.2.0', true), loose, 'looseness as a boolean')
+  t.match(parse('4.2.0', { loose: true }), loose, 'looseness as an option')
+  t.end()
+})

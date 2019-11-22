@@ -1,5 +1,5 @@
 const numeric = /^[0-9]+$/
-function compareIdentifiers (a, b) {
+const compareIdentifiers = (a, b) => {
   const anum = numeric.test(a)
   const bnum = numeric.test(b)
 
@@ -15,11 +15,9 @@ function compareIdentifiers (a, b) {
     : 1
 }
 
-function rcompareIdentifiers (a, b) {
-  return compareIdentifiers(b, a)
-}
+const rcompareIdentifiers = (a, b) => compareIdentifiers(b, a)
 
 module.exports = {
-    compareIdentifiers,
-    rcompareIdentifiers
+  compareIdentifiers,
+  rcompareIdentifiers
 }

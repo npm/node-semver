@@ -9,4 +9,3 @@ test('rcompare', (t) => {
 
   t.end()
 })
-

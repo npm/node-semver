@@ -1,147 +1,11 @@
-const debug = require('../internal/debug')
-const SemVer = require('../classes/semver')
-const { re, t, comparatorTrimReplace, tildeTrimReplace, caretTrimReplace } = require('../internal/re')
-const cmp = require('../functions/cmp')
-
-const ANY = {}
-class Comparator {
-  constructor(comp, options) {
-    if (!options || typeof options !== "object") {
-      options = {
-        loose: !!options,
-        includePrerelease: false
-      };
-    }
-
-    if (comp instanceof Comparator) {
-      if (comp.loose === !!options.loose) {
-        return comp;
-      } else {
-        comp = comp.value;
-      }
-    }
-
-    debug("comparator", comp, options);
-    this.options = options;
-    this.loose = !!options.loose;
-    this.parse(comp);
-
-    if (this.semver === ANY) {
-      this.value = "";
-    } else {
-      this.value = this.operator + this.semver.version;
-    }
-
-    debug("comp", this);
-  }
-
-  parse(comp) {
-    const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
-    const m = comp.match(r);
-
-    if (!m) {
-      throw new TypeError(`Invalid comparator: ${  comp}`);
-    }
-
-    this.operator = m[1] !== undefined ? m[1] : "";
-    if (this.operator === "=") {
-      this.operator = "";
-    }
-
-    // if it literally is just '>' or '' then allow anything.
-    if (!m[2]) {
-      this.semver = ANY;
-    } else {
-      this.semver = new SemVer(m[2], this.options.loose);
-    }
-  }
-
-  toString() {
-    return this.value;
-  }
-
-  test(version) {
-    debug("Comparator.test", version, this.options.loose);
-
-    if (this.semver === ANY || version === ANY) {
-      return true;
-    }
-
-    if (typeof version === "string") {
-      try {
-        version = new SemVer(version, this.options);
-      } catch (er) {
-        return false;
-      }
-    }
-
-    return cmp(version, this.operator, this.semver, this.options);
-  }
-
-  intersects(comp, options) {
-    if (!(comp instanceof Comparator)) {
-      throw new TypeError("a Comparator is required");
-    }
-
-    if (!options || typeof options !== "object") {
-      options = {
-        loose: !!options,
-        includePrerelease: false
-      };
-    }
-
-    let rangeTmp;
-
-    if (this.operator === "") {
-      if (this.value === "") {
-        return true;
-      }
-      rangeTmp = new Range(comp.value, options);
-      return satisfies(this.value, rangeTmp, options);
-    } else if (comp.operator === "") {
-      if (comp.value === "") {
-        return true;
-      }
-      rangeTmp = new Range(this.value, options);
-      return satisfies(comp.semver, rangeTmp, options);
-    }
-
-    const sameDirectionIncreasing =
-      (this.operator === ">=" || this.operator === ">") &&
-      (comp.operator === ">=" || comp.operator === ">");
-    const sameDirectionDecreasing =
-      (this.operator === "<=" || this.operator === "<") &&
-      (comp.operator === "<=" || comp.operator === "<");
-    const sameSemVer = this.semver.version === comp.semver.version;
-    const differentDirectionsInclusive =
-      (this.operator === ">=" || this.operator === "<=") &&
-      (comp.operator === ">=" || comp.operator === "<=");
-    const oppositeDirectionsLessThan =
-      cmp(this.semver, "<", comp.semver, options) &&
-      (this.operator === ">=" || this.operator === ">") &&
-        (comp.operator === "<=" || comp.operator === "<");
-    const oppositeDirectionsGreaterThan =
-      cmp(this.semver, ">", comp.semver, options) &&
-      (this.operator === "<=" || this.operator === "<") &&
-        (comp.operator === ">=" || comp.operator === ">");
-
-    return (
-      sameDirectionIncreasing ||
-      sameDirectionDecreasing ||
-      (sameSemVer && differentDirectionsInclusive) ||
-      oppositeDirectionsLessThan ||
-      oppositeDirectionsGreaterThan
-    );
-  }
-}
-
+// hoisted class for cyclic dependency
 class Range {
-  constructor(range, options) {
-    if (!options || typeof options !== "object") {
+  constructor (range, options) {
+    if (!options || typeof options !== 'object') {
       options = {
         loose: !!options,
         includePrerelease: false
-      };
+      }
     }
 
     if (range instanceof Range) {
@@ -149,100 +13,88 @@ class Range {
         range.loose === !!options.loose &&
         range.includePrerelease === !!options.includePrerelease
       ) {
-        return range;
+        return range
       } else {
-        return new Range(range.raw, options);
+        return new Range(range.raw, options)
       }
     }
 
     if (range instanceof Comparator) {
-      return new Range(range.value, options);
+      return new Range(range.value, options)
     }
 
-    this.options = options;
-    this.loose = !!options.loose;
-    this.includePrerelease = !!options.includePrerelease;
+    this.options = options
+    this.loose = !!options.loose
+    this.includePrerelease = !!options.includePrerelease
 
     // First, split based on boolean or ||
-    this.raw = range;
+    this.raw = range
     this.set = range
       .split(/\s*\|\|\s*/)
-      .map(function(range) {
-        return this.parseRange(range.trim());
-      }, this)
+      .map(range => this.parseRange(range.trim()))
       .filter((c) => {
         // throw out any that are not relevant for whatever reason
-        return c.length;
-      });
+        return c.length
+      })
 
     if (!this.set.length) {
-      throw new TypeError(`Invalid SemVer Range: ${  range}`);
+      throw new TypeError(`Invalid SemVer Range: ${range}`)
     }
 
-    this.format();
+    this.format()
   }
 
-  format() {
+  format () {
     this.range = this.set
       .map((comps) => {
-        return comps.join(" ").trim();
+        return comps.join(' ').trim()
       })
-      .join("||")
-      .trim();
-    return this.range;
+      .join('||')
+      .trim()
+    return this.range
   }
 
-  toString() {
-    return this.range;
+  toString () {
+    return this.range
   }
 
-  parseRange(range) {
-    const loose = this.options.loose;
-    range = range.trim();
+  parseRange (range) {
+    const loose = this.options.loose
+    range = range.trim()
     // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-    const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE];
-    range = range.replace(hr, hyphenReplace);
-    debug("hyphen replace", range);
+    const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
+    range = range.replace(hr, hyphenReplace)
+    debug('hyphen replace', range)
     // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
-    range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace);
-    debug("comparator trim", range, re[t.COMPARATORTRIM]);
+    range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace)
+    debug('comparator trim', range, re[t.COMPARATORTRIM])
 
     // `~ 1.2.3` => `~1.2.3`
-    range = range.replace(re[t.TILDETRIM], tildeTrimReplace);
+    range = range.replace(re[t.TILDETRIM], tildeTrimReplace)
 
     // `^ 1.2.3` => `^1.2.3`
-    range = range.replace(re[t.CARETTRIM], caretTrimReplace);
+    range = range.replace(re[t.CARETTRIM], caretTrimReplace)
 
     // normalize spaces
-    range = range.split(/\s+/).join(" ");
+    range = range.split(/\s+/).join(' ')
 
     // At this point, the range is completely trimmed and
     // ready to be split into comparators.
 
-    const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
-    let set = range
-      .split(" ")
-      .map(function(comp) {
-        return parseComparator(comp, this.options);
-      }, this)
-      .join(" ")
-      .split(/\s+/);
-    if (this.options.loose) {
+    const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR]
+    return range
+      .split(' ')
+      .map(comp => parseComparator(comp, this.options))
+      .join(' ')
+      .split(/\s+/)
       // in loose mode, throw out any that are not valid comparators
-      set = set.filter((comp) => {
-        return !!comp.match(compRe);
-      });
-    }
-    set = set.map(function(comp) {
-      return new Comparator(comp, this.options);
-    }, this);
-
-    return set;
+      .filter(this.options.loose ? comp => !!comp.match(compRe) : () => true)
+      .map(comp => new Comparator(comp, this.options))
   }
 
-  intersects(range, options) {
+  intersects (range, options) {
     if (!(range instanceof Range)) {
-      throw new TypeError("a Range is required");
+      throw new TypeError('a Range is required')
     }
 
     return this.set.some((thisComparators) => {
@@ -253,41 +105,53 @@ class Range {
             isSatisfiable(rangeComparators, options) &&
             thisComparators.every((thisComparator) => {
               return rangeComparators.every((rangeComparator) => {
-                return thisComparator.intersects(rangeComparator, options);
-              });
+                return thisComparator.intersects(rangeComparator, options)
+              })
             })
-          );
+          )
         })
-      );
-    });
+      )
+    })
   }
 
   // if ANY of the sets match ALL of its comparators, then pass
-  test(version) {
+  test (version) {
     if (!version) {
-      return false;
+      return false
     }
 
-    if (typeof version === "string") {
+    if (typeof version === 'string') {
       try {
-        version = new SemVer(version, this.options);
+        version = new SemVer(version, this.options)
       } catch (er) {
-        return false;
+        return false
       }
     }
 
     for (let i = 0; i < this.set.length; i++) {
       if (testSet(this.set[i], version, this.options)) {
-        return true;
+        return true
       }
     }
-    return false;
+    return false
   }
 }
+module.exports = Range
+
+const Comparator = require('./comparator')
+const debug = require('../internal/debug')
+const SemVer = require('./semver')
+const {
+  re,
+  t,
+  comparatorTrimReplace,
+  tildeTrimReplace,
+  caretTrimReplace
+} = require('../internal/re')
 
 // take a set of comparators and determine whether there
 // exists a version which can satisfy it
-function isSatisfiable (comparators, options) {
+const isSatisfiable = (comparators, options) => {
   let result = true
   const remainingComparators = comparators.slice()
   let testComparator = remainingComparators.pop()
@@ -306,7 +170,7 @@ function isSatisfiable (comparators, options) {
 // comprised of xranges, tildes, stars, and gtlt's at this point.
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
-function parseComparator (comp, options) {
+const parseComparator = (comp, options) => {
   debug('comp', comp, options)
   comp = replaceCarets(comp, options)
   debug('caret', comp)
@@ -319,9 +183,7 @@ function parseComparator (comp, options) {
   return comp
 }
 
-function isX (id) {
-  return !id || id.toLowerCase() === 'x' || id === '*'
-}
+const isX = id => !id || id.toLowerCase() === 'x' || id === '*'
 
 // ~, ~> --> * (any, kinda silly)
 // ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
@@ -329,13 +191,12 @@ function isX (id) {
 // ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
 // ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
 // ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
-function replaceTildes (comp, options) {
-  return comp.trim().split(/\s+/).map((comp) => {
+const replaceTildes = (comp, options) =>
+  comp.trim().split(/\s+/).map((comp) => {
     return replaceTilde(comp, options)
   }).join(' ')
-}
 
-function replaceTilde (comp, options) {
+const replaceTilde = (comp, options) => {
   const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE]
   return comp.replace(r, (_, M, m, p, pr) => {
     debug('tilde', comp, _, M, m, p, pr)
@@ -344,18 +205,18 @@ function replaceTilde (comp, options) {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = `>=${  M  }.0.0 <${  +M + 1  }.0.0`
+      ret = `>=${M}.0.0 <${+M + 1}.0.0`
     } else if (isX(p)) {
       // ~1.2 == >=1.2.0 <1.3.0
-      ret = `>=${  M  }.${  m  }.0 <${  M  }.${  +m + 1  }.0`
+      ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0`
     } else if (pr) {
       debug('replaceTilde pr', pr)
-      ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
-            } <${  M  }.${  +m + 1  }.0`
+      ret = `>=${M}.${m}.${p}-${pr
+      } <${M}.${+m + 1}.0`
     } else {
       // ~1.2.3 == >=1.2.3 <1.3.0
-      ret = `>=${  M  }.${  m  }.${  p 
-            } <${  M  }.${  +m + 1  }.0`
+      ret = `>=${M}.${m}.${p
+      } <${M}.${+m + 1}.0`
     }
 
     debug('tilde return', ret)
@@ -369,13 +230,12 @@ function replaceTilde (comp, options) {
 // ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
 // ^1.2.3 --> >=1.2.3 <2.0.0
 // ^1.2.0 --> >=1.2.0 <2.0.0
-function replaceCarets (comp, options) {
-  return comp.trim().split(/\s+/).map((comp) => {
+const replaceCarets = (comp, options) =>
+  comp.trim().split(/\s+/).map((comp) => {
     return replaceCaret(comp, options)
   }).join(' ')
-}
 
-function replaceCaret (comp, options) {
+const replaceCaret = (comp, options) => {
   debug('caret', comp, options)
   const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
   return comp.replace(r, (_, M, m, p, pr) => {
@@ -385,40 +245,40 @@ function replaceCaret (comp, options) {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = `>=${  M  }.0.0 <${  +M + 1  }.0.0`
+      ret = `>=${M}.0.0 <${+M + 1}.0.0`
     } else if (isX(p)) {
       if (M === '0') {
-        ret = `>=${  M  }.${  m  }.0 <${  M  }.${  +m + 1  }.0`
+        ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0`
       } else {
-        ret = `>=${  M  }.${  m  }.0 <${  +M + 1  }.0.0`
+        ret = `>=${M}.${m}.0 <${+M + 1}.0.0`
       }
     } else if (pr) {
       debug('replaceCaret pr', pr)
       if (M === '0') {
         if (m === '0') {
-          ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
-                } <${  M  }.${  m  }.${  +p + 1}`
+          ret = `>=${M}.${m}.${p}-${pr
+          } <${M}.${m}.${+p + 1}`
         } else {
-          ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
-                } <${  M  }.${  +m + 1  }.0`
+          ret = `>=${M}.${m}.${p}-${pr
+          } <${M}.${+m + 1}.0`
         }
       } else {
-        ret = `>=${  M  }.${  m  }.${  p  }-${  pr 
-              } <${  +M + 1  }.0.0`
+        ret = `>=${M}.${m}.${p}-${pr
+        } <${+M + 1}.0.0`
       }
     } else {
       debug('no pr')
       if (M === '0') {
         if (m === '0') {
-          ret = `>=${  M  }.${  m  }.${  p 
-                } <${  M  }.${  m  }.${  +p + 1}`
+          ret = `>=${M}.${m}.${p
+          } <${M}.${m}.${+p + 1}`
         } else {
-          ret = `>=${  M  }.${  m  }.${  p 
-                } <${  M  }.${  +m + 1  }.0`
+          ret = `>=${M}.${m}.${p
+          } <${M}.${+m + 1}.0`
         }
       } else {
-        ret = `>=${  M  }.${  m  }.${  p 
-              } <${  +M + 1  }.0.0`
+        ret = `>=${M}.${m}.${p
+        } <${+M + 1}.0.0`
       }
     }
 
@@ -427,14 +287,14 @@ function replaceCaret (comp, options) {
   })
 }
 
-function replaceXRanges (comp, options) {
+const replaceXRanges = (comp, options) => {
   debug('replaceXRanges', comp, options)
   return comp.split(/\s+/).map((comp) => {
     return replaceXRange(comp, options)
   }).join(' ')
 }
 
-function replaceXRange (comp, options) {
+const replaceXRange = (comp, options) => {
   comp = comp.trim()
   const r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE]
   return comp.replace(r, (ret, gtlt, M, m, p, pr) => {
@@ -492,12 +352,12 @@ function replaceXRange (comp, options) {
         }
       }
 
-      ret = `${gtlt + M  }.${  m  }.${  p  }${pr}`
+      ret = `${gtlt + M}.${m}.${p}${pr}`
     } else if (xm) {
-      ret = `>=${  M  }.0.0${  pr  } <${  +M + 1  }.0.0${  pr}`
+      ret = `>=${M}.0.0${pr} <${+M + 1}.0.0${pr}`
     } else if (xp) {
-      ret = `>=${  M  }.${  m  }.0${  pr 
-        } <${  M  }.${  +m + 1  }.0${  pr}`
+      ret = `>=${M}.${m}.0${pr
+      } <${M}.${+m + 1}.0${pr}`
     }
 
     debug('xRange return', ret)
@@ -508,7 +368,7 @@ function replaceXRange (comp, options) {
 
 // Because * is AND-ed with everything else in the comparator,
 // and '' means "any version", just remove the *s entirely.
-function replaceStars (comp, options) {
+const replaceStars = (comp, options) => {
   debug('replaceStars', comp, options)
   // Looseness is ignored here.  star is always as loose as it gets!
   return comp.trim().replace(re[t.STAR], '')
@@ -519,35 +379,35 @@ function replaceStars (comp, options) {
 // 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
 // 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
 // 1.2 - 3.4 => >=1.2.0 <3.5.0
-function hyphenReplace ($0,
+const hyphenReplace = ($0,
   from, fM, fm, fp, fpr, fb,
-  to, tM, tm, tp, tpr, tb) {
+  to, tM, tm, tp, tpr, tb) => {
   if (isX(fM)) {
     from = ''
   } else if (isX(fm)) {
-    from = `>=${  fM  }.0.0`
+    from = `>=${fM}.0.0`
   } else if (isX(fp)) {
-    from = `>=${  fM  }.${  fm  }.0`
+    from = `>=${fM}.${fm}.0`
   } else {
-    from = `>=${  from}`
+    from = `>=${from}`
   }
 
   if (isX(tM)) {
     to = ''
   } else if (isX(tm)) {
-    to = `<${  +tM + 1  }.0.0`
+    to = `<${+tM + 1}.0.0`
   } else if (isX(tp)) {
-    to = `<${  tM  }.${  +tm + 1  }.0`
+    to = `<${tM}.${+tm + 1}.0`
   } else if (tpr) {
-    to = `<=${  tM  }.${  tm  }.${  tp  }-${  tpr}`
+    to = `<=${tM}.${tm}.${tp}-${tpr}`
   } else {
-    to = `<=${  to}`
+    to = `<=${to}`
   }
 
-  return (`${from  } ${  to}`).trim()
+  return (`${from} ${to}`).trim()
 }
 
-function testSet (set, version, options) {
+const testSet = (set, version, options) => {
   for (let i = 0; i < set.length; i++) {
     if (!set[i].test(version)) {
       return false
@@ -562,7 +422,7 @@ function testSet (set, version, options) {
     // even though it's within the range set by the comparators.
     for (let i = 0; i < set.length; i++) {
       debug(set[i].semver)
-      if (set[i].semver === ANY) {
+      if (set[i].semver === Comparator.ANY) {
         continue
       }
 
@@ -582,19 +442,3 @@ function testSet (set, version, options) {
 
   return true
 }
-
-function satisfies (version, range, options) {
-  try {
-    range = new Range(range, options)
-  } catch (er) {
-    return false
-  }
-  return range.test(version)
-} 
-
-module.exports = {
-  Comparator,
-  satisfies,
-  Range,
-  ANY
-};

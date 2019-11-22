@@ -83,7 +83,7 @@ test('valid range test', (t) => {
     const loose = v[2]
     const found = validRange(pre, loose)
 
-    t.equal(found, wanted, `validRange(${  pre  }) === ${  wanted}`)
+    t.equal(found, wanted, `validRange(${pre}) === ${wanted}`)
   })
 
   t.end()

@@ -73,12 +73,10 @@ test('comparators test', (t) => {
     ['1.2.3 - 3', [['>=1.2.3', '<4.0.0']]],
     ['>*', [['<0.0.0-0']]],
     ['<*', [['<0.0.0-0']]]
-  ].forEach((v) => {
-    const pre = v[0]
-    const wanted = v[1]
-    const found = toComparators(v[0])
+  ].forEach(([pre, wanted]) => {
+    const found = toComparators(pre)
     const jw = JSON.stringify(wanted)
-    t.equivalent(found, wanted, `toComparators(${  pre  }) === ${  jw}`)
+    t.equivalent(found, wanted, `toComparators(${pre}) === ${jw}`)
   })
 
   t.end()

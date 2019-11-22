@@ -1,6 +1,7 @@
 const { test } = require('tap')
 const intersects = require('../../ranges/intersects')
-const { Comparator, Range } = require('../../classes/range')
+const Range = require('../../classes/range')
+const Comparator = require('../../classes/comparator')
 
 test('intersect comparators', (t) => {
   [
@@ -118,9 +119,9 @@ test('ranges intersect', (t) => {
     ['1.3.0 || <1.0.0 >2.0.0', 'x', true],
     ['1.x', '1.3.0 || <1.0.0 >2.0.0', true],
     ['*', '*', true],
-    ['x', '', true],
+    ['x', '', true]
   ].forEach((v) => {
-    t.test(`${v[0]  } <~> ${  v[1]}`, t => {
+    t.test(`${v[0]} <~> ${v[1]}`, t => {
       const range1 = new Range(v[0])
       const range2 = new Range(v[1])
       const expect = v[2]
@@ -157,7 +158,6 @@ test('missing comparator parameter in intersect comparators', (t) => {
   'throws type error')
   t.end()
 })
-
 
 test('missing range parameter in range intersect', (t) => {
   t.throws(() => {

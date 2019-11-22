@@ -1,7 +1,7 @@
 const parse = require('./parse')
 const eq = require('./eq')
 
-module.exports = function diff (version1, version2) {
+const diff = (version1, version2) => {
   if (eq(version1, version2)) {
     return null
   } else {
@@ -22,3 +22,4 @@ module.exports = function diff (version1, version2) {
     return defaultResult // may be undefined
   }
 }
+module.exports = diff

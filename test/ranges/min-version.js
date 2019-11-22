@@ -67,7 +67,7 @@ test('minimum version in range tests', (t) => {
     const range = tuple[0]
     const version = tuple[1]
     const loose = tuple[2] || false
-    const msg = `minVersion(${  range  }, ${  loose  }) = ${  version}`
+    const msg = `minVersion(${range}, ${loose}) = ${version}`
     const min = minVersion(range, loose)
     t.ok(min === version || (min && min.version === version), msg)
   })

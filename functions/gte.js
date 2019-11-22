@@ -1,6 +1,3 @@
-
 const compare = require('./compare')
-
-module.exports = function gte (a, b, loose) {
-  return compare(a, b, loose) >= 0
-}
+const gte = (a, b, loose) => compare(a, b, loose) >= 0
+module.exports = gte

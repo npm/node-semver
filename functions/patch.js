@@ -1,5 +1,3 @@
 const SemVer = require('../classes/semver')
-
-module.exports = function patch (a, loose) {
-  return new SemVer(a, loose).patch
-}
+const patch = (a, loose) => new SemVer(a, loose).patch
+module.exports = patch

@@ -18,7 +18,7 @@ test('minor tests', (t) => {
     const range = tuple[0]
     const version = tuple[1]
     const loose = tuple[2] || false
-    const msg = `minor(${  range  }) = ${  version}`
+    const msg = `minor(${range}) = ${version}`
     t.equal(minor(range, loose), version, msg)
   })
   t.end()

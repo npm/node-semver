@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "tap",
+    "snap": "tap",
     "preversion": "npm test",
     "postversion": "npm publish",
     "postpublish": "git push origin --follow-tags"
   },
   "devDependencies": {
-    "tap": "^14.3.1"
+    "tap": "^14.10.1"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
@@ -23,6 +24,7 @@
     "semver.js"
   ],
   "tap": {
-    "check-coverage": true
+    "check-coverage": true,
+    "coverage-map": "map.js"
   }
 }

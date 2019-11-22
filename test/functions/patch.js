@@ -18,7 +18,7 @@ test('patch tests', (t) => {
     const range = tuple[0]
     const version = tuple[1]
     const loose = tuple[2] || false
-    const msg = `patch(${  range  }) = ${  version}`
+    const msg = `patch(${range}) = ${version}`
     t.equal(patch(range, loose), version, msg)
   })
   t.end()

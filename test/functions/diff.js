@@ -22,8 +22,8 @@ test('diff versions test', (t) => {
     const version2 = v[1]
     const wanted = v[2]
     const found = diff(version1, version2)
-    const cmd = `diff(${  version1  }, ${  version2  })`
-    t.equal(found, wanted, `${cmd  } === ${  wanted}`)
+    const cmd = `diff(${version1}, ${version2})`
+    t.equal(found, wanted, `${cmd} === ${wanted}`)
   })
 
   t.end()
