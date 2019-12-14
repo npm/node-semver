@@ -1,5 +1,11 @@
 # changes log
 
+## 7.0.0
+
+* Refactor module into separate files for better tree-shaking
+* Drop support for very old node versions, use const/let, `=>` functions,
+  and classes.
+
 ## 6.3.0
 
 * Expose the token enum on the exports

@@ -30,5 +30,8 @@
   "tap": {
     "check-coverage": true,
     "coverage-map": "map.js"
+  },
+  "engines": {
+    "node": ">=10"
   }
 }
