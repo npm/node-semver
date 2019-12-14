@@ -430,7 +430,9 @@ any other overlapping SemVer tuple.
 
 * `clean(version)`: Clean a string to be a valid semver if possible
 
-This will return a cleaned and trimmed semver version. If the provided version is not valid a null will be returned. This does not work for ranges. 
+This will return a cleaned and trimmed semver version. If the provided
+version is not valid a null will be returned. This does not work for
+ranges.
 
 ex.
 * `s.clean(' = v 2.1.5foo')`: `null`
@@ -441,3 +443,57 @@ ex.
 * `s.clean('  =v2.1.5')`: `2.1.5`
 * `s.clean('      2.1.5   ')`: `'2.1.5'`
 * `s.clean('~1.0.0')`: `null`
+
+## Exported Modules
+
+<!--
+TODO: Make sure that all of these items are documented (classes aren't,
+eg), and then pull the module name into the documentation for that specific
+thing.
+-->
+
+You may pull in just the part of this semver utility that you need, if you
+are sensitive to packing and tree-shaking concerns.  The main
+`require('semver')` export uses getter functions to lazily load the parts
+of the API that are used.
+
+The following modules are available:
+
+* `require('semver')`
+* `require('semver/classes')`
+* `require('semver/classes/comparator')`
+* `require('semver/classes/range')`
+* `require('semver/classes/semver')`
+* `require('semver/functions/clean')`
+* `require('semver/functions/cmp')`
+* `require('semver/functions/coerce')`
+* `require('semver/functions/compare')`
+* `require('semver/functions/compare-build')`
+* `require('semver/functions/compare-loose')`
+* `require('semver/functions/diff')`
+* `require('semver/functions/eq')`
+* `require('semver/functions/gt')`
+* `require('semver/functions/gte')`
+* `require('semver/functions/inc')`
+* `require('semver/functions/lt')`
+* `require('semver/functions/lte')`
+* `require('semver/functions/major')`
+* `require('semver/functions/minor')`
+* `require('semver/functions/neq')`
+* `require('semver/functions/parse')`
+* `require('semver/functions/patch')`
+* `require('semver/functions/prerelease')`
+* `require('semver/functions/rcompare')`
+* `require('semver/functions/rsort')`
+* `require('semver/functions/satisfies')`
+* `require('semver/functions/sort')`
+* `require('semver/functions/valid')`
+* `require('semver/ranges/gtr')`
+* `require('semver/ranges/intersects')`
+* `require('semver/ranges/ltr')`
+* `require('semver/ranges/max-satisfying')`
+* `require('semver/ranges/min-satisfying')`
+* `require('semver/ranges/min-version')`
+* `require('semver/ranges/outside')`
+* `require('semver/ranges/to-comparators')`
+* `require('semver/ranges/valid')`
