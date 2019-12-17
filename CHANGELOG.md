@@ -1,5 +1,10 @@
 # changes log
 
+## 7.1.0
+
+* Add `require('semver/preload')` to load the entire module without using
+  lazy getter methods.
+
 ## 7.0.0
 
 * Refactor module into separate files for better tree-shaking
