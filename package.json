@@ -25,7 +25,8 @@
     "functions",
     "internal",
     "ranges",
-    "index.js"
+    "index.js",
+    "preload.js"
   ],
   "tap": {
     "check-coverage": true,
