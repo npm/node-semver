@@ -8,9 +8,10 @@ const diff = (version1, version2) => {
     const v1 = parse(version1)
     const v2 = parse(version2)
     let prefix = ''
+    let defaultResult
     if (v1.prerelease.length || v2.prerelease.length) {
       prefix = 'pre'
-      var defaultResult = 'prerelease'
+      defaultResult = 'prerelease'
     }
     for (const key in v1) {
       if (key === 'major' || key === 'minor' || key === 'patch') {
