@@ -441,3 +441,39 @@ ex.
 * `s.clean('  =v2.1.5')`: `2.1.5`
 * `s.clean('      2.1.5   ')`: `'2.1.5'`
 * `s.clean('~1.0.0')`: `null`
+
+
+## Constants
+
+As a convenience, helper constants are exported to provide information about what `node-semver` supports:
+
+### `RELEASE_TYPES`
+
+- major
+- premajor
+- minor
+- preminor
+- patch
+- prepatch
+- prerelease
+
+```
+const semver = require('semver');
+
+if (semver.RELEASE_TYPES.includes(arbitraryUserInput)) {
+  console.log('This is a valid release type!');
+} else {
+  console.warn('This is NOT a valid release type!');
+}
+```
+
+### `SEMVER_SPEC_VERSION`
+
+2.0.0
+
+```
+const semver = require('semver');
+
+console.log('We are currently using the semver specification version:', semver.SEMVER_SPEC_VERSION);
+```
+
