@@ -25,13 +25,12 @@ semver.valid(semver.coerce('v2')) // '2.0.0'
 semver.valid(semver.coerce('42.6.7.9.3-alpha')) // '42.6.7'
 ```
 
-This module uses getters to lazily load only the parts of the package that
-are used.  To use it with Webpack and other projects that need string
-literals as the argument to `require()`, load it this way:
+You can also just load the module for the function that you care about, if
+you'd like to minimize your footprint.
 
 ```js
 // load the whole API at once in a single object
-const semver = require('semver/preload')
+const semver = require('semver')
 
 // or just load the bits you need
 // all of them listed here, just pick and choose what you want
