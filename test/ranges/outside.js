@@ -6,41 +6,41 @@ const versionLtr = require('../fixtures/version-lt-range')
 const versionNotLtr = require('../fixtures/version-not-lt-range')
 
 test('gtr tests', (t) => {
-  // [range, version, loose]
+  // [range, version, options]
   // Version should be greater than range
-  versionGtr.forEach(([range, version, loose = false]) => {
-    const msg = `outside(${version}, ${range}, > ${loose})`
-    t.ok(outside(version, range, '>', loose), msg)
+  versionGtr.forEach(([range, version, options = false]) => {
+    const msg = `outside(${version}, ${range}, > ${options})`
+    t.ok(outside(version, range, '>', options), msg)
   })
   t.end()
 })
 
 test('ltr tests', (t) => {
-  // [range, version, loose]
+  // [range, version, options]
   // Version should be less than range
-  versionLtr.forEach(([range, version, loose = false]) => {
-    const msg = `outside(${version}, ${range}, <, ${loose})`
-    t.ok(outside(version, range, '<', loose), msg)
+  versionLtr.forEach(([range, version, options = false]) => {
+    const msg = `outside(${version}, ${range}, <, ${options})`
+    t.ok(outside(version, range, '<', options), msg)
   })
   t.end()
 })
 
 test('negative gtr tests', (t) => {
-  // [range, version, loose]
+  // [range, version, options]
   // Version should NOT be greater than range
-  versionNotGtr.forEach(([range, version, loose = false]) => {
-    const msg = `!outside(${version}, ${range}, > ${loose})`
-    t.notOk(outside(version, range, '>', loose), msg)
+  versionNotGtr.forEach(([range, version, options = false]) => {
+    const msg = `!outside(${version}, ${range}, > ${options})`
+    t.notOk(outside(version, range, '>', options), msg)
   })
   t.end()
 })
 
 test('negative ltr tests', (t) => {
-  // [range, version, loose]
+  // [range, version, options]
   // Version should NOT be less than range
-  versionNotLtr.forEach(([range, version, loose = false]) => {
-    const msg = `!outside(${version}, ${range}, < ${loose})`
-    t.notOk(outside(version, range, '<', loose), msg)
+  versionNotLtr.forEach(([range, version, options = false]) => {
+    const msg = `!outside(${version}, ${range}, < ${options})`
+    t.notOk(outside(version, range, '<', options), msg)
   })
   t.end()
 })
