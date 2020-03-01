@@ -1,4 +1,4 @@
-// [range, version, loose]
+// [range, version, options]
 // Version should be greater than range
 module.exports = [
   ['~1.2.2', '1.3.0'],
