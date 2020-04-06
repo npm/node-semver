@@ -19,12 +19,12 @@
     "semver": "./bin/semver.js"
   },
   "files": [
-    "bin",
+    "bin/**/*.js",
     "range.bnf",
-    "classes",
-    "functions",
-    "internal",
-    "ranges",
+    "classes/**/*.js",
+    "functions/**/*.js",
+    "internal/**/*.js",
+    "ranges/**/*.js",
     "index.js",
     "preload.js"
   ],
