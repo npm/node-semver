@@ -78,6 +78,7 @@ const semverOutside = require('semver/ranges/outside')
 const semverGtr = require('semver/ranges/gtr')
 const semverLtr = require('semver/ranges/ltr')
 const semverIntersects = require('semver/ranges/intersects')
+const simplifyRange = require('semver/ranges/simplify')
 ```
 
 As a command-line utility:
@@ -446,6 +447,14 @@ strings that they parse.
   `hilo` argument must be either the string `'>'` or `'<'`.  (This is
   the function called by `gtr` and `ltr`.)
 * `intersects(range)`: Return true if any of the ranges comparators intersect
+* `simplifyRange(versions, range)`: Return a "simplified" range that
+  matches the same items in `versions` list as the range specified.  Note
+  that it does *not* guarantee that it would match the same versions in all
+  cases, only for the set of versions provided.  This is useful when
+  generating ranges by joining together multiple versions with `||`
+  programmatically, to provide the user with something a bit more
+  ergonomic.  If the provided range is shorter in string-length than the
+  generated range, then that is returned.
 
 Note that, since ranges may be non-contiguous, a version might not be
 greater than a range, less than a range, *or* satisfy a range!  For

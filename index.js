@@ -43,4 +43,5 @@ module.exports = {
   gtr: require('./ranges/gtr'),
   ltr: require('./ranges/ltr'),
   intersects: require('./ranges/intersects'),
+  simplifyRange: require('./ranges/simplify'),
 }
