@@ -192,11 +192,11 @@ const parseComparator = (comp, options) => {
 const isX = id => !id || id.toLowerCase() === 'x' || id === '*'
 
 // ~, ~> --> * (any, kinda silly)
-// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
-// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0
-// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
-// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
-// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
+// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0-0
+// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0-0
+// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0-0
+// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0-0
+// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0-0
 const replaceTildes = (comp, options) =>
   comp.trim().split(/\s+/).map((comp) => {
     return replaceTilde(comp, options)
@@ -211,18 +211,18 @@ const replaceTilde = (comp, options) => {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = `>=${M}.0.0 <${+M + 1}.0.0`
+      ret = `>=${M}.0.0 <${+M + 1}.0.0-0`
     } else if (isX(p)) {
-      // ~1.2 == >=1.2.0 <1.3.0
-      ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0`
+      // ~1.2 == >=1.2.0 <1.3.0-0
+      ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0-0`
     } else if (pr) {
       debug('replaceTilde pr', pr)
       ret = `>=${M}.${m}.${p}-${pr
-      } <${M}.${+m + 1}.0`
+      } <${M}.${+m + 1}.0-0`
     } else {
-      // ~1.2.3 == >=1.2.3 <1.3.0
+      // ~1.2.3 == >=1.2.3 <1.3.0-0
       ret = `>=${M}.${m}.${p
-      } <${M}.${+m + 1}.0`
+      } <${M}.${+m + 1}.0-0`
     }
 
     debug('tilde return', ret)
@@ -231,11 +231,11 @@ const replaceTilde = (comp, options) => {
 }
 
 // ^ --> * (any, kinda silly)
-// ^2, ^2.x, ^2.x.x --> >=2.0.0 <3.0.0
-// ^2.0, ^2.0.x --> >=2.0.0 <3.0.0
-// ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
-// ^1.2.3 --> >=1.2.3 <2.0.0
-// ^1.2.0 --> >=1.2.0 <2.0.0
+// ^2, ^2.x, ^2.x.x --> >=2.0.0 <3.0.0-0
+// ^2.0, ^2.0.x --> >=2.0.0 <3.0.0-0
+// ^1.2, ^1.2.x --> >=1.2.0 <2.0.0-0
+// ^1.2.3 --> >=1.2.3 <2.0.0-0
+// ^1.2.0 --> >=1.2.0 <2.0.0-0
 const replaceCarets = (comp, options) =>
   comp.trim().split(/\s+/).map((comp) => {
     return replaceCaret(comp, options)
@@ -252,40 +252,40 @@ const replaceCaret = (comp, options) => {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = `>=${M}.0.0${z} <${+M + 1}.0.0${z}`
+      ret = `>=${M}.0.0${z} <${+M + 1}.0.0-0`
     } else if (isX(p)) {
       if (M === '0') {
-        ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0${z}`
+        ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`
       } else {
-        ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0${z}`
+        ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`
       }
     } else if (pr) {
       debug('replaceCaret pr', pr)
       if (M === '0') {
         if (m === '0') {
           ret = `>=${M}.${m}.${p}-${pr
-          } <${M}.${m}.${+p + 1}${z}`
+          } <${M}.${m}.${+p + 1}-0`
         } else {
           ret = `>=${M}.${m}.${p}-${pr
-          } <${M}.${+m + 1}.0${z}`
+          } <${M}.${+m + 1}.0-0`
         }
       } else {
         ret = `>=${M}.${m}.${p}-${pr
-        } <${+M + 1}.0.0${z}`
+        } <${+M + 1}.0.0-0`
       }
     } else {
       debug('no pr')
       if (M === '0') {
         if (m === '0') {
           ret = `>=${M}.${m}.${p
-          }${z} <${M}.${m}.${+p + 1}${z}`
+          }${z} <${M}.${m}.${+p + 1}-0`
         } else {
           ret = `>=${M}.${m}.${p
-          }${z} <${M}.${+m + 1}.0${z}`
+          }${z} <${M}.${+m + 1}.0-0`
         }
       } else {
         ret = `>=${M}.${m}.${p
-        } <${+M + 1}.0.0${z}`
+        } <${+M + 1}.0.0-0`
       }
     }
 
@@ -360,10 +360,10 @@ const replaceXRange = (comp, options) => {
 
       ret = `${gtlt + M}.${m}.${p}${pr}`
     } else if (xm) {
-      ret = `>=${M}.0.0${pr} <${+M + 1}.0.0${pr}`
+      ret = `>=${M}.0.0${pr} <${+M + 1}.0.0-0`
     } else if (xp) {
       ret = `>=${M}.${m}.0${pr
-      } <${M}.${+m + 1}.0${pr}`
+      } <${M}.${+m + 1}.0-0`
     }
 
     debug('xRange return', ret)
@@ -389,8 +389,8 @@ const replaceGTE0 = (comp, options) => {
 // This function is passed to string.replace(re[t.HYPHENRANGE])
 // M, m, patch, prerelease, build
 // 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
-// 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
-// 1.2 - 3.4 => >=1.2.0 <3.5.0
+// 1.2.3 - 3.4 => >=1.2.0 <3.5.0-0 Any 3.4.x will do
+// 1.2 - 3.4 => >=1.2.0 <3.5.0-0
 const hyphenReplace = incPr => ($0,
   from, fM, fm, fp, fpr, fb,
   to, tM, tm, tp, tpr, tb) => {
@@ -409,9 +409,9 @@ const hyphenReplace = incPr => ($0,
   if (isX(tM)) {
     to = ''
   } else if (isX(tm)) {
-    to = `<${+tM + 1}.0.0${incPr ? '-0' : ''}`
+    to = `<${+tM + 1}.0.0-0`
   } else if (isX(tp)) {
-    to = `<${tM}.${+tm + 1}.0${incPr ? '-0' : ''}`
+    to = `<${tM}.${+tm + 1}.0-0`
   } else if (tpr) {
     to = `<=${tM}.${tm}.${tp}-${tpr}`
   } else if (incPr) {

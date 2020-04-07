@@ -256,8 +256,8 @@ inclusive range, then all versions that start with the supplied parts
 of the tuple are accepted, but nothing that would be greater than the
 provided tuple parts.
 
-* `1.2.3 - 2.3` := `>=1.2.3 <2.4.0`
-* `1.2.3 - 2` := `>=1.2.3 <3.0.0`
+* `1.2.3 - 2.3` := `>=1.2.3 <2.4.0-0`
+* `1.2.3 - 2` := `>=1.2.3 <3.0.0-0`
 
 #### X-Ranges `1.2.x` `1.X` `1.2.*` `*`
 
@@ -265,28 +265,28 @@ Any of `X`, `x`, or `*` may be used to "stand in" for one of the
 numeric values in the `[major, minor, patch]` tuple.
 
 * `*` := `>=0.0.0` (Any version satisfies)
-* `1.x` := `>=1.0.0 <2.0.0` (Matching major version)
-* `1.2.x` := `>=1.2.0 <1.3.0` (Matching major and minor versions)
+* `1.x` := `>=1.0.0 <2.0.0-0` (Matching major version)
+* `1.2.x` := `>=1.2.0 <1.3.0-0` (Matching major and minor versions)
 
 A partial version range is treated as an X-Range, so the special
 character is in fact optional.
 
 * `""` (empty string) := `*` := `>=0.0.0`
-* `1` := `1.x.x` := `>=1.0.0 <2.0.0`
-* `1.2` := `1.2.x` := `>=1.2.0 <1.3.0`
+* `1` := `1.x.x` := `>=1.0.0 <2.0.0-0`
+* `1.2` := `1.2.x` := `>=1.2.0 <1.3.0-0`
 
 #### Tilde Ranges `~1.2.3` `~1.2` `~1`
 
 Allows patch-level changes if a minor version is specified on the
 comparator.  Allows minor-level changes if not.
 
-* `~1.2.3` := `>=1.2.3 <1.(2+1).0` := `>=1.2.3 <1.3.0`
-* `~1.2` := `>=1.2.0 <1.(2+1).0` := `>=1.2.0 <1.3.0` (Same as `1.2.x`)
-* `~1` := `>=1.0.0 <(1+1).0.0` := `>=1.0.0 <2.0.0` (Same as `1.x`)
-* `~0.2.3` := `>=0.2.3 <0.(2+1).0` := `>=0.2.3 <0.3.0`
-* `~0.2` := `>=0.2.0 <0.(2+1).0` := `>=0.2.0 <0.3.0` (Same as `0.2.x`)
-* `~0` := `>=0.0.0 <(0+1).0.0` := `>=0.0.0 <1.0.0` (Same as `0.x`)
-* `~1.2.3-beta.2` := `>=1.2.3-beta.2 <1.3.0` Note that prereleases in
+* `~1.2.3` := `>=1.2.3 <1.(2+1).0` := `>=1.2.3 <1.3.0-0`
+* `~1.2` := `>=1.2.0 <1.(2+1).0` := `>=1.2.0 <1.3.0-0` (Same as `1.2.x`)
+* `~1` := `>=1.0.0 <(1+1).0.0` := `>=1.0.0 <2.0.0-0` (Same as `1.x`)
+* `~0.2.3` := `>=0.2.3 <0.(2+1).0` := `>=0.2.3 <0.3.0-0`
+* `~0.2` := `>=0.2.0 <0.(2+1).0` := `>=0.2.0 <0.3.0-0` (Same as `0.2.x`)
+* `~0` := `>=0.0.0 <(0+1).0.0` := `>=0.0.0 <1.0.0-0` (Same as `0.x`)
+* `~1.2.3-beta.2` := `>=1.2.3-beta.2 <1.3.0-0` Note that prereleases in
   the `1.2.3` version will be allowed, if they are greater than or
   equal to `beta.2`.  So, `1.2.3-beta.4` would be allowed, but
   `1.2.4-beta.2` would not, because it is a prerelease of a
@@ -308,15 +308,15 @@ However, it presumes that there will *not* be breaking changes between
 `0.2.4` and `0.2.5`.  It allows for changes that are presumed to be
 additive (but non-breaking), according to commonly observed practices.
 
-* `^1.2.3` := `>=1.2.3 <2.0.0`
-* `^0.2.3` := `>=0.2.3 <0.3.0`
-* `^0.0.3` := `>=0.0.3 <0.0.4`
-* `^1.2.3-beta.2` := `>=1.2.3-beta.2 <2.0.0` Note that prereleases in
+* `^1.2.3` := `>=1.2.3 <2.0.0-0`
+* `^0.2.3` := `>=0.2.3 <0.3.0-0`
+* `^0.0.3` := `>=0.0.3 <0.0.4-0`
+* `^1.2.3-beta.2` := `>=1.2.3-beta.2 <2.0.0-0` Note that prereleases in
   the `1.2.3` version will be allowed, if they are greater than or
   equal to `beta.2`.  So, `1.2.3-beta.4` would be allowed, but
   `1.2.4-beta.2` would not, because it is a prerelease of a
   different `[major, minor, patch]` tuple.
-* `^0.0.3-beta` := `>=0.0.3-beta <0.0.4`  Note that prereleases in the
+* `^0.0.3-beta` := `>=0.0.3-beta <0.0.4-0`  Note that prereleases in the
   `0.0.3` version *only* will be allowed, if they are greater than or
   equal to `beta`.  So, `0.0.3-pr.2` would be allowed.
 
@@ -324,16 +324,16 @@ When parsing caret ranges, a missing `patch` value desugars to the
 number `0`, but will allow flexibility within that value, even if the
 major and minor versions are both `0`.
 
-* `^1.2.x` := `>=1.2.0 <2.0.0`
-* `^0.0.x` := `>=0.0.0 <0.1.0`
-* `^0.0` := `>=0.0.0 <0.1.0`
+* `^1.2.x` := `>=1.2.0 <2.0.0-0`
+* `^0.0.x` := `>=0.0.0 <0.1.0-0`
+* `^0.0` := `>=0.0.0 <0.1.0-0`
 
 A missing `minor` and `patch` values will desugar to zero, but also
 allow flexibility within those values, even if the major version is
 zero.
 
-* `^1.x` := `>=1.0.0 <2.0.0`
-* `^0.x` := `>=0.0.0 <1.0.0`
+* `^1.x` := `>=1.0.0 <2.0.0-0`
+* `^0.x` := `>=0.0.0 <1.0.0-0`
 
 ### Range Grammar
 
