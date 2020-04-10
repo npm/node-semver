@@ -11,7 +11,7 @@
     "postpublish": "git push origin --follow-tags"
   },
   "devDependencies": {
-    "tap": "^14.10.2"
+    "tap": "^14.10.7"
   },
   "license": "ISC",
   "repository": "https://github.com/npm/node-semver",
