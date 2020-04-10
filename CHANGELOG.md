@@ -1,5 +1,16 @@
 # changes log
 
+## 7.2.0
+
+* Add `simplifyRange` method to attempt to generate a more human-readable
+  range expression that is equivalent to a supplied range, for a given set
+  of versions.
+
+## 7.1.2
+
+* Remove fancy lazy-loading logic, as it was causing problems for webpack
+  users.
+
 ## 7.1.0
 
 * Add `require('semver/preload')` to load the entire module without using
