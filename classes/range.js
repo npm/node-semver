@@ -243,6 +243,7 @@ const replaceCarets = (comp, options) =>
 const replaceCaret = (comp, options) => {
   debug('caret', comp, options)
   const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET]
+  const z = options.includePrerelease ? '-0' : ''
   return comp.replace(r, (_, M, m, p, pr) => {
     debug('caret', comp, _, M, m, p, pr)
     let ret
@@ -250,40 +251,40 @@ const replaceCaret = (comp, options) => {
     if (isX(M)) {
       ret = ''
     } else if (isX(m)) {
-      ret = `>=${M}.0.0 <${+M + 1}.0.0`
+      ret = `>=${M}.0.0${z} <${+M + 1}.0.0${z}`
     } else if (isX(p)) {
       if (M === '0') {
-        ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0`
+        ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0${z}`
       } else {
-        ret = `>=${M}.${m}.0 <${+M + 1}.0.0`
+        ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0${z}`
       }
     } else if (pr) {
       debug('replaceCaret pr', pr)
       if (M === '0') {
         if (m === '0') {
           ret = `>=${M}.${m}.${p}-${pr
-          } <${M}.${m}.${+p + 1}`
+          } <${M}.${m}.${+p + 1}${z}`
         } else {
           ret = `>=${M}.${m}.${p}-${pr
-          } <${M}.${+m + 1}.0`
+          } <${M}.${+m + 1}.0${z}`
         }
       } else {
         ret = `>=${M}.${m}.${p}-${pr
-        } <${+M + 1}.0.0`
+        } <${+M + 1}.0.0${z}`
       }
     } else {
       debug('no pr')
       if (M === '0') {
         if (m === '0') {
           ret = `>=${M}.${m}.${p
-          } <${M}.${m}.${+p + 1}`
+          }${z} <${M}.${m}.${+p + 1}${z}`
         } else {
           ret = `>=${M}.${m}.${p
-          } <${M}.${+m + 1}.0`
+          }${z} <${M}.${+m + 1}.0${z}`
         }
       } else {
         ret = `>=${M}.${m}.${p
-        } <${+M + 1}.0.0`
+        } <${+M + 1}.0.0${z}`
       }
     }
 

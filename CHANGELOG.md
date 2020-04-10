@@ -1,5 +1,10 @@
 # changes log
 
+## 7.2.2
+
+* Fix bug where `2.0.0-pre` would be included in `^1.0.0` if
+  `includePrerelease` was set to true.
+
 ## 7.2.0
 
 * Add `simplifyRange` method to attempt to generate a more human-readable
