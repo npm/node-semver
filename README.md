@@ -79,6 +79,7 @@ const semverGtr = require('semver/ranges/gtr')
 const semverLtr = require('semver/ranges/ltr')
 const semverIntersects = require('semver/ranges/intersects')
 const simplifyRange = require('semver/ranges/simplify')
+const rangeSubset = require('semver/ranges/subset')
 ```
 
 As a command-line utility:
@@ -455,6 +456,8 @@ strings that they parse.
   programmatically, to provide the user with something a bit more
   ergonomic.  If the provided range is shorter in string-length than the
   generated range, then that is returned.
+* `subset(subRange, superRange)`: Return `true` if the `subRange` range is
+  entirely contained by the `superRange` range.
 
 Note that, since ranges may be non-contiguous, a version might not be
 greater than a range, less than a range, *or* satisfy a range!  For

@@ -1,5 +1,10 @@
 # changes log
 
+## 7.3.0
+
+* Add `subset(r1, r2)` method to determine if `r1` range is entirely
+  contained by `r2` range.
+
 ## 7.2.3
 
 * Fix handling of `includePrelease` mode where version ranges like `1.0.0 -
