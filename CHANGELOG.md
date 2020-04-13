@@ -1,5 +1,10 @@
 # changes log
 
+## 7.2.3
+
+* Fix handling of `includePrelease` mode where version ranges like `1.0.0 -
+  2.0.0` would include `3.0.0-pre` and not `1.0.0-pre`.
+
 ## 7.2.2
 
 * Fix bug where `2.0.0-pre` would be included in `^1.0.0` if
