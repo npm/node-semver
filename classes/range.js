@@ -68,7 +68,7 @@ class Range {
     range = range.trim()
     // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
     const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
-    range = range.replace(hr, hyphenReplace)
+    range = range.replace(hr, hyphenReplace(this.options.includePrerelease))
     debug('hyphen replace', range)
     // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
     range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace)
@@ -384,27 +384,31 @@ const replaceStars = (comp, options) => {
 // 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
 // 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
 // 1.2 - 3.4 => >=1.2.0 <3.5.0
-const hyphenReplace = ($0,
+const hyphenReplace = incPr => ($0,
   from, fM, fm, fp, fpr, fb,
   to, tM, tm, tp, tpr, tb) => {
   if (isX(fM)) {
     from = ''
   } else if (isX(fm)) {
-    from = `>=${fM}.0.0`
+    from = `>=${fM}.0.0${incPr ? '-0' : ''}`
   } else if (isX(fp)) {
-    from = `>=${fM}.${fm}.0`
-  } else {
+    from = `>=${fM}.${fm}.0${incPr ? '-0' : ''}`
+  } else if (fpr) {
     from = `>=${from}`
+  } else {
+    from = `>=${from}${incPr ? '-0' : ''}`
   }
 
   if (isX(tM)) {
     to = ''
   } else if (isX(tm)) {
-    to = `<${+tM + 1}.0.0`
+    to = `<${+tM + 1}.0.0${incPr ? '-0' : ''}`
   } else if (isX(tp)) {
-    to = `<${tM}.${+tm + 1}.0`
+    to = `<${tM}.${+tm + 1}.0${incPr ? '-0' : ''}`
   } else if (tpr) {
     to = `<=${tM}.${tm}.${tp}-${tpr}`
+  } else if (incPr) {
+    to = `<${tM}.${tm}.${+tp + 1}-0`
   } else {
     to = `<=${to}`
   }
