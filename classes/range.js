@@ -358,6 +358,9 @@ const replaceXRange = (comp, options) => {
         }
       }
 
+      if (gtlt === '<')
+        pr = '-0'
+
       ret = `${gtlt + M}.${m}.${p}${pr}`
     } else if (xm) {
       ret = `>=${M}.0.0${pr} <${+M + 1}.0.0-0`
