@@ -3,6 +3,23 @@
   "version": "7.3.5",
   "description": "The semantic version parser used by npm.",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "import": "./esm-wrapper.mjs"
+    },
+    "./bin/": "./bin/",
+    "./classes/": "./classes/",
+    "./functions/": "./functions/",
+    "./internal/": "./internal/",
+    "./ranges/": "./ranges/",
+    "./index.js": "./index.js",
+    "./index": "./index.js",
+    "./preload.js": "./preload.js",
+    "./preload": "./preload.js",
+    "./package.json": "./package.json",
+    "./package": "./package.json"
+  },
   "scripts": {
     "test": "tap",
     "snap": "tap",
@@ -30,7 +47,8 @@
   ],
   "tap": {
     "check-coverage": true,
-    "coverage-map": "map.js"
+    "coverage-map": "map.js",
+    "test-ignore": "test/esm-wrapper.mjs"
   },
   "engines": {
     "node": ">=10"
