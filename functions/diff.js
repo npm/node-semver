@@ -17,6 +17,17 @@ const diff = (version1, version2) => {
         }
       }
     }
+    if (v1['major'] === v2['major'] && 
+        v1['minor'] === v2['minor'] && 
+        v1['patch'] === v2['patch'] && !(v1.prerelease.length && v2.prerelease.length)) {
+      const releaseTypes = []
+      for (const key in v1) {
+        if (key === 'major' || key === 'minor' || key === 'patch') {
+          if (v1[key]) releaseTypes.push(key);
+        }
+      }
+      return releaseTypes.pop();
+    }
     return defaultResult // may be undefined
   }
 }
