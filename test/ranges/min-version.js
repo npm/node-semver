@@ -33,6 +33,7 @@ test('minimum version in range tests', (t) => {
     ['^1.1.1', '1.1.1'],
     ['^1.1.1-beta', '1.1.1-beta'],
     ['^1.1.1 || >=2', '1.1.1'],
+    ['^2.16.2 ^2.16', '2.16.2'],
 
     // '-' operator
     ['1.1.1 - 1.8.0', '1.1.1'],
@@ -69,7 +70,10 @@ test('minimum version in range tests', (t) => {
     const loose = tuple[2] || false
     const msg = `minVersion(${range}, ${loose}) = ${version}`
     const min = minVersion(range, loose)
-    t.ok(min === version || (min && min.version === version), msg)
+    t.ok(min === version || (min && min.version === version), msg, {
+      found: min,
+      wanted: version,
+    })
   })
   t.end()
 })
