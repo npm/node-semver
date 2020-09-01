@@ -33,7 +33,7 @@ const minVersion = (range, loose) => {
           /* fallthrough */
         case '':
         case '>=':
-          if (!minver || gt(minver, compver)) {
+          if (!minver || gt(compver, minver)) {
             minver = compver
           }
           break
