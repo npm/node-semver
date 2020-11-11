@@ -45,4 +45,5 @@ module.exports = {
   intersects: require('./ranges/intersects'),
   simplifyRange: require('./ranges/simplify'),
   subset: require('./ranges/subset'),
+  identifier: require('./functions/identifier'),
 }
