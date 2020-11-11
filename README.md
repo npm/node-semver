@@ -56,6 +56,7 @@ const semverCompareLoose = require('semver/functions/compare-loose')
 const semverCompareBuild = require('semver/functions/compare-build')
 const semverSort = require('semver/functions/sort')
 const semverRsort = require('semver/functions/rsort')
+const semverIdentifier = require('semver/functions/identifier')
 
 // low-level comparators between versions
 const semverGt = require('semver/functions/gt')
@@ -398,6 +399,7 @@ strings that they parse.
   or comparators intersect.
 * `parse(v)`: Attempt to parse a string as a semantic version, returning either
   a `SemVer` object or `null`.
+* `identifier(v)`: Return a valid prerelease identifier, or null if it's not valid.
 
 ### Comparison
 
