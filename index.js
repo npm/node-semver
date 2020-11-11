@@ -26,6 +26,7 @@ const gte = require('./functions/gte')
 const lte = require('./functions/lte')
 const cmp = require('./functions/cmp')
 const coerce = require('./functions/coerce')
+const identifier = require('./functions/identifier')
 const Comparator = require('./classes/comparator')
 const Range = require('./classes/range')
 const satisfies = require('./functions/satisfies')
@@ -64,6 +65,7 @@ module.exports = {
   lte,
   cmp,
   coerce,
+  identifier,
   Comparator,
   Range,
   satisfies,
