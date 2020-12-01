@@ -36,6 +36,6 @@
     "node": ">=10"
   },
   "dependencies": {
-    "lru-cache": "^4.1.5"
+    "lru-cache": "^6.0.0"
   }
 }
