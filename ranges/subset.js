@@ -7,6 +7,8 @@ const compare = require('../functions/compare.js')
 // - Every simple range `r1, r2, ...` is a subset of some `R1, R2, ...`
 //
 // Simple range `c1 c2 ...` is a subset of simple range `C1 C2 ...` iff:
+// - If C is only the ANY comparator
+//   - return true
 // - If c is only the ANY comparator
 //   - If C is only the ANY comparator, return true
 //   - Else return false
@@ -56,6 +58,9 @@ const subset = (sub, dom, options) => {
 
 const simpleSubset = (sub, dom, options) => {
   if (sub === dom)
+    return true
+
+  if (dom.length === 1 && dom[0].semver === ANY)
     return true
 
   if (sub.length === 1 && sub[0].semver === ANY)
