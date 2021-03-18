@@ -15,6 +15,12 @@ const cases = [
   ['>2 <1', '3', true],
   ['1 || 2 || 3', '>=1.0.0', true],
 
+  // everything is a subset of *
+  ['1.2.3', '*', true],
+  ['^1.2.3', '*', true],
+  ['^1.2.3-pre.0', '*', true],
+  ['1 || 2 || 3', '*', true],
+
   ['*', '*', true],
   ['', '*', true],
   ['*', '', true],
