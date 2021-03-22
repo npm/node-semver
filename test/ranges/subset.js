@@ -18,8 +18,25 @@ const cases = [
   // everything is a subset of *
   ['1.2.3', '*', true],
   ['^1.2.3', '*', true],
-  ['^1.2.3-pre.0', '*', true],
+  ['^1.2.3-pre.0', '*', false],
+  ['^1.2.3-pre.0', '*', true, { includePrerelease: true }],
   ['1 || 2 || 3', '*', true],
+
+  // prerelease edge cases
+  ['^1.2.3-pre.0', '>=1.0.0', false],
+  ['^1.2.3-pre.0', '>=1.0.0', true, { includePrerelease: true }],
+  ['^1.2.3-pre.0', '>=1.2.3-pre.0', true],
+  ['^1.2.3-pre.0', '>=1.2.3-pre.0', true, { includePrerelease: true }],
+  ['>1.2.3-pre.0', '>=1.2.3-pre.0', true],
+  ['>1.2.3-pre.0', '>1.2.3-pre.0 || 2', true],
+  ['1 >1.2.3-pre.0', '>1.2.3-pre.0', true],
+  ['1 <=1.2.3-pre.0', '>=1.0.0-0', false],
+  ['1 <=1.2.3-pre.0', '>=1.0.0-0', true, { includePrerelease: true }],
+  ['1 <=1.2.3-pre.0', '<=1.2.3-pre.0', true],
+  ['1 <=1.2.3-pre.0', '<=1.2.3-pre.0', true, { includePrerelease: true }],
+  ['<1.2.3-pre.0', '<=1.2.3-pre.0', true],
+  ['<1.2.3-pre.0', '<1.2.3-pre.0 || 2', true],
+  ['1 <1.2.3-pre.0', '<1.2.3-pre.0', true],
 
   ['*', '*', true],
   ['', '*', true],
@@ -29,9 +46,16 @@ const cases = [
   // >=0.0.0 is like * in non-prerelease mode
   // >=0.0.0-0 is like * in prerelease mode
   ['*', '>=0.0.0-0', true, { includePrerelease: true }],
+
+  // true because these are identical in non-PR mode
   ['*', '>=0.0.0', true],
+
+  // false because * includes 0.0.0-0 in PR mode
   ['*', '>=0.0.0', false, { includePrerelease: true }],
-  ['*', '>=0.0.0-0', false],
+
+  // true because * doesn't include 0.0.0-0 in non-PR mode
+  ['*', '>=0.0.0-0', true],
+
   ['^2 || ^3 || ^4', '>=1', true],
   ['^2 || ^3 || ^4', '>1', true],
   ['^2 || ^3 || ^4', '>=2', true],
@@ -79,9 +103,8 @@ const cases = [
   ['>2.0.0', '>=2.0.0', true],
 ]
 
-
 t.plan(cases.length + 1)
-cases.forEach(([sub, dom, expect, options = {}]) => {
+cases.forEach(([sub, dom, expect, options]) => {
   const msg = `${sub || "''"} ⊂ ${dom || "''"} = ${expect}` +
     (options ? ' ' + Object.keys(options).join(',') : '')
   t.equal(subset(sub, dom, options), expect, msg)
