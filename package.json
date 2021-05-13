@@ -8,6 +8,11 @@
       "require": "./index.js",
       "import": "./esm-wrapper.mjs"
     },
+    "./bin/*": "./bin/*",
+    "./classes/*": "./classes/*",
+    "./functions/*": "./functions/*",
+    "./internal/*": "./internal/*",
+    "./ranges/*": "./ranges/*",
     "./bin/": "./bin/",
     "./classes/": "./classes/",
     "./functions/": "./functions/",
