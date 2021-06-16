@@ -1,0 +1,7 @@
+https://github.com/corona-warn-app/cwa-documentation/projects/1#card-55907105"dependencies": {
+  "my_dep": "^1.0.0",
+  "another_dep": "~2.2.0"
+},void SetCursorPosition(int cursor)[![Checks](https://github.com/corona-warn-app/cwa-documentation/actions/workflows/checks.yml/badge.svg?branch=fix%2Frepo-table-update)](https://github.com/corona-warn-app/cwa-documentation/actions/workflows/checks.yml)void SetOptions(Microsoft.PowerShell.SetPSReadLineOption options)void SetOptions(Microsoft.PowerShell.SetPSReadLineOption options)void Replace(int start, int length, string replacement)bool TryGetArgAsInt(System.Object arg, [ref] int numericArg,
+  int defaultNumericArg)[int]$numericArg = 0
+[Microsoft.PowerShell.PSConsoleReadLine]::TryGetArgAsInt($arg,
+  [ref]$numericArg, 1)void Replace(int start, int length, string replacement)
