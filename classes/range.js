@@ -5,7 +5,7 @@ class Range {
 
     if (range instanceof Range) {
       // inherit options
-      options = { ...{ loose: range.loose, includePrerelease: range.includePrerelease }, ...range.options, ...options }
+      options = { loose: range.loose, includePrerelease: range.includePrerelease, ...range.options, ...options }
       if (
         range.loose === !!options.loose &&
         range.includePrerelease === !!options.includePrerelease
