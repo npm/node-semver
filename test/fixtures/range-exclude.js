@@ -80,7 +80,6 @@ module.exports = [
   ['^1.0.0', '1.0.0-rc1', { includePrerelease: true }],
   ['^1.0.0', '2.0.0-rc1', { includePrerelease: true }],
   ['^1.2.3-rc2', '2.0.0', { includePrerelease: true }],
-  ['^1.0.0', '2.0.0-rc1', { includePrerelease: true }],
   ['^1.0.0', '2.0.0-rc1'],
 
   ['1 - 2', '3.0.0-pre', { includePrerelease: true }],
