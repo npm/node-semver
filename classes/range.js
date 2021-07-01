@@ -81,7 +81,7 @@ class Range {
 
     // memoize range parsing for performance.
     // this is a very hot path, and fully deterministic.
-    const memoOpts = Object.keys(this.options).join(',')
+    const memoOpts = Object.keys(this.options).filter(k => this.options[k]).join(',')
     const memoKey = `parseRange:${memoOpts}:${range}`
     const cached = cache.get(memoKey)
     if (cached)
