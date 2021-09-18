@@ -117,5 +117,5 @@ test('coerce tests', (t) => {
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
   t.same(valid(coerce('v2')), '2.0.0')
 
-  t.done()
+  t.end()
 })
