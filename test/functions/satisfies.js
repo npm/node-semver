@@ -26,3 +26,10 @@ test('invalid ranges never satisfied (but do not throw)', t => {
   cases.forEach(([range, ver]) =>
     t.notOk(satisfies(ver, range), `${range} not satisfied because invalid`))
 })
+
+test('prereleases', t => {
+  t.plan(2)
+  t.notOk(satisfies('3.1.10-pre', '^3.1.10-a'), 'not satisfied because names are different')
+  t.ok(satisfies('3.1.10-pre.74', '^3.1.10-pre.73'), 'satisfied because name is the same and version is greater')
+  t.notOk(satisfies('3.1.10-pre.72', '^3.1.10-pre.73'), 'not satisfied because name is the same but version is less')
+})
