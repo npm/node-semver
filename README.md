@@ -299,11 +299,9 @@ Allows changes that do not modify the left-most non-zero element in the
 minor updates for versions `1.0.0` and above, patch updates for
 versions `0.X >=0.1.0`, and *no* updates for versions `0.0.X`.
 
-Many authors treat a `0.x` version as if the `x` were the "major breaking-change" indicator.
-
 Caret ranges are ideal when an author may make breaking changes
 between `0.2.4` and `0.3.0` releases, which is a common practice.
-However, it presumes that there will *not* be breaking changes between
+However, it presumes that there should *not* be breaking changes between
 `0.2.4` and `0.2.5`.  It allows for changes that are presumed to be
 additive (but non-breaking), according to commonly observed practices.
 
