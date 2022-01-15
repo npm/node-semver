@@ -134,13 +134,13 @@ const success = () => {
 }
 
 const help = () => console.log(
-`SemVer ${version}
+`semver ${version}
 
 A JavaScript implementation of the https://semver.org/ specification
 Copyright Isaac Z. Schlueter
 
 Usage: semver [options] <version> [<version> [...]]
-Prints valid versions sorted by SemVer precedence
+Prints valid versions sorted by semver precedence
 
 Options:
 -r --range <range>
@@ -163,7 +163,7 @@ Options:
         Always include prerelease versions in range matching
 
 -c --coerce
-        Coerce a string into SemVer if possible
+        Coerce a string into semver if possible
         (does not imply --loose)
 
 --rtl
