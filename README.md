@@ -91,7 +91,7 @@ A JavaScript implementation of the https://semver.org/ specification
 Copyright Isaac Z. Schlueter
 
 Usage: semver [options] <version> [<version> [...]]
-Prints valid versions sorted by SemVer precedence
+Prints valid versions sorted by semver precedence
 
 Options:
 -r --range <range>
@@ -114,7 +114,7 @@ Options:
         Always include prerelease versions in range matching
 
 -c --coerce
-        Coerce a string into SemVer if possible
+        Coerce a string into semver if possible
         (does not imply --loose)
 
 --rtl
@@ -183,7 +183,7 @@ prerelease tag.
 For example, the range `>1.2.3-alpha.3` would be allowed to match the
 version `1.2.3-alpha.7`, but it would *not* be satisfied by
 `3.4.5-alpha.9`, even though `3.4.5-alpha.9` is technically "greater
-than" `1.2.3-alpha.3` according to the SemVer sort rules.  The version
+than" `1.2.3-alpha.3` according to the semver sort rules.  The version
 range only accepts prerelease tags on the `1.2.3` version.  The
 version `3.4.5` *would* satisfy the range, because it does not have a
 prerelease flag, and `3.4.5` is greater than `1.2.3-alpha.7`.
@@ -377,7 +377,7 @@ are:
   excluding prerelease tagged versions from ranges unless they are
   explicitly opted into.
 
-Strict-mode Comparators and Ranges will be strict about the SemVer
+Strict-mode Comparators and Ranges will be strict about the semver
 strings that they parse.
 
 * `valid(v)`: Return the parsed version, or null if it's not valid.
@@ -493,7 +493,7 @@ If the `options.rtl` flag is set, then `coerce` will return the right-most
 coercible tuple that does not share an ending index with a longer coercible
 tuple.  For example, `1.2.3.4` will return `2.3.4` in rtl mode, not
 `4.0.0`.  `1.2.3/4` will return `4.0.0`, because the `4` is not a part of
-any other overlapping SemVer tuple.
+any other overlapping semver tuple.
 
 ### Clean
 
