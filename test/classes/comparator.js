@@ -46,7 +46,7 @@ test('ANY matches anything', t => {
   t.ok(c.test('1.2.3'), 'ANY matches anything')
   const c1 = new Comparator('>=1.2.3')
   const ANY = Comparator.ANY
-  t.ok(c.test(ANY), 'anything matches ANY')
+  t.ok(c1.test(ANY), 'anything matches ANY')
   t.end()
 })
 

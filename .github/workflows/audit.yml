@@ -1,0 +1,27 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    # "At 01:00 on Monday" https://crontab.guru/#0_1_*_*_1
+    - cron: "0 1 * * 1"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup git user
+        run: |
+          git config --global user.email "ops+npm-cli@npmjs.com"
+          git config --global user.name "npm cli ops bot"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Update npm to latest
+        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
+      - run: npm -v
+      - run: npm i --ignore-scripts --package-lock
+      - run: npm audit

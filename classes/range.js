@@ -31,7 +31,7 @@ class Range {
     this.set = range
       .split('||')
       // map the range to a 2d array of comparators
-      .map(range => this.parseRange(range.trim()))
+      .map(r => this.parseRange(r.trim()))
       // throw out any comparator lists that are empty
       // this generally means that it was not a valid range, which is allowed
       // in loose mode, but will still throw if the WHOLE range is invalid.
@@ -46,9 +46,9 @@ class Range {
       // keep the first one, in case they're all null sets
       const first = this.set[0]
       this.set = this.set.filter(c => !isNullSet(c[0]))
-      if (this.set.length === 0)
+      if (this.set.length === 0) {
         this.set = [first]
-      else if (this.set.length > 1) {
+      } else if (this.set.length > 1) {
         // if we have any that are *, then the range is just *
         for (const c of this.set) {
           if (c.length === 1 && isAny(c[0])) {
@@ -84,8 +84,9 @@ class Range {
     const memoOpts = Object.keys(this.options).join(',')
     const memoKey = `parseRange:${memoOpts}:${range}`
     const cached = cache.get(memoKey)
-    if (cached)
+    if (cached) {
       return cached
+    }
 
     const loose = this.options.loose
     // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
@@ -115,7 +116,7 @@ class Range {
       .split(/\s+/)
       // >=0.0.0 is equivalent to *
       .map(comp => replaceGTE0(comp, this.options))
-    
+
     if (loose) {
       // in loose mode, throw out any that are not valid comparators
       rangeList = rangeList.filter(comp => {
@@ -131,12 +132,14 @@ class Range {
     const rangeMap = new Map()
     const comparators = rangeList.map(comp => new Comparator(comp, this.options))
     for (const comp of comparators) {
-      if (isNullSet(comp))
+      if (isNullSet(comp)) {
         return [comp]
+      }
       rangeMap.set(comp.value, comp)
     }
-    if (rangeMap.size > 1 && rangeMap.has(''))
+    if (rangeMap.size > 1 && rangeMap.has('')) {
       rangeMap.delete('')
+    }
 
     const result = [...rangeMap.values()]
     cache.set(memoKey, result)
@@ -201,7 +204,7 @@ const {
   t,
   comparatorTrimReplace,
   tildeTrimReplace,
-  caretTrimReplace
+  caretTrimReplace,
 } = require('../internal/re')
 
 const isNullSet = c => c.value === '<0.0.0-0'
@@ -250,8 +253,8 @@ const isX = id => !id || id.toLowerCase() === 'x' || id === '*'
 // ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0-0
 // ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0-0
 const replaceTildes = (comp, options) =>
-  comp.trim().split(/\s+/).map((comp) => {
-    return replaceTilde(comp, options)
+  comp.trim().split(/\s+/).map((c) => {
+    return replaceTilde(c, options)
   }).join(' ')
 
 const replaceTilde = (comp, options) => {
@@ -289,8 +292,8 @@ const replaceTilde = (comp, options) => {
 // ^1.2.3 --> >=1.2.3 <2.0.0-0
 // ^1.2.0 --> >=1.2.0 <2.0.0-0
 const replaceCarets = (comp, options) =>
-  comp.trim().split(/\s+/).map((comp) => {
-    return replaceCaret(comp, options)
+  comp.trim().split(/\s+/).map((c) => {
+    return replaceCaret(c, options)
   }).join(' ')
 
 const replaceCaret = (comp, options) => {
@@ -348,8 +351,8 @@ const replaceCaret = (comp, options) => {
 
 const replaceXRanges = (comp, options) => {
   debug('replaceXRanges', comp, options)
-  return comp.split(/\s+/).map((comp) => {
-    return replaceXRange(comp, options)
+  return comp.split(/\s+/).map((c) => {
+    return replaceXRange(c, options)
   }).join(' ')
 }
 
@@ -410,8 +413,9 @@ const replaceXRange = (comp, options) => {
         }
       }
 
-      if (gtlt === '<')
+      if (gtlt === '<') {
         pr = '-0'
+      }
 
       ret = `${gtlt + M}.${m}.${p}${pr}`
     } else if (xm) {

@@ -1,0 +1,43 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: Post Dependabot Actions
+
+on: pull_request
+
+# https://docs.github.com/en/rest/overview/permissions-required-for-github-apps
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  Install:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup git user
+        run: |
+          git config --global user.email "ops+npm-cli@npmjs.com"
+          git config --global user.name "npm cli ops bot"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Update npm to latest
+        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
+      - run: npm -v
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: npm install and commit
+        if: contains(steps.metadata.outputs.dependency-names, '@npmcli/template-oss')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr checkout ${{ github.event.pull_request.number }}
+          npm install --ignore-scripts
+          npm run template-oss-apply
+          git add .
+          git commit -am "chore: postinstall for dependabot template-oss PR"
+          git push
