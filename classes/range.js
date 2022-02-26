@@ -29,7 +29,7 @@ class Range {
     // First, split based on boolean or ||
     this.raw = range
     this.set = range
-      .split(/\s*\|\|\s*/)
+      .split('||')
       // map the range to a 2d array of comparators
       .map(range => this.parseRange(range.trim()))
       // throw out any comparator lists that are empty
