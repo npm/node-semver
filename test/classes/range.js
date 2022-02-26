@@ -17,9 +17,9 @@ test('range tests', t => {
 
 test('range parsing', t => {
   t.plan(rangeParse.length)
-  rangeParse.forEach(([range, expect, options]) => t.test(`${range} ${expect}`, t => {
+  rangeParse.forEach(([range, expect, options]) => t.test(`${range} ${expect} ${JSON.stringify(options)}`, t => {
     if (expect === null)
-      t.throws(() => new Range(range), TypeError, `invalid range: ${range}`)
+      t.throws(() => new Range(range, options), TypeError, `invalid range: ${range} ${JSON.stringify(options)}`)
     else {
       t.equal(new Range(range, options).range || '*', expect,
         `${range} => ${expect}`)

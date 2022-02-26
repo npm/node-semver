@@ -89,4 +89,8 @@ module.exports = [
   ['<X', '<0.0.0-0'],
   ['<x <* || >* 2.x', '<0.0.0-0'],
   ['>x 2.x || * || <x', '*'],
+  ['>=09090', null],
+  ['>=09090', '>=9090.0.0', true],
+  ['>=09090-0', null, { includePrerelease: true }],
+  ['>=09090-0', null, { loose: true, includePrerelease: true }],
 ]
