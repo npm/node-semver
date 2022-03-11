@@ -51,7 +51,7 @@ test('return SemVer arg to ctor if options match', t => {
   const s = new SemVer('1.2.3', { loose: true, includePrerelease: true })
   t.equal(new SemVer(s, {loose: true, includePrerelease: true}), s,
     'get same object when options match')
-  t.notEqual(new SemVer(s), s, 'get new object when options match')
+  t.not(new SemVer(s), s, 'get new object when options match')
   t.end()
 })
 
