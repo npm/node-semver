@@ -17,17 +17,17 @@ test('range tests', t => {
 
 test('range parsing', t => {
   t.plan(rangeParse.length)
-  rangeParse.forEach(([range, expect, options]) => t.test(`${range} ${expect} ${JSON.stringify(options)}`, t => {
-    if (expect === null)
-      t.throws(() => new Range(range, options), TypeError, `invalid range: ${range} ${JSON.stringify(options)}`)
-    else {
-      t.equal(new Range(range, options).range || '*', expect,
-        `${range} => ${expect}`)
-      t.equal(new Range(range, options).range, new Range(expect).range,
-        'parsing both yields same result')
-    }
-    t.end()
-  }))
+  rangeParse.forEach(([range, expect, options]) =>
+    t.test(`${range} ${expect} ${JSON.stringify(options)}`, t => {
+      if (expect === null) {
+        t.throws(() => new Range(range, options), TypeError, `invalid range: ${range}`)
+      } else {
+        t.equal(new Range(range, options).range || '*', expect, `${range} => ${expect}`)
+        t.equal(new Range(range, options).range, new Range(expect).range,
+          'parsing both yields same result')
+      }
+      t.end()
+    }))
 })
 
 test('throw for empty comparator set, even in loose mode', t => {
@@ -49,8 +49,8 @@ test('range as argument to range ctor', t => {
   t.equal(new Range(loose, true), loose, 'loose boolean')
   t.not(new Range(loose), loose, 'created new range if not matched')
 
-  const incPre = new Range('1.2.3', {includePrerelease: true})
-  t.equal(new Range(incPre, {includePrerelease: true}), incPre,
+  const incPre = new Range('1.2.3', { includePrerelease: true })
+  t.equal(new Range(incPre, { includePrerelease: true }), incPre,
     'include prerelease, option match returns argument')
   t.not(new Range(incPre), incPre,
     'include prerelease, option mismatch does not return argument')
@@ -69,7 +69,7 @@ test('negative range tests', t => {
 test('strict vs loose ranges', (t) => {
   [
     ['>=01.02.03', '>=1.2.3'],
-    ['~1.02.03beta', '>=1.2.3-beta <1.3.0-0']
+    ['~1.02.03beta', '>=1.2.3-beta <1.3.0-0'],
   ].forEach(([loose, comps]) => {
     t.throws(() => new Range(loose))
     t.equal(new Range(loose, true).range, comps)

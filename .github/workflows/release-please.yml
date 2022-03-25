@@ -1,0 +1,26 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+      - latest
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          changelog-types: >
+            [
+              {"type":"feat","section":"Features","hidden":false},
+              {"type":"fix","section":"Bug Fixes","hidden":false},
+              {"type":"docs","section":"Documentation","hidden":false},
+              {"type":"deps","section":"Dependencies","hidden":false},
+              {"type":"chore","hidden":true}
+            ]

@@ -12,18 +12,17 @@ t.test('falsey values always empty options object', t => {
 })
 
 t.test('truthy non-objects always loose mode, for backwards comp', t => {
-  t.strictSame(parseOptions('hello'), {loose: true})
-  t.strictSame(parseOptions(true), {loose: true})
-  t.strictSame(parseOptions(1), {loose: true})
+  t.strictSame(parseOptions('hello'), { loose: true })
+  t.strictSame(parseOptions(true), { loose: true })
+  t.strictSame(parseOptions(1), { loose: true })
   t.end()
 })
-
 
 t.test('objects only include truthy flags we know about, set to true', t => {
   t.strictSame(parseOptions(/asdf/), {})
   t.strictSame(parseOptions(new Error('hello')), {})
-  t.strictSame(parseOptions({loose: true,a:1,rtl:false}), { loose: true })
-  t.strictSame(parseOptions({loose: 1,rtl:2,includePrerelease:10}), {
+  t.strictSame(parseOptions({ loose: true, a: 1, rtl: false }), { loose: true })
+  t.strictSame(parseOptions({ loose: 1, rtl: 2, includePrerelease: 10 }), {
     loose: true,
     rtl: true,
     includePrerelease: true,

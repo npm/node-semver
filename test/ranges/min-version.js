@@ -63,7 +63,7 @@ test('minimum version in range tests', (t) => {
     ['>2 || >1.0.0-beta', '1.0.0-beta.0'],
 
     // Impossible range
-    ['>4 <3', null]
+    ['>4 <3', null],
   ].forEach((tuple) => {
     const range = tuple[0]
     const version = tuple[1]
