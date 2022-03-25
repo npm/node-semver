@@ -47,12 +47,12 @@ test('range as argument to range ctor', t => {
   const loose = new Range('1.2.3', { loose: true })
   t.equal(new Range(loose, { loose: true }), loose, 'loose option')
   t.equal(new Range(loose, true), loose, 'loose boolean')
-  t.notEqual(new Range(loose), loose, 'created new range if not matched')
+  t.not(new Range(loose), loose, 'created new range if not matched')
 
   const incPre = new Range('1.2.3', {includePrerelease: true})
   t.equal(new Range(incPre, {includePrerelease: true}), incPre,
     'include prerelease, option match returns argument')
-  t.notEqual(new Range(incPre), incPre,
+  t.not(new Range(incPre), incPre,
     'include prerelease, option mismatch does not return argument')
 
   t.end()
