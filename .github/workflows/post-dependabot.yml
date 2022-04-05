@@ -41,3 +41,4 @@ jobs:
           git add .
           git commit -am "chore: postinstall for dependabot template-oss PR"
           git push
+          npm run lint
