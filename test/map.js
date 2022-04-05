@@ -25,7 +25,7 @@ const find = (folder, set = [], root = true) => {
   if (!root) {
     return
   }
-  return set.map(f => f.substr(folder.length + 1)
+  return set.map(f => f.slice(folder.length + 1)
     .replace(/\\/g, '/'))
     .sort((a, b) => a.localeCompare(b))
 }
