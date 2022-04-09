@@ -23,5 +23,5 @@ jobs:
       - name: Update npm to latest
         run: npm i --prefer-online --no-fund --no-audit -g npm@latest
       - run: npm -v
-      - run: npm i --ignore-scripts --package-lock
+      - run: npm i --ignore-scripts --no-audit --no-fund --package-lock
       - run: npm audit
