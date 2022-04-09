@@ -4,13 +4,12 @@ name: Post Dependabot Actions
 
 on: pull_request
 
-# https://docs.github.com/en/rest/overview/permissions-required-for-github-apps
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
 permissions:
-  actions: write
   contents: write
 
 jobs:
-  Install:
+  template-oss-apply:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
@@ -36,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr checkout ${{ github.event.pull_request.number }}
-          npm install --ignore-scripts
+          npm install --ignore-scripts --no-audit --no-fund
           npm run template-oss-apply
           git add .
           git commit -am "chore: postinstall for dependabot template-oss PR"
