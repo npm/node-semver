@@ -60,3 +60,21 @@ t.test('coercing', t => Promise.all([
   ['not a version', '1.2.3', '-c'],
   ['not a version', '-c'],
 ].map(args => t.resolveMatchSnapshot(run(args), args.join(' ')))))
+
+t.test('args with equals', t => Promise.all([
+  [['--version', '1.2.3'], '1.2.3'],
+  [['--range', '1'], ['1.2.3'], ['2.3.4'], '1.2.3'],
+  [['--increment', 'major'], ['1.0.0'], '2.0.0'],
+  [['--increment', 'premajor'], ['--preid', 'beta'], ['1.0.0'], '2.0.0-beta.0'],
+].map(async (args) => {
+  const expected = args.pop()
+  const equals = args.map((a) => a.join('='))
+  const spaces = args.reduce((acc, a) => acc.concat(a), [])
+  const res1 = await run(equals)
+  const res2 = await run(spaces)
+  t.equal(res1.signal, null)
+  t.equal(res1.code, 0)
+  t.equal(res1.err, '')
+  t.equal(res1.out.trim(), expected)
+  t.strictSame(res1, res2, args.join(' '))
+})))
