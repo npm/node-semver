@@ -2,6 +2,7 @@
 // null result means it's not a valid range
 // '*' is the return value from functions.validRange(), but
 // new Range().range will be '' in those cases
+const { MAX_SAFE_INTEGER } = require('../../internal/constants')
 module.exports = [
   ['1.0.0 - 2.0.0', '>=1.0.0 <=2.0.0'],
   ['1.0.0 - 2.0.0', '>=1.0.0-0 <2.0.1-0', { includePrerelease: true }],
@@ -93,4 +94,7 @@ module.exports = [
   ['>=09090', '>=9090.0.0', true],
   ['>=09090-0', null, { includePrerelease: true }],
   ['>=09090-0', null, { loose: true, includePrerelease: true }],
+  [`^${MAX_SAFE_INTEGER}.0.0`, null],
+  [`=${MAX_SAFE_INTEGER}.0.0`, `${MAX_SAFE_INTEGER}.0.0`],
+  [`^${MAX_SAFE_INTEGER - 1}.0.0`, `>=${MAX_SAFE_INTEGER - 1}.0.0 <${MAX_SAFE_INTEGER}.0.0-0`],
 ]
