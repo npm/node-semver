@@ -1,0 +1,38 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: Pull Request Linting
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  check:
+    name: Check PR Title or Commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup git user
+        run: |
+          git config --global user.email "ops+npm-cli@npmjs.com"
+          git config --global user.name "npm cli ops bot"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Update npm to latest
+        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
+      - run: npm -v
+      - name: Install deps
+        run: npm i -D @commitlint/cli @commitlint/config-conventional
+      - name: Check commits OR PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          npx --offline commitlint -V --from origin/main --to ${{ github.event.pull_request.head.sha }} \
+            || echo $PR_TITLE | npx --offline commitlint -V

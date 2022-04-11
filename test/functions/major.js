@@ -13,7 +13,7 @@ test('major tests', (t) => {
     [' v8.2.3 ', 8],
     ['\t13.2.3', 13],
     ['=21.2.3', 21, true],
-    ['v=34.2.3', 34, true]
+    ['v=34.2.3', 34, true],
   ].forEach((tuple) => {
     const range = tuple[0]
     const version = tuple[1]

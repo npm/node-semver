@@ -13,7 +13,7 @@ test('patch tests', (t) => {
     [' v1.2.8 ', 8],
     ['\t1.2.13', 13],
     ['=1.2.21', 21, true],
-    ['v=1.2.34', 34, true]
+    ['v=1.2.34', 34, true],
   ].forEach((tuple) => {
     const range = tuple[0]
     const version = tuple[1]

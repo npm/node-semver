@@ -82,4 +82,9 @@ module.exports = [
   ['1.2.0-1', 'minor', '1.2.0', false, 'dev'],
   ['1.0.0-1', 'major', '1.0.0', 'dev'],
   ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev'],
+
+  ['1.2.3-0', 'prerelease', '1.2.3-1.0', false, '1'],
+  ['1.2.3-1.0', 'prerelease', '1.2.3-1.1', false, '1'],
+  ['1.2.3-1.1', 'prerelease', '1.2.3-1.2', false, '1'],
+  ['1.2.3-1.1', 'prerelease', '1.2.3-2.0', false, '2'],
 ]

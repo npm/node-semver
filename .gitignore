@@ -1,5 +1,31 @@
-/node_modules
-.*.swp
-coverage/
-.nyc_output/
-.idea
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+# ignore everything in the root
+/*
+
+# keep these
+!/.eslintrc.local.*
+!**/.gitignore
+!/docs/
+!/tap-snapshots/
+!/test/
+!/map.js
+!/scripts/
+!/README*
+!/LICENSE*
+!/CHANGELOG*
+!/.commitlintrc.js
+!/.eslintrc.js
+!/.github/
+!/.gitignore
+!/.npmrc
+!/SECURITY.md
+!/bin/
+!/classes/
+!/functions/
+!/index.js
+!/internal/
+!/package.json
+!/preload.js
+!/range.bnf
+!/ranges/

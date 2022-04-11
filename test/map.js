@@ -1,23 +1,36 @@
 const t = require('tap')
 
 // ensure that the coverage map maps all coverage
-const ignore = ['.git', '.github', 'node_modules', 'coverage', 'tap-snapshots', 'test', 'fixtures']
-const {statSync, readdirSync} = require('fs')
+const ignore = [
+  '.git',
+  '.github',
+  '.commitlintrc.js',
+  '.eslintrc.js',
+  'node_modules',
+  'coverage',
+  'tap-snapshots',
+  'test',
+  'fixtures',
+]
+
+const { statSync, readdirSync } = require('fs')
 const find = (folder, set = [], root = true) => {
   const ent = readdirSync(folder)
-  set.push(...ent.filter(f => /\.m?js$/.test(f)).map(f => folder + '/' + f))
-  for (const f of ent.filter(f => !ignore.includes(f) && !/\.m?js$/.test(f))) {
-    if (statSync(folder + '/' + f).isDirectory())
-      find(folder + '/' + f, set, false)
+  set.push(...ent.filter(f => !ignore.includes(f) && /\.m?js$/.test(f)).map(f => folder + '/' + f))
+  for (const e of ent.filter(f => !ignore.includes(f) && !/\.m?js$/.test(f))) {
+    if (statSync(folder + '/' + e).isDirectory()) {
+      find(folder + '/' + e, set, false)
+    }
   }
-  if (!root)
+  if (!root) {
     return
-  return set.map(f => f.substr(folder.length + 1)
+  }
+  return set.map(f => f.slice(folder.length + 1)
     .replace(/\\/g, '/'))
     .sort((a, b) => a.localeCompare(b))
 }
 
-const {resolve} = require('path')
+const { resolve } = require('path')
 const root = resolve(__dirname, '..')
 
 const sut = find(root)

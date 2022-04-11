@@ -6,7 +6,7 @@ test('has a list of src, re, and tokens', (t) => {
   t.match(Object.assign({}, semver), {
     src: Array,
     re: Array,
-    tokens: Object
+    tokens: Object,
   })
   re.forEach(r => t.match(r, RegExp, 'regexps are regexps'))
   src.forEach(s => t.match(s, String, 'src is strings'))

@@ -12,7 +12,7 @@ test('prerelease', (t) => {
     [['beta'], '0.6.1beta', true],
     [null, '1.0.0', true],
     [null, '~2.0.0-alpha.1', false],
-    [null, 'invalid version']
+    [null, 'invalid version'],
   ].forEach((tuple) => {
     const expected = tuple[0]
     const version = tuple[1]

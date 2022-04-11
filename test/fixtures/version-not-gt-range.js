@@ -82,5 +82,5 @@ module.exports = [
   ['^0.1.0 || ~3.0.1 || 5.0.0', '1.0.0beta', true],
   ['^0.1.0 || ~3.0.1 || 5.0.0', '5.0.0-0', true],
   ['^0.1.0 || ~3.0.1 || >4 <=5.0.0', '3.5.0'],
-  ['0.7.x', '0.7.2-beta', { includePrerelease: true }]
+  ['0.7.x', '0.7.2-beta', { includePrerelease: true }],
 ]

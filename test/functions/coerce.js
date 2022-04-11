@@ -8,7 +8,9 @@ test('coerce tests', (t) => {
   const coerceToNull = [
     null,
     { version: '1.2.3' },
-    function () { return '1.2.3' },
+    function () {
+      return '1.2.3'
+    },
     '',
     '.',
     'version one',
@@ -21,7 +23,7 @@ test('coerce tests', (t) => {
     `${'9'.repeat(16)}.4.7.4`,
     `${'9'.repeat(16)}.${'2'.repeat(16)}.${'3'.repeat(16)}`,
     `${'1'.repeat(16)}.${'9'.repeat(16)}.${'3'.repeat(16)}`,
-    `${'1'.repeat(16)}.${'2'.repeat(16)}.${'9'.repeat(16)}`
+    `${'1'.repeat(16)}.${'2'.repeat(16)}.${'9'.repeat(16)}`,
   ]
   coerceToNull.forEach((input) => {
     const msg = `coerce(${input}) should be null`
@@ -107,7 +109,7 @@ test('coerce tests', (t) => {
     ['1.2.3./6', '6.0.0', { rtl: true }],
     ['1.2.3/6', '6.0.0', { rtl: true }],
     ['1.2.3.4', '2.3.4', { rtl: true }],
-    ['1.2.3.4xyz', '2.3.4', { rtl: true }]
+    ['1.2.3.4xyz', '2.3.4', { rtl: true }],
   ]
   coerceToValid.forEach(([input, expected, options]) => {
     const msg = `coerce(${input}) should become ${expected}`
@@ -117,5 +119,5 @@ test('coerce tests', (t) => {
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
   t.same(valid(coerce('v2')), '2.0.0')
 
-  t.done()
+  t.end()
 })
