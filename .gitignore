@@ -19,6 +19,7 @@
 !/.github/
 !/.gitignore
 !/.npmrc
+!/CODE_OF_CONDUCT.md
 !/SECURITY.md
 !/bin/
 !/classes/
