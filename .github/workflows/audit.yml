@@ -10,18 +10,28 @@ on:
 
 jobs:
   audit:
+    name: Audit Dependencies
+    if: github.repository_owner == 'npm'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup git user
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Git User
         run: |
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
-      - uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-      - name: Update npm to latest
+          node-version: 18.x
+      - name: Install npm@latest
         run: npm i --prefer-online --no-fund --no-audit -g npm@latest
-      - run: npm -v
-      - run: npm i --ignore-scripts --no-audit --no-fund --package-lock
-      - run: npm audit
+      - name: npm Version
+        run: npm -v
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund --package-lock
+      - name: Run Audit
+        run: npm audit

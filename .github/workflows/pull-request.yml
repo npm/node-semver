@@ -1,6 +1,6 @@
 # This file is automatically added by @npmcli/template-oss. Do not edit.
 
-name: Pull Request Linting
+name: Pull Request
 
 on:
   pull_request:
@@ -11,28 +11,38 @@ on:
       - synchronize
 
 jobs:
-  check:
-    name: Check PR Title or Commits
+  commitlint:
+    name: Lint Commits
+    if: github.repository_owner == 'npm'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Setup git user
+      - name: Setup Git User
         run: |
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
-      - uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-      - name: Update npm to latest
+          node-version: 18.x
+      - name: Install npm@latest
         run: npm i --prefer-online --no-fund --no-audit -g npm@latest
-      - run: npm -v
-      - name: Install deps
-        run: npm i -D @commitlint/cli @commitlint/config-conventional
-      - name: Check commits OR PR title
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
+      - name: npm Version
+        run: npm -v
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Run Commitlint on Commits
+        id: commit
+        continue-on-error: true
         run: |
-          npx --offline commitlint -V --from origin/main --to ${{ github.event.pull_request.head.sha }} \
-            || echo $PR_TITLE | npx --offline commitlint -V
+          npx --offline commitlint -V --from origin/${{ github.base_ref }} --to ${{ github.event.pull_request.head.sha }}
+      - name: Run Commitlint on PR Title
+        if: steps.commit.outcome == 'failure'
+        run: |
+          echo ${{ github.event.pull_request.title }} | npx --offline commitlint -V
