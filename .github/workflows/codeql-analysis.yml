@@ -13,8 +13,8 @@ on:
       - main
       - latest
   schedule:
-    # "At 03:00 on Monday" https://crontab.guru/#0_3_*_*_1
-    - cron: "0 3 * * 1"
+    # "At 10:00 UTC (03:00 PT) on Monday" https://crontab.guru/#0_10_*_*_1
+    - cron: "0 10 * * 1"
 
 jobs:
   analyze:
