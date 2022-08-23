@@ -5,8 +5,8 @@ name: Audit
 on:
   workflow_dispatch:
   schedule:
-    # "At 01:00 on Monday" https://crontab.guru/#0_1_*_*_1
-    - cron: "0 1 * * 1"
+    # "At 08:00 UTC (01:00 PT) on Monday" https://crontab.guru/#0_8_*_*_1
+    - cron: "0 8 * * 1"
 
 jobs:
   audit:
