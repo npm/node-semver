@@ -1,6 +1,10 @@
 semver(1) -- The semantic versioner for npm
 ===========================================
 
+> It is a special node implementation for NPM the RFC is not guarantee
+> 
+> As exemple leading `v` is consider as valid by `valid` method
+
 ## Install
 
 ```bash
