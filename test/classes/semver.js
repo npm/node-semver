@@ -49,15 +49,15 @@ test('throws when presented with garbage', t => {
 
 test('return SemVer arg to ctor if options match', t => {
   const s = new SemVer('1.2.3', { loose: true, includePrerelease: true })
-  t.equal(new SemVer(s, {loose: true, includePrerelease: true}), s,
+  t.equal(new SemVer(s, { loose: true, includePrerelease: true }), s,
     'get same object when options match')
-  t.notEqual(new SemVer(s), s, 'get new object when options match')
+  t.not(new SemVer(s), s, 'get new object when options match')
   t.end()
 })
 
 test('really big numeric prerelease value', (t) => {
   const r = new SemVer(`1.2.3-beta.${Number.MAX_SAFE_INTEGER}0`)
-  t.strictSame(r.prerelease, [ 'beta', '90071992547409910' ])
+  t.strictSame(r.prerelease, ['beta', '90071992547409910'])
   t.end()
 })
 
@@ -66,7 +66,7 @@ test('invalid version numbers', (t) => {
     'NOT VALID',
     1.2,
     null,
-    'Infinity.NaN.Infinity'
+    'Infinity.NaN.Infinity',
   ].forEach((v) => {
     t.throws(() => {
       new SemVer(v) // eslint-disable-line no-new
@@ -86,10 +86,11 @@ test('incrementing', t => {
     id,
   ]) => t.test(`${version} ${inc} ${id || ''}`.trim(), t => {
     t.plan(1)
-    if (expect === null)
+    if (expect === null) {
       t.throws(() => new SemVer(version, options).inc(inc, id))
-    else
+    } else {
       t.equal(new SemVer(version, options).inc(inc, id).version, expect)
+    }
   }))
 })
 
@@ -115,7 +116,7 @@ test('invalid version numbers', (t) => {
     'NOT VALID',
     1.2,
     null,
-    'Infinity.NaN.Infinity'
+    'Infinity.NaN.Infinity',
   ].forEach((v) => {
     t.throws(() => {
       new SemVer(v) // eslint-disable-line no-new

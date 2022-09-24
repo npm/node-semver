@@ -15,7 +15,7 @@ test('diff versions test', (t) => {
     ['0.0.1', '0.0.1-pre-2', 'prerelease'],
     ['1.1.0', '1.1.0-pre', 'prerelease'],
     ['1.1.0-pre-1', '1.1.0-pre-2', 'prerelease'],
-    ['1.0.0', '1.0.0', null]
+    ['1.0.0', '1.0.0', null],
 
   ].forEach((v) => {
     const version1 = v[0]

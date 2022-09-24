@@ -37,5 +37,5 @@ module.exports = [
   ['1.2.3+build', ' = 1.2.3+otherbuild', true],
   ['1.2.3-beta+build', '1.2.3-beta+otherbuild'],
   ['1.2.3+build', '1.2.3+otherbuild'],
-  ['  v1.2.3+build', '1.2.3+otherbuild']
+  ['  v1.2.3+build', '1.2.3+otherbuild'],
 ]
