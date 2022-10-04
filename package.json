@@ -55,6 +55,7 @@
     "//@npmcli/template-oss": "This file is partially managed by @npmcli/template-oss. Edits may be overwritten.",
     "version": "4.4.4",
     "engines": ">=10",
+    "content": "./scripts",
     "ciVersions": [
       "10.0.0",
       "10.x",
