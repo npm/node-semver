@@ -66,7 +66,7 @@ jobs:
           # This only sets the conventional commit prefix. This workflow can't reliably determine
           # what the breaking change is though. If a BREAKING CHANGE message is required then
           # this PR check will fail and the commit will be amended with stafftools
-          if [[ "${{ steps.dependabot-metadata.outputs.update-type }}" == "version-update:semver-major" ]]; then
+          if [[ "${{ steps.metadata.outputs.update-type }}" == "version-update:semver-major" ]]; then
             prefix='feat!'
           else
             prefix='chore!'
@@ -90,7 +90,7 @@ jobs:
       # and attempt to commit and push again. This is helpful because we will have a commit
       # with the correct prefix that we can then --amend with @npmcli/stafftools later.
       - name: Push All Changes Except Workflows
-        if: steps.apply.outputs.changes && steps.push-all.outcome == 'failure'
+        if: steps.apply.outputs.changes && steps.push.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
