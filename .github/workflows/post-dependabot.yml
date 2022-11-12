@@ -28,8 +28,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - name: Install npm@latest
-        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
+      - name: Install npm@8
+        run: npm i --prefer-online --no-fund --no-audit -g npm@8
       - name: npm Version
         run: npm -v
       - name: Install Dependencies
