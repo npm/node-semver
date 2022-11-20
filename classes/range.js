@@ -104,7 +104,7 @@ class Range {
     range = range.replace(re[t.CARETTRIM], caretTrimReplace)
 
     // normalize spaces
-    range = range.split(/\s+/).join(' ')
+    range = range.replace(/  +/g, ' ')
 
     // At this point, the range is completely trimmed and
     // ready to be split into comparators.
