@@ -465,7 +465,7 @@ const hyphenReplace = incPr => ($0,
   } else if (fpr) {
     from = `>=${from}`
   } else {
-    from = `>=${from}${incPr ? '-0' : ''}`
+    from = `>=${fM}.${fm}.${fp}${incPr ? '-0' : ''}`
   }
 
   if (isX(tM)) {
