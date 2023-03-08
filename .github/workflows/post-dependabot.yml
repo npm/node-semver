@@ -48,11 +48,11 @@ jobs:
         run: |
           dependabot_dir="${{ steps.metadata.outputs.directory }}"
           if [[ "$dependabot_dir" == "/" ]]; then
-            echo "::set-output name=workspace::-iwr"
+            echo "workspace=-iwr" >> $GITHUB_OUTPUT
           else
             # strip leading slash from directory so it works as a
             # a path to the workspace flag
-            echo "::set-output name=workspace::-w ${dependabot_dir#/}"
+            echo "workspace=-w ${dependabot_dir#/}" >> $GITHUB_OUTPUT
           fi
 
       - name: Apply Changes
@@ -61,7 +61,7 @@ jobs:
         run: |
           npm run template-oss-apply ${{ steps.flags.outputs.workspace }}
           if [[ `git status --porcelain` ]]; then
-            echo "::set-output name=changes::true"
+            echo "changes=true" >> $GITHUB_OUTPUT
           fi
           # This only sets the conventional commit prefix. This workflow can't reliably determine
           # what the breaking change is though. If a BREAKING CHANGE message is required then
@@ -71,7 +71,7 @@ jobs:
           else
             prefix='chore'
           fi
-          echo "::set-output name=message::$prefix: postinstall for dependabot template-oss PR"
+          echo "message=$prefix: postinstall for dependabot template-oss PR" >> $GITHUB_OUTPUT
 
       # This step will fail if template-oss has made any workflow updates. It is impossible
       # for a workflow to update other workflows. In the case it does fail, we continue
