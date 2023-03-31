@@ -31,7 +31,7 @@ class Range {
     this.set = range
       .split('||')
       // map the range to a 2d array of comparators
-      .map(r => this.parseRange(r.trim()))
+      .map(r => this.parseRange(r))
       // throw out any comparator lists that are empty
       // this generally means that it was not a valid range, which is allowed
       // in loose mode, but will still throw if the WHOLE range is invalid.
@@ -81,8 +81,8 @@ class Range {
 
     // memoize range parsing for performance.
     // this is a very hot path, and fully deterministic.
-    const memoOpts = Object.keys(this.options).join(',')
-    const memoKey = `parseRange:${memoOpts}:${range}`
+    const memoOpts = buildMemoKeyFromOptions(this.options)
+    const memoKey = memoOpts + range
     const cached = cache.get(memoKey)
     if (cached) {
       return cached
@@ -190,6 +190,35 @@ class Range {
     return false
   }
 }
+
+function buildMemoKeyFromOptions(options) {
+  if (options.includePrerelease === true) {
+    if (options.loose === true && options.rtl === true) {
+      return '1';
+    }
+
+    if (options.loose === true) {
+      return '2';
+    }
+  
+    if (options.rtl === true) {
+      return '3';
+    }
+
+    return '4';
+  } else if (options.loose === true) {
+    if (options.rtl === true) {
+      return '5';
+    }
+
+    return '6';
+  } else if (options.rtl === true) {
+    return '7';
+  } else {
+    return '8';
+  }
+}
+
 module.exports = Range
 
 const LRU = require('lru-cache')
