@@ -8,5 +8,5 @@ test('valid range test', (t) => {
   t.plan(rangeParse.length)
   rangeParse.forEach(([pre, wanted, options]) =>
     t.equal(validRange(pre, options), wanted,
-      `validRange(${pre}) === ${wanted}`))
+      `validRange(${pre}) === ${wanted} ${JSON.stringify(options)}`))
 })
