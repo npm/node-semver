@@ -80,7 +80,7 @@ test('comparators test', (t) => {
   ].forEach(([pre, wanted]) => {
     const found = toComparators(pre)
     const jw = JSON.stringify(wanted)
-    t.equivalent(found, wanted, `toComparators(${pre}) === ${jw}`)
+    t.same(found, wanted, `toComparators(${pre}) === ${jw}`)
   })
 
   t.end()

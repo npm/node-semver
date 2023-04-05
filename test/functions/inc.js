@@ -10,10 +10,20 @@ test('increment versions test', (t) => {
     t.equal(found, wanted, `${cmd} === ${wanted}`)
 
     const parsed = parse(pre, options)
+    const parsedAsInput = parse(pre, options)
     if (wanted) {
       parsed.inc(what, id)
       t.equal(parsed.version, wanted, `${cmd} object version updated`)
       t.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
+
+      const preIncObject = JSON.stringify(parsedAsInput)
+      inc(parsedAsInput, what, options, id)
+      const postIncObject = JSON.stringify(parsedAsInput)
+      t.equal(
+        postIncObject,
+        preIncObject,
+        `${cmd} didn't modify its input`
+      )
     } else if (parsed) {
       t.throws(() => {
         parsed.inc(what, id)

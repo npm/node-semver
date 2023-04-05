@@ -1,4 +1,4 @@
-// c0, c1, expected interesection
+// c0, c1, expected intersection
 module.exports = [
   // One is a Version
   ['1.3.0', '>=1.3.0', true],

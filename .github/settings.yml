@@ -1,2 +1,2 @@
 ---
-_extends: 'open-source-project-boilerplate'
+_extends: '.github:npm-cli/settings.yml'

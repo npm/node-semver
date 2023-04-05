@@ -5,7 +5,7 @@ test('rcompareIdentifiers and compareIdentifiers', (t) => {
   const set = [
     ['1', '2'],
     ['alpha', 'beta'],
-    ['0', 'beta']
+    ['0', 'beta'],
   ]
   set.forEach((ab) => {
     const a = ab[0]
