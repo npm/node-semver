@@ -4,8 +4,6 @@ const SemVer = require('../classes/semver')
 
 const parseOptions = require('../internal/parse-options')
 const parse = (version, options) => {
-  options = parseOptions(options)
-
   if (version instanceof SemVer) {
     return version
   }
@@ -18,6 +16,7 @@ const parse = (version, options) => {
     return null
   }
 
+  options = parseOptions(options)
   const r = options.loose ? re[t.LOOSE] : re[t.FULL]
   if (!r.test(version)) {
     return null

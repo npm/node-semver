@@ -24,6 +24,7 @@ let rtl = false
 let identifier
 
 const semver = require('../')
+const parseOptions = require('../internal/parse-options')
 
 let reverse = false
 
@@ -88,7 +89,7 @@ const main = () => {
     }
   }
 
-  options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }
+  options = parseOptions({ loose, includePrerelease, rtl })
 
   versions = versions.map((v) => {
     return coerce ? (semver.coerce(v, options) || { version: v }).version : v
