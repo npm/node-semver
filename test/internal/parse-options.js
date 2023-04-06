@@ -27,5 +27,20 @@ t.test('objects only include truthy flags we know about, set to true', t => {
     rtl: true,
     includePrerelease: true,
   })
+  t.strictSame(parseOptions({ loose: true }), { loose: true })
+  t.strictSame(parseOptions({ rtl: true }), { rtl: true })
+  t.strictSame(parseOptions({ includePrerelease: true }), { includePrerelease: true })
+  t.strictSame(parseOptions({ loose: true, rtl: true }), { loose: true, rtl: true })
+  t.strictSame(parseOptions({ loose: true, includePrerelease: true }), { loose: true, includePrerelease: true })
+  t.strictSame(parseOptions({ rtl: true, includePrerelease: true }), { rtl: true, includePrerelease: true })
+  t.end()
+})
+
+t.test('should skip validation when options is already parsed', t => {
+  const options = { loose: true, rtl: true }
+  const parsedOptions = parseOptions(options)
+
+  t.equal(parseOptions(parsedOptions) === parsedOptions, true)
+  t.not(parseOptions(options) === parsedOptions, false)
   t.end()
 })
