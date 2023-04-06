@@ -22,17 +22,18 @@ test('tostrings', (t) => {
 
 test('intersect comparators', (t) => {
   t.plan(comparatorIntersection.length)
-  comparatorIntersection.forEach(([c0, c1, expect]) => t.test(`${c0} ${c1} ${expect}`, t => {
-    const comp0 = new Comparator(c0)
-    const comp1 = new Comparator(c1)
+  comparatorIntersection.forEach(([c0, c1, expect, includePrerelease]) =>
+    t.test(`${c0} ${c1} ${expect}`, t => {
+      const comp0 = new Comparator(c0)
+      const comp1 = new Comparator(c1)
 
-    t.equal(comp0.intersects(comp1, false), expect,
-      `${c0} intersects ${c1}`)
+      t.equal(comp0.intersects(comp1, { includePrerelease }), expect,
+        `${c0} intersects ${c1}`)
 
-    t.equal(comp1.intersects(comp0, { loose: false }), expect,
-      `${c1} intersects ${c0}`)
-    t.end()
-  }))
+      t.equal(comp1.intersects(comp0, { includePrerelease }), expect,
+        `${c1} intersects ${c0}`)
+      t.end()
+    }))
 })
 
 test('intersect demands another comparator', t => {

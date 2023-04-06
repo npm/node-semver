@@ -1,4 +1,4 @@
-// c0, c1, expected intersection
+// c0, c1, expected intersection, includePrerelease
 module.exports = [
   // One is a Version
   ['1.3.0', '>=1.3.0', true],
@@ -33,4 +33,10 @@ module.exports = [
   ['', '', true],
   ['', '>1.0.0', true],
   ['<=2.0.0', '', true],
+  ['<0.0.0', '<0.1.0', false],
+  ['<0.1.0', '<0.0.0', false],
+  ['<0.0.0-0', '<0.1.0', false],
+  ['<0.1.0', '<0.0.0-0', false],
+  ['<0.0.0-0', '<0.1.0', false, true],
+  ['<0.1.0', '<0.0.0-0', false, true],
 ]

@@ -90,6 +90,16 @@ class Comparator {
       return new Range(this.value, options).test(comp.semver)
     }
 
+    // Special cases where nothing can possibly be lower
+    if (options.includePrerelease &&
+      (this.value === '<0.0.0-0' || comp.value === '<0.0.0-0')) {
+      return false
+    }
+    if (!options.includePrerelease &&
+      (this.value.startsWith('<0.0.0') || comp.value.startsWith('<0.0.0'))) {
+      return false
+    }
+
     const sameDirectionIncreasing =
       (this.operator === '>=' || this.operator === '>') &&
       (comp.operator === '>=' || comp.operator === '>')
