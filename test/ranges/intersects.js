@@ -7,24 +7,24 @@ const rangeIntersection = require('../fixtures/range-intersection.js')
 
 test('intersect comparators', t => {
   t.plan(comparatorIntersection.length)
-  comparatorIntersection.forEach(([c0, c1, expect]) => t.test(`${c0} ${c1} ${expect}`, t => {
-    const comp0 = new Comparator(c0)
-    const comp1 = new Comparator(c1)
+  comparatorIntersection.forEach(([c0, c1, expect, includePrerelease]) =>
+    t.test(`${c0} ${c1} ${expect}`, t => {
+      const opts = { loose: false, includePrerelease }
+      const comp0 = new Comparator(c0)
+      const comp1 = new Comparator(c1)
 
-    t.equal(intersects(comp0, comp1), expect, `${c0} intersects ${c1} objects`)
-    t.equal(intersects(comp1, comp0), expect, `${c1} intersects ${c0} objects`)
-    t.equal(intersects(comp0, comp1, true), expect,
-      `${c0} intersects ${c1} loose, objects`)
-    t.equal(intersects(comp1, comp0, true), expect,
-      `${c1} intersects ${c0} loose, objects`)
-    t.equal(intersects(c0, c1), expect, `${c0} intersects ${c1}`)
-    t.equal(intersects(c1, c0), expect, `${c1} intersects ${c0}`)
-    t.equal(intersects(c0, c1, true), expect,
-      `${c0} intersects ${c1} loose`)
-    t.equal(intersects(c1, c0, true), expect,
-      `${c1} intersects ${c0} loose`)
-    t.end()
-  }))
+      t.equal(intersects(comp0, comp1, opts), expect, `${c0} intersects ${c1} objects`)
+      t.equal(intersects(comp1, comp0, opts), expect, `${c1} intersects ${c0} objects`)
+      t.equal(intersects(c0, c1, opts), expect, `${c0} intersects ${c1}`)
+      t.equal(intersects(c1, c0, opts), expect, `${c1} intersects ${c0}`)
+
+      opts.loose = true
+      t.equal(intersects(comp0, comp1, opts), expect, `${c0} intersects ${c1} loose, objects`)
+      t.equal(intersects(comp1, comp0, opts), expect, `${c1} intersects ${c0} loose, objects`)
+      t.equal(intersects(c0, c1, opts), expect, `${c0} intersects ${c1} loose`)
+      t.equal(intersects(c1, c0, opts), expect, `${c1} intersects ${c0} loose`)
+      t.end()
+    }))
 })
 
 test('ranges intersect', (t) => {
