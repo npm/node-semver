@@ -23,6 +23,8 @@ let rtl = false
 
 let identifier
 
+let identifierBase
+
 const semver = require('../')
 
 let reverse = false
@@ -70,6 +72,9 @@ const main = () => {
         break
       case '-r': case '--range':
         range.push(argv.shift())
+        break
+      case '-n':
+        identifierBase = argv.shift()
         break
       case '-c': case '--coerce':
         coerce = true
@@ -127,7 +132,7 @@ const success = () => {
   }).map((v) => {
     return semver.clean(v, options)
   }).map((v) => {
-    return inc ? semver.inc(v, inc, options, identifier) : v
+    return inc ? semver.inc(v, inc, options, identifier, identifierBase) : v
   }).forEach((v, i, _) => {
     console.log(v)
   })
