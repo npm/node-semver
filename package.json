@@ -81,6 +81,7 @@
       "/index.js",
       "/preload.js",
       "/range.bnf"
-    ]
+    ],
+    "publish": "true"
   }
 }

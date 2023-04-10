@@ -171,7 +171,7 @@ jobs:
           RELEASE_COMMENT_ID: ${{ needs.release.outputs.comment-id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm exec --offline -- template-oss-release-manager --lockfile=false --publish=false
+          npm exec --offline -- template-oss-release-manager --lockfile=false --publish=true
           npm run rp-pull-request --ignore-scripts --if-present
       - name: Commit
         id: commit
@@ -320,41 +320,25 @@ jobs:
     defaults:
       run:
         shell: bash
+    permissions:
+      deployments: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ fromJSON(needs.release.outputs.release).tagName }}
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - name: Install npm@8
-        run: npm i --prefer-online --no-fund --no-audit -g npm@8
-      - name: npm Version
-        run: npm -v
-      - name: View in Registry
+      - name: Install npm@latest
         run: |
-          EXIT_CODE=0
-
-          function is_published {
-            if npm view "$@" --loglevel=error > /dev/null; then
-              echo 0
-            else
-              echo 1
-            fi
-          }
-
-          for release in $(echo '${{ needs.release.outputs.releases }}' | jq -r '.[] | @base64'); do
-            name=$(echo "$release" | base64 --decode | jq -r .pkgName)
-            version=$(echo "$release" | base64 --decode | jq -r .version)
-            spec="$name@$version"
-            status=$(is_published "$spec")
-            if [[ "$status" -eq 1 ]]; then
-              echo "$spec ERROR"
-              EXIT_CODE=$status
-            else
-              echo "$spec OK"
-            fi
-          done
-
-          exit $EXIT_CODE
+          npm i --prefer-online --no-fund --no-audit -g npm@latest
+          npm config set '//registry.npmjs.org/:_authToken'=\${PUBLISH_TOKEN}
+      - name: Publish
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: npm publish
 
   post-release-integration:
     needs: [ release, release-integration ]
