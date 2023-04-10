@@ -10,11 +10,27 @@ const diff = (version1, version2) => {
     const hasPre = v1.prerelease.length || v2.prerelease.length
     const prefix = hasPre ? 'pre' : ''
     const defaultResult = hasPre ? 'prerelease' : ''
-    for (const key in v1) {
-      if (key === 'major' || key === 'minor' || key === 'patch') {
-        if (v1[key] !== v2[key]) {
-          return prefix + key
-        }
+
+    if (v1.major !== v2.major) {
+      return prefix + 'major'
+    }
+    if (v1.minor !== v2.minor) {
+      return prefix + 'minor'
+    }
+
+    if (v1.patch !== v2.patch) {
+      return prefix + 'patch'
+    }
+
+    if (!v1.prerelease.length || !v2.prerelease.length) {
+      if (v1.patch) {
+        return 'patch'
+      }
+      if (v1.minor) {
+        return 'minor'
+      }
+      if (v1.major) {
+        return 'major'
       }
     }
     return defaultResult // may be undefined
