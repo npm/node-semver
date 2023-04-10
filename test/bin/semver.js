@@ -29,6 +29,7 @@ t.test('inc tests', t => Promise.all([
   ['-i', 'major', '1.0.0'],
   ['-i', 'major', '1.0.0', '1.0.1'],
   ['-i', 'premajor', '1.0.0', '--preid=beta'],
+  ['-i', 'premajor', '1.0.0', '--preid=beta', '-n', '1'],
   ['-i', '1.2.3'],
 ].map(args => t.resolveMatchSnapshot(run(args), args.join(' ')))))
 

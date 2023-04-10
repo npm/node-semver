@@ -110,6 +110,9 @@ Options:
 -l --loose
         Interpret versions and ranges loosely
 
+-n <0|1>
+        This is the base to be used for the prerelease identifier.
+
 -p --include-prerelease
         Always include prerelease versions in range matching
 
@@ -229,6 +232,24 @@ Which then can be used to increment further:
 
 ```bash
 $ semver 1.2.4-beta.0 -i prerelease
+1.2.4-beta.1
+```
+
+#### Prerelease Identifier Base
+
+The method `.inc` takes an optional parameter 'identifierBase' string
+that will let you let your prerelease number as zero-based or one-based.
+If you do not specify this parameter, it will default to zero-based.
+
+```javascript
+semver.inc('1.2.3', 'prerelease', 'beta', '1')
+// '1.2.4-beta.1'
+```
+
+command-line example:
+
+```bash
+$ semver 1.2.3 -i prerelease --preid beta -n 1
 1.2.4-beta.1
 ```
 
@@ -513,6 +534,40 @@ ex.
 * `s.clean('      2.1.5   ')`: `'2.1.5'`
 * `s.clean('~1.0.0')`: `null`
 
+## Constants
+
+As a convenience, helper constants are exported to provide information about what `node-semver` supports:
+
+### `RELEASE_TYPES`
+
+- major
+- premajor
+- minor
+- preminor
+- patch
+- prepatch
+- prerelease
+
+```
+const semver = require('semver');
+
+if (semver.RELEASE_TYPES.includes(arbitraryUserInput)) {
+  console.log('This is a valid release type!');
+} else {
+  console.warn('This is NOT a valid release type!');
+}
+```
+
+### `SEMVER_SPEC_VERSION`
+
+2.0.0
+
+```
+const semver = require('semver');
+
+console.log('We are currently using the semver specification version:', semver.SEMVER_SPEC_VERSION);
+```
+
 ## Exported Modules
 
 <!--
@@ -566,3 +621,4 @@ The following modules are available:
 * `require('semver/ranges/outside')`
 * `require('semver/ranges/to-comparators')`
 * `require('semver/ranges/valid')`
+

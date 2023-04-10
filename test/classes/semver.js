@@ -84,12 +84,13 @@ test('incrementing', t => {
     expect,
     options,
     id,
+    base,
   ]) => t.test(`${version} ${inc} ${id || ''}`.trim(), t => {
     t.plan(1)
     if (expect === null) {
-      t.throws(() => new SemVer(version, options).inc(inc, id))
+      t.throws(() => new SemVer(version, options).inc(inc, id, base))
     } else {
-      t.equal(new SemVer(version, options).inc(inc, id).version, expect)
+      t.equal(new SemVer(version, options).inc(inc, id, base).version, expect)
     }
   }))
 })
