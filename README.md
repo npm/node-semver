@@ -110,6 +110,9 @@ Options:
 -l --loose
         Interpret versions and ranges loosely
 
+-n <0|1>
+        This is the base to be used for the prerelease identifier.
+
 -p --include-prerelease
         Always include prerelease versions in range matching
 
@@ -229,6 +232,24 @@ Which then can be used to increment further:
 
 ```bash
 $ semver 1.2.4-beta.0 -i prerelease
+1.2.4-beta.1
+```
+
+#### Prerelease Identifier Base
+
+The method `.inc` takes an optional parameter 'identifierBase' string
+that will let you let your prerelease number as zero-based or one-based.
+If you do not specify this parameter, it will default to zero-based.
+
+```javascript
+semver.inc('1.2.3', 'prerelease', 'beta', '1')
+// '1.2.4-beta.1'
+```
+
+command-line example:
+
+```bash
+$ semver 1.2.3 -i prerelease --preid beta -n 1
 1.2.4-beta.1
 ```
 

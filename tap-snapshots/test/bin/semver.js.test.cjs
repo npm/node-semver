@@ -301,6 +301,15 @@ Object {
 }
 `
 
+exports[`test/bin/semver.js TAP inc tests > -i premajor 1.0.0 --preid=beta -n 1 1`] = `
+Object {
+  "code": 0,
+  "err": "",
+  "out": "2.0.0-beta.1\\n",
+  "signal": null,
+}
+`
+
 exports[`test/bin/semver.js TAP inc tests > -i premajor 1.0.0 --preid=beta 1`] = `
 Object {
   "code": 0,
