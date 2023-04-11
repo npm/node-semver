@@ -28,24 +28,26 @@ const diff = (version1, version2) => {
     return prefix + 'patch'
   }
 
-  if (lowHasPre && !highHasPre) {
-    if (lowVersion.patch) {
-      // anything higher than a patch bump would result in the wrong version
-      return 'patch'
-    }
+  // at this point we know stable versions match but overall versions are not equal,
+  // so either they are both prereleases, or the lower version is a prerelease
 
-    if (lowVersion.minor) {
-      // anything higher than a minor bump would result in the wrong version
-      return 'minor'
-    }
-
-    // bumping major/minor/patch all have same result
-    return 'major'
+  if (highHasPre) {
+    // high and low are preleases
+    return 'prerelease'
   }
 
-  // at this point it must be that both are prereleases and
-  // prelease parts are different because we know the 2 versions
-  // are not equal
-  return 'prerelease'
+  if (lowVersion.patch) {
+    // anything higher than a patch bump would result in the wrong version
+    return 'patch'
+  }
+
+  if (lowVersion.minor) {
+    // anything higher than a minor bump would result in the wrong version
+    return 'minor'
+  }
+
+  // bumping major/minor/patch all have same result
+  return 'major'
 }
+
 module.exports = diff
