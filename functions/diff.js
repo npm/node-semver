@@ -14,7 +14,7 @@ const diff = (version1, version2) => {
   const lowVersion = v1Higher ? v2 : v1
   const highHasPre = !!highVersion.prerelease.length
   const lowHasPre = !!lowVersion.prerelease.length
-  const prefix = highHasPre ? 'pre' : ''
+  const prefix = highHasPre && !lowHasPre ? 'pre' : ''
 
   if (v1.major !== v2.major) {
     return prefix + 'major'
