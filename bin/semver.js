@@ -25,6 +25,8 @@ let identifier
 
 let identifierBase
 
+let disableIdentifierBase
+
 const semver = require('../')
 const parseOptions = require('../internal/parse-options')
 
@@ -77,6 +79,9 @@ const main = () => {
       case '-n':
         identifierBase = argv.shift()
         break
+      case '--noidbase':
+        disableIdentifierBase = true
+        break
       case '-c': case '--coerce':
         coerce = true
         break
@@ -94,7 +99,7 @@ const main = () => {
     }
   }
 
-  options = parseOptions({ loose, includePrerelease, rtl })
+  options = parseOptions({ loose, includePrerelease, rtl, disableIdentifierBase })
 
   versions = versions.map((v) => {
     return coerce ? (semver.coerce(v, options) || { version: v }).version : v
@@ -177,6 +182,19 @@ Options:
 
 --ltr
         Coerce version strings left to right (default)
+
+-n <base>
+        Prerelease Identifier Base
+        that will let you let your prerelease number as 
+        zero-based or one-based.If you do not specify 
+        this parameter, it will default to zero-based.
+        
+--noidbase
+        Disable Identifier Base
+        when this flag is set to true initial prerelease
+        identifier base is disabled, if another version
+        is created with same identifier then the prerelease
+        number is used based on Prerelease Identifier Base
 
 Program exits successfully if any valid version satisfies
 all supplied ranges, and prints all satisfying versions.

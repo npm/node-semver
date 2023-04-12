@@ -253,6 +253,29 @@ $ semver 1.2.3 -i prerelease --preid beta -n 1
 1.2.4-beta.1
 ```
 
+#### Disable Prerelease Identifier Base
+when this flag is set to true initial prerelease identifier base is disabled.
+
+```javascript
+semver.inc('1.2.3', 'prerelease', { disableIdentifierBase: true } , 'beta')
+// '1.2.4-beta'
+```
+
+command-line example:
+```bash
+$ semver 1.2.3 -i prerelease --preid beta -noidbase
+# 1.2.4-beta
+```
+
+
+if another version is created with same identifier then the prerelease
+number is used based on Prerelease Identifier Base
+
+```javascript
+semver.inc('1.2.3-beta', 'prerelease', { disableIdentifierBase: true } , 'beta', '1')
+// '1.2.3-beta.1'
+```
+
 ### Advanced Range Syntax
 
 Advanced range syntax desugars to primitive comparators in
