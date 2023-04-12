@@ -1,15 +1,15 @@
 const parse = require('./parse')
-const eq = require('./eq')
-const gt = require('./gt')
 
 const diff = (version1, version2) => {
   const v1 = parse(version1)
   const v2 = parse(version2)
-  if (eq(v1, v2)) {
+  const comparison = v1.compare(v2)
+
+  if (comparison === 0) {
     return null
   }
 
-  const v1Higher = gt(v1, v2)
+  const v1Higher = comparison > 0
   const highVersion = v1Higher ? v1 : v2
   const lowVersion = v1Higher ? v2 : v1
   const highHasPre = !!highVersion.prerelease.length
