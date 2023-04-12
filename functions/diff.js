@@ -1,10 +1,9 @@
 const parse = require('./parse')
-const eq = require('./eq')
 
 const diff = (version1, version2) => {
   const v1 = parse(version1)
   const v2 = parse(version2)
-  if (eq(v1, v2)) {
+  if (v1.compare(v2) === 0) {
     return null
   } else {
     const hasPre = v1.prerelease.length || v2.prerelease.length
