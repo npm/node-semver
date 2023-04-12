@@ -14,6 +14,9 @@ const diff = (version1, version2) => {
   const lowVersion = v1Higher ? v2 : v1
   const highHasPre = !!highVersion.prerelease.length
   const lowHasPre = !!lowVersion.prerelease.length
+
+  // add the `pre` prefix if we are going from a stable version
+  // to a prerelease one
   const prefix = highHasPre && !lowHasPre ? 'pre' : ''
 
   if (v1.major !== v2.major) {
