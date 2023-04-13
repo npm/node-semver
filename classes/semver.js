@@ -247,9 +247,8 @@ class SemVer {
       // This probably shouldn't be used publicly.
       // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
       case 'pre': {
-        const base = identifierBase === false ||
-        identifierBase === 'false' ||
-        Number(identifierBase) ? 1 : 0
+        identifierBase = identifierBase === 'false' ? false : identifierBase
+        const base = identifierBase === false || Number(identifierBase) ? 1 : 0
 
         if (this.prerelease.length === 0) {
           this.prerelease = [base]

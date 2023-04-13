@@ -179,11 +179,9 @@ Options:
         Coerce version strings left to right (default)
 
 -n <base>
-        Prerelease Identifier Base
-        that will let you let your prerelease number as 
-        zero-based or one-based. If you provide false
-        zero will be omitted. If you do not specify 
-        this parameter, it will default to zero-based.
+        Base number to be used for the prerelease identifier.
+        Can be either 0or 1, or false to omit the number altogether.
+        Defaults to 0.
 
 Program exits successfully if any valid version satisfies
 all supplied ranges, and prints all satisfying versions.
