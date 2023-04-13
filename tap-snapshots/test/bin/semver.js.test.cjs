@@ -96,15 +96,9 @@ Object {
     -n <base>
             Prerelease Identifier Base
             that will let you let your prerelease number as 
-            zero-based or one-based.If you do not specify 
+            zero-based or one-based. If you provide false
+            zero will be omitted. If you do not specify 
             this parameter, it will default to zero-based.
-            
-    --noidbase
-            Disable Identifier Base
-            when this flag is set to true initial prerelease
-            identifier base is disabled, if another version
-            is created with same identifier then the prerelease
-            number is used based on Prerelease Identifier Base
     
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
@@ -165,15 +159,9 @@ Object {
     -n <base>
             Prerelease Identifier Base
             that will let you let your prerelease number as 
-            zero-based or one-based.If you do not specify 
+            zero-based or one-based. If you provide false
+            zero will be omitted. If you do not specify 
             this parameter, it will default to zero-based.
-            
-    --noidbase
-            Disable Identifier Base
-            when this flag is set to true initial prerelease
-            identifier base is disabled, if another version
-            is created with same identifier then the prerelease
-            number is used based on Prerelease Identifier Base
     
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
@@ -234,15 +222,9 @@ Object {
     -n <base>
             Prerelease Identifier Base
             that will let you let your prerelease number as 
-            zero-based or one-based.If you do not specify 
+            zero-based or one-based. If you provide false
+            zero will be omitted. If you do not specify 
             this parameter, it will default to zero-based.
-            
-    --noidbase
-            Disable Identifier Base
-            when this flag is set to true initial prerelease
-            identifier base is disabled, if another version
-            is created with same identifier then the prerelease
-            number is used based on Prerelease Identifier Base
     
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
@@ -303,15 +285,9 @@ Object {
     -n <base>
             Prerelease Identifier Base
             that will let you let your prerelease number as 
-            zero-based or one-based.If you do not specify 
+            zero-based or one-based. If you provide false
+            zero will be omitted. If you do not specify 
             this parameter, it will default to zero-based.
-            
-    --noidbase
-            Disable Identifier Base
-            when this flag is set to true initial prerelease
-            identifier base is disabled, if another version
-            is created with same identifier then the prerelease
-            number is used based on Prerelease Identifier Base
     
     Program exits successfully if any valid version satisfies
     all supplied ranges, and prints all satisfying versions.
@@ -362,7 +338,7 @@ Object {
 }
 `
 
-exports[`test/bin/semver.js TAP inc tests > -i premajor 1.0.0 --preid=beta --noidbase 1`] = `
+exports[`test/bin/semver.js TAP inc tests > -i premajor 1.0.0 --preid=beta -n false 1`] = `
 Object {
   "code": 0,
   "err": "",

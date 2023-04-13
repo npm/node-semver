@@ -35,13 +35,9 @@ t.test('any object passed is returned', t => {
     loose: true,
     includePrerelease: true,
   })
-  t.strictSame(parseOptions({ disableIdentifierBase: true }), {
-    disableIdentifierBase: true,
-  })
-  t.strictSame(parseOptions({ rtl: true, includePrerelease: true, disableIdentifierBase: true }), {
+  t.strictSame(parseOptions({ rtl: true, includePrerelease: true }), {
     rtl: true,
     includePrerelease: true,
-    disableIdentifierBase: true,
   })
   t.end()
 })
