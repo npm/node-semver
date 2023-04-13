@@ -79,6 +79,7 @@ module.exports = [
   ['1.2.3-1', 'preminor', '1.3.0-dev.0', false, 'dev'],
   ['1.2.0', 'premajor', '2.0.0-dev.0', false, 'dev'],
   ['1.2.3-1', 'premajor', '2.0.0-dev.0', false, 'dev'],
+  ['1.2.3-1', 'premajor', '2.0.0-dev.1', false, 'dev', 1],
   ['1.2.0-1', 'minor', '1.2.0', false, 'dev'],
   ['1.0.0-1', 'major', '1.0.0', 'dev'],
   ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev'],
@@ -99,6 +100,10 @@ module.exports = [
   ['1.2.0', 'premajor', '2.0.0-dev.0', false, 'dev', '0'],
   ['1.2.3-1', 'premajor', '2.0.0-dev.0', false, 'dev', '0'],
   ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.0', false, 'dev', '0'],
+  ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.1', false, 'dev', '1'],
+  ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.bar.0', false, '', '0'],
+  ['1.2.3-dev.bar', 'prerelease', '1.2.3-dev.bar.1', false, '', '1'],
   ['1.2.0', 'preminor', '1.3.0-dev.1', false, 'dev', '1'],
   ['1.2.3-1', 'preminor', '1.3.0-dev.0', false, 'dev'],
+  ['1.2.0', 'prerelease', '1.2.1-1', false, '', '1'],
 ]
