@@ -3,36 +3,52 @@ const parse = require('./parse')
 const diff = (version1, version2) => {
   const v1 = parse(version1)
   const v2 = parse(version2)
-  if (v1.compare(v2) === 0) {
+  const comparison = v1.compare(v2)
+
+  if (comparison === 0) {
     return null
-  } else {
-    const hasPre = v1.prerelease.length || v2.prerelease.length
-    const prefix = hasPre ? 'pre' : ''
-    const defaultResult = hasPre ? 'prerelease' : ''
-
-    if (v1.major !== v2.major) {
-      return prefix + 'major'
-    }
-    if (v1.minor !== v2.minor) {
-      return prefix + 'minor'
-    }
-
-    if (v1.patch !== v2.patch) {
-      return prefix + 'patch'
-    }
-
-    if (!v1.prerelease.length || !v2.prerelease.length) {
-      if (v1.patch) {
-        return 'patch'
-      }
-      if (v1.minor) {
-        return 'minor'
-      }
-      if (v1.major) {
-        return 'major'
-      }
-    }
-    return defaultResult // may be undefined
   }
+
+  const v1Higher = comparison > 0
+  const highVersion = v1Higher ? v1 : v2
+  const lowVersion = v1Higher ? v2 : v1
+  const highHasPre = !!highVersion.prerelease.length
+
+  // add the `pre` prefix if we are going to a prerelease version
+  const prefix = highHasPre ? 'pre' : ''
+
+  if (v1.major !== v2.major) {
+    return prefix + 'major'
+  }
+
+  if (v1.minor !== v2.minor) {
+    return prefix + 'minor'
+  }
+
+  if (v1.patch !== v2.patch) {
+    return prefix + 'patch'
+  }
+
+  // at this point we know stable versions match but overall versions are not equal,
+  // so either they are both prereleases, or the lower version is a prerelease
+
+  if (highHasPre) {
+    // high and low are preleases
+    return 'prerelease'
+  }
+
+  if (lowVersion.patch) {
+    // anything higher than a patch bump would result in the wrong version
+    return 'patch'
+  }
+
+  if (lowVersion.minor) {
+    // anything higher than a minor bump would result in the wrong version
+    return 'minor'
+  }
+
+  // bumping major/minor/patch all have same result
+  return 'major'
 }
+
 module.exports = diff
