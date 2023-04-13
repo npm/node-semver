@@ -268,7 +268,7 @@ class SemVer {
           // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
           // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
           let prerelease = [identifier, base]
-          if (identifierBase === false || identifierBase === 'false') {
+          if (identifierBase === false) {
             prerelease = [identifier]
           }
           if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
