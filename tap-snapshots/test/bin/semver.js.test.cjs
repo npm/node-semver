@@ -95,7 +95,7 @@ Object {
     
     -n <base>
             Base number to be used for the prerelease identifier.
-            Can be either 0or 1, or false to omit the number altogether.
+            Can be either 0 or 1, or false to omit the number altogether.
             Defaults to 0.
     
     Program exits successfully if any valid version satisfies
@@ -156,7 +156,7 @@ Object {
     
     -n <base>
             Base number to be used for the prerelease identifier.
-            Can be either 0or 1, or false to omit the number altogether.
+            Can be either 0 or 1, or false to omit the number altogether.
             Defaults to 0.
     
     Program exits successfully if any valid version satisfies
@@ -217,7 +217,7 @@ Object {
     
     -n <base>
             Base number to be used for the prerelease identifier.
-            Can be either 0or 1, or false to omit the number altogether.
+            Can be either 0 or 1, or false to omit the number altogether.
             Defaults to 0.
     
     Program exits successfully if any valid version satisfies
@@ -278,7 +278,7 @@ Object {
     
     -n <base>
             Base number to be used for the prerelease identifier.
-            Can be either 0or 1, or false to omit the number altogether.
+            Can be either 0 or 1, or false to omit the number altogether.
             Defaults to 0.
     
     Program exits successfully if any valid version satisfies
