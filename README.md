@@ -264,13 +264,6 @@ $ semver 1.2.3 -i prerelease --preid beta -n false
 1.2.4-beta
 ```
 
-if 'identifierBase' is set to `false` and identifier exists next prerelease
-number will be `1`
-```javascript
-semver.inc('1.2.3-beta', 'prerelease', 'beta', false)
-// '1.2.3-beta.1'
-```
-
 ### Advanced Range Syntax
 
 Advanced range syntax desugars to primitive comparators in
