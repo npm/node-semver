@@ -1,8 +1,8 @@
-const parse = require('./parse')
+const parse = require('./parse.js')
 
 const diff = (version1, version2) => {
-  const v1 = parse(version1)
-  const v2 = parse(version2)
+  const v1 = parse(version1, null, true)
+  const v2 = parse(version2, null, true)
   const comparison = v1.compare(v2)
 
   if (comparison === 0) {
