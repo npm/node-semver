@@ -247,7 +247,11 @@ class SemVer {
       // This probably shouldn't be used publicly.
       // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
       case 'pre': {
-        const base = identifierBase === false || Number(identifierBase) ? 1 : 0
+        const base = Number(identifierBase) ? 1 : 0
+
+        if (!identifier && identifierBase === false) {
+          throw new Error('invalid increment argument: identifier is empty')
+        }
 
         if (this.prerelease.length === 0) {
           this.prerelease = [base]
@@ -261,6 +265,9 @@ class SemVer {
           }
           if (i === -1) {
             // didn't increment anything
+            if (identifier === this.prerelease.join('.') && identifierBase === false) {
+              throw new Error('invalid increment argument: identifier already exists')
+            }
             this.prerelease.push(base)
           }
         }
