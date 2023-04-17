@@ -43,3 +43,13 @@ test('diff versions test', (t) => {
 
   t.end()
 })
+
+test('throws on bad version', (t) => {
+  t.throws(() => {
+    diff('bad', '1.2.3')
+  }, {
+    message: 'Invalid Version: bad',
+    name: 'TypeError',
+  })
+  t.end()
+})

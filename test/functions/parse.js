@@ -9,6 +9,22 @@ t.test('returns null instead of throwing when presented with garbage', t => {
     t.equal(parse(v, opts), null, msg))
 })
 
+t.test('throw errors if asked to', t => {
+  t.throws(() => {
+    parse('bad', null, true)
+  }, {
+    name: 'TypeError',
+    message: 'Invalid Version: bad',
+  })
+  t.throws(() => {
+    parse([], null, true)
+  }, {
+    name: 'TypeError',
+    message: 'Invalid Version: []',
+  })
+  t.end()
+})
+
 t.test('parse a version into a SemVer object', t => {
   t.match(parse('1.2.3'), new SemVer('1.2.3'))
   const s = new SemVer('4.5.6')
