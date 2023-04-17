@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.5.0](https://github.com/npm/node-semver/compare/v7.4.0...v7.5.0) (2023-04-17)
+
+### Features
+
+* [`503a4e5`](https://github.com/npm/node-semver/commit/503a4e52fe2b1c6ed1400d33149f7733c8361eed) [#548](https://github.com/npm/node-semver/pull/548) allow identifierBase to be false (#548) (@lsvalina)
+
+### Bug Fixes
+
+* [`e219bb4`](https://github.com/npm/node-semver/commit/e219bb454036a0c23e34407591f921c8edb688e7) [#552](https://github.com/npm/node-semver/pull/552) throw on bad version with correct error message (#552) (@wraithgar)
+* [`fc2f3df`](https://github.com/npm/node-semver/commit/fc2f3df0b5d25253b3580607e111a9a280d888ca) [#546](https://github.com/npm/node-semver/pull/546) incorrect results from diff sometimes with prerelease versions (#546) (@tjenkinson)
+* [`2781767`](https://github.com/npm/node-semver/commit/27817677794f592b592bf6181a80a4824ff762b2) [#547](https://github.com/npm/node-semver/pull/547) avoid re-instantiating SemVer during diff compare (#547) (@macno)
+
 ## [7.4.0](https://github.com/npm/node-semver/compare/v7.3.8...v7.4.0) (2023-04-10)
 
 ### Features
