@@ -322,6 +322,7 @@ jobs:
         shell: bash
     permissions:
       deployments: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -338,7 +339,7 @@ jobs:
       - name: Publish
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-        run: npm publish
+        run: npm publish --provenance
 
   post-release-integration:
     needs: [ release, release-integration ]
