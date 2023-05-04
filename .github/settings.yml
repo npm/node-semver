@@ -1,2 +1,26 @@
----
-_extends: '.github:npm-cli/settings.yml'
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+repository:
+  allow_merge_commit: false
+  allow_rebase_merge: true
+  allow_squash_merge: true
+  squash_merge_commit_title: PR_TITLE
+  squash_merge_commit_message: PR_BODY
+  delete_branch_on_merge: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+
+branches:
+  - name: main
+    protection:
+      required_status_checks: null
+      enforce_admins: true
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        require_code_owner_reviews: true
+        require_last_push_approval: true
+        dismiss_stale_reviews: true
+      restrictions:
+        apps: []
+        users: []
+        teams: [ "cli-team" ]
