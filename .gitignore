@@ -33,3 +33,4 @@
 !/SECURITY.md
 !/tap-snapshots/
 !/test/
+!/rollup.config.js

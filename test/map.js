@@ -11,6 +11,7 @@ const ignore = [
   'tap-snapshots',
   'test',
   'fixtures',
+  'rollup.config.js',
 ]
 
 const { statSync, readdirSync } = require('fs')
