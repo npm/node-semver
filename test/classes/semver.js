@@ -5,60 +5,52 @@ const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')
 const invalidVersions = require('../fixtures/invalid-versions')
 
-test('comparisons', (t) => {
+test('comparisons', t => {
   t.plan(comparisons.length)
-  comparisons.forEach(([v0, v1, opt]) =>
-    t.test(`${v0} ${v1}`, (t) => {
-      const s0 = new SemVer(v0, opt)
-      const s1 = new SemVer(v1, opt)
-      t.equal(s0.compare(s1), 1)
-      t.equal(s0.compare(v1), 1)
-      t.equal(s1.compare(s0), -1)
-      t.equal(s1.compare(v0), -1)
-      t.equal(s0.compare(v0), 0)
-      t.equal(s1.compare(v1), 0)
-      t.end()
-    })
-  )
+  comparisons.forEach(([v0, v1, opt]) => t.test(`${v0} ${v1}`, t => {
+    const s0 = new SemVer(v0, opt)
+    const s1 = new SemVer(v1, opt)
+    t.equal(s0.compare(s1), 1)
+    t.equal(s0.compare(v1), 1)
+    t.equal(s1.compare(s0), -1)
+    t.equal(s1.compare(v0), -1)
+    t.equal(s0.compare(v0), 0)
+    t.equal(s1.compare(v1), 0)
+    t.end()
+  }))
 })
 
-test('equality', (t) => {
+test('equality', t => {
   t.plan(equality.length)
-  equality.forEach(([v0, v1, loose]) =>
-    t.test(`${v0} ${v1} ${loose}`, (t) => {
-      const s0 = new SemVer(v0, loose)
-      const s1 = new SemVer(v1, loose)
-      t.equal(s0.compare(s1), 0)
-      t.equal(s1.compare(s0), 0)
-      t.equal(s0.compare(v1), 0)
-      t.equal(s1.compare(v0), 0)
-      t.equal(s0.compare(s0), 0)
-      t.equal(s1.compare(s1), 0)
-      t.equal(s0.comparePre(s1), 0, 'comparePre just to hit that code path')
-      t.end()
-    })
-  )
+  equality.forEach(([v0, v1, loose]) => t.test(`${v0} ${v1} ${loose}`, t => {
+    const s0 = new SemVer(v0, loose)
+    const s1 = new SemVer(v1, loose)
+    t.equal(s0.compare(s1), 0)
+    t.equal(s1.compare(s0), 0)
+    t.equal(s0.compare(v1), 0)
+    t.equal(s1.compare(v0), 0)
+    t.equal(s0.compare(s0), 0)
+    t.equal(s1.compare(s1), 0)
+    t.equal(s0.comparePre(s1), 0, 'comparePre just to hit that code path')
+    t.end()
+  }))
 })
 
-test('toString equals parsed version', (t) => {
+test('toString equals parsed version', t => {
   t.equal(String(new SemVer('v1.2.3')), '1.2.3')
   t.end()
 })
 
-test('throws when presented with garbage', (t) => {
+test('throws when presented with garbage', t => {
   t.plan(invalidVersions.length)
   invalidVersions.forEach(([v, msg, opts]) =>
-    t.throws(() => new SemVer(v, opts), msg)
-  )
+    t.throws(() => new SemVer(v, opts), msg))
 })
 
-test('return SemVer arg to ctor if options match', (t) => {
+test('return SemVer arg to ctor if options match', t => {
   const s = new SemVer('1.2.3', { loose: true, includePrerelease: true })
-  t.equal(
-    new SemVer(s, { loose: true, includePrerelease: true }),
-    s,
-    'get same object when options match'
-  )
+  t.equal(new SemVer(s, { loose: true, includePrerelease: true }), s,
+    'get same object when options match')
   t.not(new SemVer(s), s, 'get new object when options match')
   t.end()
 })
@@ -88,21 +80,23 @@ test('invalid version numbers', (t) => {
   t.end()
 })
 
-test('incrementing', (t) => {
+test('incrementing', t => {
   t.plan(increments.length)
-  increments.forEach(([version, inc, expect, options, id, base]) =>
-    t.test(`${version} ${inc} ${id || ''}`.trim(), (t) => {
-      t.plan(1)
-      if (expect === null) {
-        t.throws(() => new SemVer(version, options).inc(inc, id, base))
-      } else {
-        t.equal(
-          new SemVer(version, options).inc(inc, id, base).version,
-          expect
-        )
-      }
-    })
-  )
+  increments.forEach(([
+    version,
+    inc,
+    expect,
+    options,
+    id,
+    base,
+  ]) => t.test(`${version} ${inc} ${id || ''}`.trim(), t => {
+    t.plan(1)
+    if (expect === null) {
+      t.throws(() => new SemVer(version, options).inc(inc, id, base))
+    } else {
+      t.equal(new SemVer(version, options).inc(inc, id, base).version, expect)
+    }
+  }))
 })
 
 test('compare main vs pre', (t) => {
