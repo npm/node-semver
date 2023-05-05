@@ -20,7 +20,7 @@ t.test('throw errors if asked to', t => {
     parse([], null, true)
   }, {
     name: 'TypeError',
-    message: 'Invalid Version: []',
+    message: 'Invalid Version: ',
   })
   t.end()
 })
