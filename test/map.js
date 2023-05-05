@@ -6,12 +6,12 @@ const ignore = [
   '.github',
   '.commitlintrc.js',
   '.eslintrc.js',
+  '.eslintrc.local.js',
   'node_modules',
   'coverage',
   'tap-snapshots',
   'test',
   'fixtures',
-  'rollup.config.js',
 ]
 
 const { statSync, readdirSync } = require('fs')

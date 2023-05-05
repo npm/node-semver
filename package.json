@@ -4,9 +4,8 @@
   "description": "The semantic version parser used by npm.",
   "main": "index.js",
   "scripts": {
-    "test": "tap && npm run check-self-contained",
+    "test": "tap",
     "snap": "tap",
-    "check-self-contained": "rollup -c --silent > /dev/null",
     "lint": "eslint \"**/*.js\"",
     "postlint": "template-oss-check",
     "lintfix": "npm run lint -- --fix",
@@ -16,8 +15,7 @@
   "devDependencies": {
     "@npmcli/eslint-config": "^4.0.0",
     "@npmcli/template-oss": "4.14.1",
-    "@rollup/plugin-commonjs": "^24.1.0",
-    "rollup": "^3.21.5",
+    "eslint-plugin-import": "^2.27.5",
     "tap": "^16.0.0"
   },
   "license": "ISC",
