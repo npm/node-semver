@@ -6,6 +6,7 @@ const ignore = [
   '.github',
   '.commitlintrc.js',
   '.eslintrc.js',
+  '.eslintrc.local.js',
   'node_modules',
   'coverage',
   'tap-snapshots',

@@ -62,15 +62,19 @@ test('really big numeric prerelease value', (t) => {
 })
 
 test('invalid version numbers', (t) => {
-  ['1.2.3.4',
-    'NOT VALID',
-    1.2,
-    null,
-    'Infinity.NaN.Infinity',
-  ].forEach((v) => {
-    t.throws(() => {
-      new SemVer(v) // eslint-disable-line no-new
-    }, { name: 'TypeError', message: `Invalid Version: ${v}` })
+  ['1.2.3.4', 'NOT VALID', 1.2, null, 'Infinity.NaN.Infinity'].forEach((v) => {
+    t.throws(
+      () => {
+        new SemVer(v) // eslint-disable-line no-new
+      },
+      {
+        name: 'TypeError',
+        message:
+          typeof v === 'string'
+            ? `Invalid Version: ${v}`
+            : `Invalid version. Must be a string. Got type "${typeof v}".`,
+      }
+    )
   })
 
   t.end()
@@ -113,15 +117,19 @@ test('compare main vs pre', (t) => {
 })
 
 test('invalid version numbers', (t) => {
-  ['1.2.3.4',
-    'NOT VALID',
-    1.2,
-    null,
-    'Infinity.NaN.Infinity',
-  ].forEach((v) => {
-    t.throws(() => {
-      new SemVer(v) // eslint-disable-line no-new
-    }, { name: 'TypeError', message: `Invalid Version: ${v}` })
+  ['1.2.3.4', 'NOT VALID', 1.2, null, 'Infinity.NaN.Infinity'].forEach((v) => {
+    t.throws(
+      () => {
+        new SemVer(v) // eslint-disable-line no-new
+      },
+      {
+        name: 'TypeError',
+        message:
+          typeof v === 'string'
+            ? `Invalid Version: ${v}`
+            : `Invalid version. Must be a string. Got type "${typeof v}".`,
+      }
+    )
   })
 
   t.end()
