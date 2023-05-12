@@ -61,7 +61,7 @@ jobs:
 
             return { summary }
       - name: Create Check
-        uses: LouisBrunner/checks-action@v1.3.1
+        uses: LouisBrunner/checks-action@v1.6.0
         id: check
         if: inputs.check-sha
         with:
@@ -93,7 +93,7 @@ jobs:
       - name: Post Lint
         run: npm run postlint --ignore-scripts
       - name: Conclude Check
-        uses: LouisBrunner/checks-action@v1.3.1
+        uses: LouisBrunner/checks-action@v1.6.0
         if: steps.check.outputs.check_id && always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -162,7 +162,7 @@ jobs:
 
             return { summary }
       - name: Create Check
-        uses: LouisBrunner/checks-action@v1.3.1
+        uses: LouisBrunner/checks-action@v1.6.0
         id: check
         if: inputs.check-sha
         with:
@@ -208,7 +208,7 @@ jobs:
       - name: Test
         run: npm test --ignore-scripts
       - name: Conclude Check
-        uses: LouisBrunner/checks-action@v1.3.1
+        uses: LouisBrunner/checks-action@v1.6.0
         if: steps.check.outputs.check_id && always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
