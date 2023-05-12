@@ -6,10 +6,6 @@ module.exports = {
       'error',
       {
         devDependencies: false,
-        optionalDependencies: false,
-        peerDependencies: false,
-        bundledDependencies: false,
-        includeInternal: true,
       },
     ],
     'import/no-nodejs-modules': ['error'],
