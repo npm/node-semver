@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.5.1](https://github.com/npm/node-semver/compare/v7.5.0...v7.5.1) (2023-05-12)
+
+### Bug Fixes
+
+* [`d30d25a`](https://github.com/npm/node-semver/commit/d30d25a5c1fb963c3cc9178cb1769fe45e4a3cab) [#559](https://github.com/npm/node-semver/pull/559) show type on invalid semver error (#559) (@tjenkinson)
+
 ## [7.5.0](https://github.com/npm/node-semver/compare/v7.4.0...v7.5.0) (2023-04-17)
 
 ### Features
