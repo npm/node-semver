@@ -14,7 +14,15 @@ test('increment versions test', (t) => {
     if (wanted) {
       parsed.inc(what, id, base)
       t.equal(parsed.version, wanted, `${cmd} object version updated`)
-      t.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
+      if (parsed.build.length) {
+        t.equal(
+          parsed.raw,
+          `${wanted}+${parsed.build.join('.')}`,
+          `${cmd} object raw field updated with build`
+        )
+      } else {
+        t.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
+      }
 
       const preIncObject = JSON.stringify(parsedAsInput)
       inc(parsedAsInput, what, options, id, base)

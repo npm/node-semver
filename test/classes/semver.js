@@ -90,11 +90,18 @@ test('incrementing', t => {
     id,
     base,
   ]) => t.test(`${version} ${inc} ${id || ''}`.trim(), t => {
-    t.plan(1)
     if (expect === null) {
+      t.plan(1)
       t.throws(() => new SemVer(version, options).inc(inc, id, base))
     } else {
-      t.equal(new SemVer(version, options).inc(inc, id, base).version, expect)
+      t.plan(2)
+      const incremented = new SemVer(version, options).inc(inc, id, base)
+      t.equal(incremented.version, expect)
+      if (incremented.build.length) {
+        t.equal(incremented.raw, `${expect}+${incremented.build.join('.')}`)
+      } else {
+        t.equal(incremented.raw, expect)
+      }
     }
   }))
 })
