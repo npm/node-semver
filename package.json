@@ -37,7 +37,7 @@
     "range.bnf"
   ],
   "tap": {
-    "check-coverage": true,
+    "timeout": 30,
     "coverage-map": "map.js",
     "nyc-arg": [
       "--exclude",

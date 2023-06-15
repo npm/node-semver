@@ -1,5 +1,5 @@
 const { test } = require('tap')
-const { src, re } = require('../../internal/re')
+const { src, re, safeRe } = require('../../internal/re')
 const semver = require('../../')
 
 test('has a list of src, re, and tokens', (t) => {
@@ -13,5 +13,11 @@ test('has a list of src, re, and tokens', (t) => {
   for (const i in semver.tokens) {
     t.match(semver.tokens[i], Number, 'tokens are numbers')
   }
+
+  safeRe.forEach(r => {
+    t.notMatch(r.source, '\\s+', 'safe regex do not contain greedy whitespace')
+    t.notMatch(r.source, '\\s*', 'safe regex do not contain greedy whitespace')
+  })
+
   t.end()
 })
