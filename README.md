@@ -425,8 +425,8 @@ strings that they parse.
     increments it.
   * If called from a prerelease version with `pre`, it increments the 
     revision number. Example: `inc('1.0.1-rc.1', 'pre') -> '1.0.1-rc.2'`
-    Be aware that `inc('1.0.0', 'pre') -> '1.0.0-0'` which is the wrong
-    direction.
+    Be aware that `inc('1.0.0', 'pre')` results in `1.0.0-0` which is 
+    the wrong direction.
 * `prerelease(v)`: Returns an array of prerelease components, or null
   if none exist. Example: `prerelease('1.2.3-alpha.1') -> ['alpha', 1]`
 * `major(v)`: Return the major version number.
