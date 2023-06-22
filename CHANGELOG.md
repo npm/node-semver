@@ -1,5 +1,15 @@
 # Changelog
 
+## [7.5.3](https://github.com/npm/node-semver/compare/v7.5.2...v7.5.3) (2023-06-22)
+
+### Bug Fixes
+
+* [`abdd93d`](https://github.com/npm/node-semver/commit/abdd93d55496d22e3c15a454a5cf13f101e48bce) [#571](https://github.com/npm/node-semver/pull/571) set max lengths in regex for numeric and build identifiers (#571) (@lukekarrys)
+
+### Documentation
+
+* [`bf53dd8`](https://github.com/npm/node-semver/commit/bf53dd8da15a17eb6b8111115d0d8ef341fea5db) [#569](https://github.com/npm/node-semver/pull/569) add example for `>` comparator (#569) (@mbtools)
+
 ## [7.5.2](https://github.com/npm/node-semver/compare/v7.5.1...v7.5.2) (2023-06-15)
 
 ### Bug Fixes
