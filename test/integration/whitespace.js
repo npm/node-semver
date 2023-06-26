@@ -29,8 +29,8 @@ test('range with 0', (t) => {
   t.throws(() => new Range(r).range)
   t.equal(validRange(r), null)
   t.throws(() => minVersion(r).version)
-  t.equal(minSatisfying(['1.2.3']), null)
-  t.equal(maxSatisfying(['1.2.3']), null)
+  t.equal(minSatisfying(['1.2.3'], r), null)
+  t.equal(maxSatisfying(['1.2.3'], r), null)
   t.end()
 })
 
