@@ -1,0 +1,36 @@
+{
+  "exclude-packages-from-root": true,
+  "group-pull-request-title-pattern": "chore: release ${version}",
+  "pull-request-title-pattern": "chore: release${component} ${version}",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Features",
+      "hidden": false
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes",
+      "hidden": false
+    },
+    {
+      "type": "docs",
+      "section": "Documentation",
+      "hidden": false
+    },
+    {
+      "type": "deps",
+      "section": "Dependencies",
+      "hidden": false
+    },
+    {
+      "type": "chore",
+      "hidden": true
+    }
+  ],
+  "packages": {
+    ".": {
+      "package-name": ""
+    }
+  }
+}

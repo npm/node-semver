@@ -1,0 +1,8 @@
+- name: Remove Template-OSS
+  if: matrix && matrix.node-version == '{{ oldNode }}'
+  run: |
+    # template-oss cannot be installed on older npms because there are transient deps
+    # that use "npm:" aliases which are not supported
+    jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+    mv package.json-update package.json
+{{> defaultStepDeps }}

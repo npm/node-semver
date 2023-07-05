@@ -1,0 +1,90 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - latest
+      - release/v*
+  schedule:
+    # "At 09:00 UTC (02:00 PT) on Monday" https://crontab.guru/#0_9_*_*_1
+    - cron: "0 9 * * 1"
+
+jobs:
+  lint:
+    name: Lint
+    if: github.repository_owner == 'npm'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Git User
+        run: |
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
+        run: |
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Lint
+        run: npm run lint --ignore-scripts
+      - name: Post Lint
+        run: npm run postlint --ignore-scripts
+
+  test:
+    name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
+    if: github.repository_owner == 'npm'
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Linux
+            os: ubuntu-latest
+            shell: bash
+        node-version:
+          - 6.17.1
+          - 18.x
+    runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.platform.shell }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Git User
+        run: |
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
+        run: |
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Add Problem Matcher
+        run: echo "::add-matcher::.github/matchers/tap.json"
+      - name: Test
+        run: npm test --ignore-scripts
