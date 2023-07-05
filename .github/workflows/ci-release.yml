@@ -1,0 +1,198 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: CI - Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        required: true
+        type: string
+        default: main
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      check-sha:
+        required: true
+        type: string
+
+jobs:
+  lint-all:
+    name: Lint All
+    if: github.repository_owner == 'npm'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Get Workflow Job
+        uses: actions/github-script@v6
+        if: inputs.check-sha
+        id: check-output
+        env:
+          JOB_NAME: "Lint All"
+          MATRIX_NAME: ""
+        with:
+          script: |
+            const { owner, repo } = context.repo
+
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner,
+              repo,
+              run_id: context.runId,
+              per_page: 100
+            })
+
+            const jobName = process.env.JOB_NAME + process.env.MATRIX_NAME
+            const job = data.jobs.find(j => j.name.endsWith(jobName))
+            const jobUrl = job?.html_url
+
+            const shaUrl = `${context.serverUrl}/${owner}/${repo}/commit/${{ inputs.check-sha }}`
+
+            let summary = `This check is assosciated with ${shaUrl}\n\n`
+
+            if (jobUrl) {
+              summary += `For run logs, click here: ${jobUrl}`
+            } else {
+              summary += `Run logs could not be found for a job with name: "${jobName}"`
+            }
+
+            return { summary }
+      - name: Create Check
+        uses: LouisBrunner/checks-action@v1.6.0
+        id: check
+        if: inputs.check-sha
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: in_progress
+          name: Lint All
+          sha: ${{ inputs.check-sha }}
+          output: ${{ steps.check-output.outputs.result }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Setup Git User
+        run: |
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
+        run: |
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Lint
+        run: npm run lint --ignore-scripts
+      - name: Post Lint
+        run: npm run postlint --ignore-scripts
+      - name: Conclude Check
+        uses: LouisBrunner/checks-action@v1.6.0
+        if: steps.check.outputs.check_id && always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          conclusion: ${{ job.status }}
+          check_id: ${{ steps.check.outputs.check_id }}
+
+  test-all:
+    name: Test All - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
+    if: github.repository_owner == 'npm'
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Linux
+            os: ubuntu-latest
+            shell: bash
+        node-version:
+          - 6.17.1
+          - 18.x
+    runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.platform.shell }}
+    steps:
+      - name: Get Workflow Job
+        uses: actions/github-script@v6
+        if: inputs.check-sha
+        id: check-output
+        env:
+          JOB_NAME: "Test All"
+          MATRIX_NAME: " - ${{ matrix.platform.name }} - ${{ matrix.node-version }}"
+        with:
+          script: |
+            const { owner, repo } = context.repo
+
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner,
+              repo,
+              run_id: context.runId,
+              per_page: 100
+            })
+
+            const jobName = process.env.JOB_NAME + process.env.MATRIX_NAME
+            const job = data.jobs.find(j => j.name.endsWith(jobName))
+            const jobUrl = job?.html_url
+
+            const shaUrl = `${context.serverUrl}/${owner}/${repo}/commit/${{ inputs.check-sha }}`
+
+            let summary = `This check is assosciated with ${shaUrl}\n\n`
+
+            if (jobUrl) {
+              summary += `For run logs, click here: ${jobUrl}`
+            } else {
+              summary += `Run logs could not be found for a job with name: "${jobName}"`
+            }
+
+            return { summary }
+      - name: Create Check
+        uses: LouisBrunner/checks-action@v1.6.0
+        id: check
+        if: inputs.check-sha
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: in_progress
+          name: Test All - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
+          sha: ${{ inputs.check-sha }}
+          output: ${{ steps.check-output.outputs.result }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Setup Git User
+        run: |
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
+        run: |
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Add Problem Matcher
+        run: echo "::add-matcher::.github/matchers/tap.json"
+      - name: Test
+        run: npm test --ignore-scripts
+      - name: Conclude Check
+        uses: LouisBrunner/checks-action@v1.6.0
+        if: steps.check.outputs.check_id && always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          conclusion: ${{ job.status }}
+          check_id: ${{ steps.check.outputs.check_id }}

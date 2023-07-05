@@ -1,0 +1,13 @@
+{
+  "files": [
+    "bin",
+    "range.bnf",
+    "semver.js"
+  ],
+  "scripts": {
+    "test": "tap test/ --100 --timeout=30",
+    "snap": "tap test/ --100 --timeout=30"
+  },
+  "tap": {{{ del }}},
+  "engines": {{{ del }}}
+}

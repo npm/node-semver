@@ -1,4 +1,4 @@
-# changes log
+# Changelog
 
 ## 6.2.0
 
