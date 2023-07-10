@@ -355,6 +355,7 @@ test('negative range tests', function (t) {
     ['*', 'not a version'],
     ['>=2', 'glorp'],
     ['2.x', '3.0.0-pre.0', { includePrerelease: true }],
+    ['== 1.0.0 || foo', '2.0.0', { loose: true }]
   ].forEach(function (v) {
     var range = v[0]
     var ver = v[1]
@@ -1090,5 +1091,14 @@ test('bad ranges in max/min satisfying', function (t) {
 test('really big numeric prerelease value', function (t) {
   var r = SemVer('1.2.3-beta.' + Number.MAX_SAFE_INTEGER + '0')
   t.strictSame(r.prerelease, [ 'beta', '90071992547409910' ])
+  t.end()
+})
+
+test('long build id', function (t) {
+  var longBuild = '-928490632884417731e7af463c92b034d6a78268fc993bcb88a57944'
+  var shortVersion = '1.1.1'
+  var longVersion = Number.MAX_SAFE_INTEGER + '.' + Number.MAX_SAFE_INTEGER + '.' + Number.MAX_SAFE_INTEGER
+  t.equal(semver.valid(shortVersion + longBuild), shortVersion + longBuild)
+  t.equal(semver.valid(longVersion + longBuild), longVersion + longBuild)
   t.end()
 })
