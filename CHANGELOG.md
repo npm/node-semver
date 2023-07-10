@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.3.1](https://github.com/npm/node-semver/compare/v6.3.0...v6.3.1) (2023-07-10)
+
+### Bug Fixes
+
+* [`928e56d`](https://github.com/npm/node-semver/commit/928e56d21150da0413a3333a3148b20e741a920c) [#591](https://github.com/npm/node-semver/pull/591) better handling of whitespace (#591) (@lukekarrys, @joaomoreno, @nicolo-ribaudo)
+
 ## 6.2.0
 
 * Coerce numbers to strings when passed to semver.coerce()
