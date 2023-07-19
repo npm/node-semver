@@ -15,6 +15,7 @@ branches:
     protection:
       required_status_checks: null
       enforce_admins: true
+      block_creations: true
       required_pull_request_reviews:
         required_approving_review_count: 1
         require_code_owner_reviews: true
@@ -24,10 +25,11 @@ branches:
         apps: []
         users: []
         teams: [ "cli-team" ]
-  - name: latest
+  - name: release/v5
     protection:
       required_status_checks: null
       enforce_admins: true
+      block_creations: true
       required_pull_request_reviews:
         required_approving_review_count: 1
         require_code_owner_reviews: true
@@ -37,10 +39,11 @@ branches:
         apps: []
         users: []
         teams: [ "cli-team" ]
-  - name: release/v*
+  - name: release/v6
     protection:
       required_status_checks: null
       enforce_admins: true
+      block_creations: true
       required_pull_request_reviews:
         required_approving_review_count: 1
         require_code_owner_reviews: true
