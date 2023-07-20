@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - latest
       - release/v*
   schedule:
     # "At 09:00 UTC (02:00 PT) on Monday" https://crontab.guru/#0_9_*_*_1
