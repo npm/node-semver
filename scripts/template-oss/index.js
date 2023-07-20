@@ -11,7 +11,6 @@ module.exports = {
   macCI: false,
   updateNpm: false,
   eslint: false,
-  dependabot: false,
   oldNode: OLD_NODE,
   ciVersions: [
     OLD_NODE,
@@ -21,6 +20,11 @@ module.exports = {
     '/range.bnf',
     '/semver.js',
   ],
+  rootRepo: {
+    add: {
+      '.github/settings.yml': false
+    }
+  },
   rootModule: {
     add: {
       'package.json': {
