@@ -32,10 +32,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - name: Install npm@8
-        run: npm i --prefer-online --no-fund --no-audit -g npm@8
-      - name: npm Version
-        run: npm -v
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
+        run: |
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
       - name: Install Dependencies
         run: npm i --ignore-scripts --no-audit --no-fund
       - name: Lint
@@ -53,18 +56,8 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             shell: bash
-          - name: macOS
-            os: macos-latest
-            shell: bash
-          - name: Windows
-            os: windows-latest
-            shell: cmd
         node-version:
-          - 10.0.0
-          - 10.x
-          - 12.x
-          - 14.x
-          - 16.x
+          - 6.17.1
           - 18.x
     runs-on: ${{ matrix.platform.os }}
     defaults:
@@ -81,24 +74,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Update Windows npm
-        # node 12 and 14 ship with npm@6, which is known to fail when updating itself in windows
-        if: matrix.platform.os == 'windows-latest' && (startsWith(matrix.node-version, '12.') || startsWith(matrix.node-version, '14.'))
+      - name: Remove Template-OSS
+        if: matrix && matrix.node-version == '6.17.1'
         run: |
-          curl -sO https://registry.npmjs.org/npm/-/npm-7.5.4.tgz
-          tar xf npm-7.5.4.tgz
-          cd package
-          node lib/npm.js install --no-fund --no-audit -g ..\npm-7.5.4.tgz
-          cd ..
-          rmdir /s /q package
-      - name: Install npm@7
-        if: startsWith(matrix.node-version, '10.')
-        run: npm i --prefer-online --no-fund --no-audit -g npm@7
-      - name: Install npm@8
-        if: ${{ !startsWith(matrix.node-version, '10.') }}
-        run: npm i --prefer-online --no-fund --no-audit -g npm@8
-      - name: npm Version
-        run: npm -v
+          # template-oss cannot be installed on older npms because there are transient deps
+          # that use "npm:" aliases which are not supported
+          jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
+          mv package.json-update package.json
       - name: Install Dependencies
         run: npm i --ignore-scripts --no-audit --no-fund
       - name: Add Problem Matcher
