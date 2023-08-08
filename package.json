@@ -1,6 +1,6 @@
 {
   "name": "semver",
-  "version": "6.3.1",
+  "version": "5.7.2",
   "description": "The semantic version parser used by npm.",
   "main": "semver.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "url": "https://github.com/npm/node-semver.git"
   },
   "bin": {
-    "semver": "./bin/semver.js"
+    "semver": "./bin/semver"
   },
   "files": [
     "bin",

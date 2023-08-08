@@ -30,7 +30,7 @@ module.exports = {
       'package.json': {
         file: './pkg.json',
         overwrite: false
-      },
+      }
     }
   }
 }

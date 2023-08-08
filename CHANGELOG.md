@@ -1,41 +1,10 @@
 # Changelog
 
-## [6.3.1](https://github.com/npm/node-semver/compare/v6.3.0...v6.3.1) (2023-07-10)
+## [5.7.2](https://github.com/npm/node-semver/compare/v5.7.1...v5.7.2) (2023-07-10)
 
 ### Bug Fixes
 
-* [`928e56d`](https://github.com/npm/node-semver/commit/928e56d21150da0413a3333a3148b20e741a920c) [#591](https://github.com/npm/node-semver/pull/591) better handling of whitespace (#591) (@lukekarrys, @joaomoreno, @nicolo-ribaudo)
-
-## 6.2.0
-
-* Coerce numbers to strings when passed to semver.coerce()
-* Add `rtl` option to coerce from right to left
-
-## 6.1.3
-
-* Handle X-ranges properly in includePrerelease mode
-
-## 6.1.2
-
-* Do not throw when testing invalid version strings
-
-## 6.1.1
-
-* Add options support for semver.coerce()
-* Handle undefined version passed to Range.test
-
-## 6.1.0
-
-* Add semver.compareBuild function
-* Support `*` in semver.intersects
-
-## 6.0
-
-* Fix `intersects` logic.
-
-    This is technically a bug fix, but since it is also a change to behavior
-    that may require users updating their code, it is marked as a major
-    version increment.
+* [`2f8fd41`](https://github.com/npm/node-semver/commit/2f8fd41487acf380194579ecb6f8b1bbfe116be0) [#585](https://github.com/npm/node-semver/pull/585) better handling of whitespace (#585) (@joaomoreno, @lukekarrys)
 
 ## 5.7
 
