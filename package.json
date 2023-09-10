@@ -48,7 +48,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "lru-cache": "^6.0.0"
+    "lru-cache": "^10.0.1"
   },
   "author": "GitHub Inc.",
   "templateOSS": {
