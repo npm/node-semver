@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - latest
       - release/v*
   schedule:
     # "At 09:00 UTC (02:00 PT) on Monday" https://crontab.guru/#0_9_*_*_1
@@ -31,8 +30,11 @@ jobs:
           git config --global user.name "npm CLI robot"
       - name: Setup Node
         uses: actions/setup-node@v3
+        id: node
         with:
-          node-version: 18.x
+          node-version: 20.x
+          check-latest: contains('20.x', '.x')
+
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |
@@ -59,7 +61,7 @@ jobs:
             shell: bash
         node-version:
           - 6.17.1
-          - 18.x
+          - 20.x
     runs-on: ${{ matrix.platform.os }}
     defaults:
       run:
@@ -73,8 +75,11 @@ jobs:
           git config --global user.name "npm CLI robot"
       - name: Setup Node
         uses: actions/setup-node@v3
+        id: node
         with:
           node-version: ${{ matrix.node-version }}
+          check-latest: contains(matrix.node-version, '.x')
+
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |

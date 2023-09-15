@@ -13,10 +13,8 @@ module.exports = {
   eslint: false,
   dependabot: false,
   oldNode: OLD_NODE,
-  ciVersions: [
-    OLD_NODE,
-    'latest',
-  ],
+  ciVersions: [OLD_NODE],
+  backport: 5,
   allowPaths: [
     '/range.bnf',
     '/semver.js',
