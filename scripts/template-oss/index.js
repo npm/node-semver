@@ -15,6 +15,7 @@ module.exports = {
   oldNode: OLD_NODE,
   ciVersions: [OLD_NODE],
   backport: 6,
+  publish: true,
   allowPaths: [
     '/range.bnf',
     '/semver.js',
