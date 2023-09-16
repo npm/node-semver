@@ -45,8 +45,8 @@ jobs:
         uses: actions/setup-node@v3
         id: node
         with:
-          node-version: 18.x
-          check-latest: contains('18.x', '.x')
+          node-version: 20.x
+          check-latest: contains('20.x', '.x')
 
       # node 10/12/14 ship with npm@6, which is known to fail when updating itself in windows
       - name: Update Windows npm
@@ -202,8 +202,8 @@ jobs:
         uses: actions/setup-node@v3
         id: node
         with:
-          node-version: 18.x
-          check-latest: contains('18.x', '.x')
+          node-version: 20.x
+          check-latest: contains('20.x', '.x')
 
       # node 10/12/14 ship with npm@6, which is known to fail when updating itself in windows
       - name: Update Windows npm
@@ -426,7 +426,7 @@ jobs:
       - name: Publish
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-        run: npm publish --provenance
+        run: npm publish --provenance --tag=latest
 
   post-release-integration:
     needs: [ release, release-integration ]
