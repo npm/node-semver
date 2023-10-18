@@ -7,7 +7,7 @@ module.exports = [
   ['1.2.3tag', 'major', '2.0.0', true],
   ['1.2.3-tag', 'major', '2.0.0'],
   ['1.2.3', 'fake', null],
-  ['1.2.0-0', 'patch', '1.2.0'],
+  ['1.2.0-0', 'patch', '1.2.1'],
   ['fake', 'major', null],
   ['1.2.3-4', 'major', '2.0.0'],
   ['1.2.3-4', 'minor', '1.3.0'],
@@ -47,7 +47,7 @@ module.exports = [
   ['1.2.3tag', 'major', '2.0.0', true, 'dev'],
   ['1.2.3-tag', 'major', '2.0.0', false, 'dev'],
   ['1.2.3', 'fake', null, false, 'dev'],
-  ['1.2.0-0', 'patch', '1.2.0', false, 'dev'],
+  ['1.2.0-0', 'patch', '1.2.1', false, 'dev'],
   ['fake', 'major', null, false, 'dev'],
   ['1.2.3-4', 'major', '2.0.0', false, 'dev'],
   ['1.2.3-4', 'minor', '1.3.0', false, 'dev'],
@@ -89,7 +89,7 @@ module.exports = [
   ['1.2.3-1.1', 'prerelease', '1.2.3-2.0', false, '2'],
 
   // [version, inc, result, identifierIndex, loose, identifier]
-  ['1.2.0-1', 'prerelease', '1.2.0-alpha.0', false, 'alpha', '0'],
+  ['1.2.0-1', 'prerelease', '1.2.1-alpha.0', false, 'alpha', '0'],
   ['1.2.1', 'prerelease', '1.2.2-alpha.0', false, 'alpha', '0'],
   ['0.2.0', 'prerelease', '0.2.1-alpha.0', false, 'alpha', '0'],
   ['1.2.2', 'prerelease', '1.2.3-alpha.1', false, 'alpha', '1'],
@@ -107,7 +107,7 @@ module.exports = [
   ['1.2.3-1', 'preminor', '1.3.0-dev.0', false, 'dev'],
   ['1.2.0', 'prerelease', '1.2.1-1', false, '', '1'],
 
-  ['1.2.0-1', 'prerelease', '1.2.0-alpha', false, 'alpha', false],
+  ['1.2.0-1', 'prerelease', '1.2.1-alpha', false, 'alpha', false],
   ['1.2.1', 'prerelease', '1.2.2-alpha', false, 'alpha', false],
   ['1.2.2', 'prerelease', '1.2.3-alpha', false, 'alpha', false],
   ['1.2.0', 'prepatch', '1.2.1-dev', false, 'dev', false],
@@ -120,8 +120,13 @@ module.exports = [
   ['1.2.3-1', 'preminor', '1.3.0-dev', false, 'dev', false],
   ['1.2.3-dev', 'prerelease', null, false, 'dev', false],
   ['1.2.0-dev', 'premajor', '2.0.0-dev', false, 'dev', false],
-  ['1.2.0-dev', 'preminor', '1.3.0-beta', false, 'beta', false],
+  ['1.2.0-dev', 'preminor', '1.2.0-beta', false, 'beta', false],
+  ['1.0.0-dev', 'premajor', '1.0.0-beta', false, 'beta', false],
+  ['1.0.0-dev', 'prepatch', '1.0.1-beta', false, 'beta', false],
   ['1.2.0-dev', 'prepatch', '1.2.1-dev', false, 'dev', false],
   ['1.2.0', 'prerelease', null, false, '', false],
-  ['1.0.0-rc.1+build.4', 'prerelease', '1.0.0-rc.2', 'rc', false],
+  ['1.0.0-rc.1+build.4', 'prerelease', '1.0.1-rc', false, 'rc', false],
+  ['1.0.0-rc.1+build.4', 'premajor', '1.0.0-rc.2', false, 'rc', false],
+  ['1.2.0-dev.2', 'preminor', '1.2.0-dev.3', false, 'dev', false],
+
 ]

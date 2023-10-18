@@ -31,6 +31,7 @@ class SemVer {
     // this isn't actually relevant for versions, but keep it so that we
     // don't run into trouble passing this.options around.
     this.includePrerelease = !!options.includePrerelease
+    this.isPrerelease = false
 
     const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
 
@@ -178,32 +179,28 @@ class SemVer {
   inc (release, identifier, identifierBase) {
     switch (release) {
       case 'premajor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor = 0
-        this.major++
+        this.isPrerelease = true
+        this.inc('major', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor++
+        this.isPrerelease = true
+        this.inc('minor', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
+        this.isPrerelease = true
         // If this is already a prerelease, it will bump to the next version
         // drop any prereleases that might already exist, since they are not
         // relevant at this point.
-        this.prerelease.length = 0
         this.inc('patch', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       // If the input is a non-prerelease version, this acts the same as
       // prepatch.
       case 'prerelease':
-        if (this.prerelease.length === 0) {
-          this.inc('patch', identifier, identifierBase)
-        }
+        this.isPrerelease = true
+        this.inc('patch', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
 
@@ -218,10 +215,10 @@ class SemVer {
           this.prerelease.length === 0
         ) {
           this.major++
+          this.prerelease = []
         }
         this.minor = 0
         this.patch = 0
-        this.prerelease = []
         break
       case 'minor':
         // If this is a pre-minor version, bump up to the same minor version.
@@ -230,19 +227,19 @@ class SemVer {
         // 1.2.1 bumps to 1.3.0
         if (this.patch !== 0 || this.prerelease.length === 0) {
           this.minor++
+          this.prerelease = []
         }
         this.patch = 0
-        this.prerelease = []
         break
       case 'patch':
         // If this is not a pre-release version, it will increment the patch.
         // If it is a pre-release it will bump up to the same patch version.
-        // 1.2.0-5 patches to 1.2.0
+        // 1.2.0-5 patches to 1.2.1
         // 1.2.0 patches to 1.2.1
-        if (this.prerelease.length === 0) {
+        if (this.prerelease.length === 0 || this.patch === 0) {
           this.patch++
+          this.prerelease = []
         }
-        this.prerelease = []
         break
       // This probably shouldn't be used publicly.
       // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
@@ -290,6 +287,9 @@ class SemVer {
       }
       default:
         throw new Error(`invalid increment argument: ${release}`)
+    }
+    if (!this.isPrerelease) {
+      this.prerelease = []
     }
     this.raw = this.format()
     if (this.build.length) {
