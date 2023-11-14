@@ -15,7 +15,7 @@
   "devDependencies": {
     "@npmcli/eslint-config": "^4.0.0",
     "@npmcli/template-oss": "4.19.0",
-    "tap": "^16.0.0"
+    "tap": "^18.5.8"
   },
   "license": "ISC",
   "repository": {
