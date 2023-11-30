@@ -17,6 +17,7 @@ test('clean tests', (t) => {
     ['~1.2.3', null],
     ['<=1.2.3', null],
     ['1.2.x', null],
+    ['0.12.0-dev.1150+3c22cecee', '0.12.0-dev.1150'],
   ].forEach(([range, version]) => {
     const msg = `clean(${range}) = ${version}`
     t.equal(clean(range), version, msg)
