@@ -27,49 +27,6 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Get Workflow Job
-        uses: actions/github-script@v6
-        if: inputs.check-sha
-        id: check-output
-        env:
-          JOB_NAME: "Lint All"
-          MATRIX_NAME: ""
-        with:
-          script: |
-            const { owner, repo } = context.repo
-
-            const { data } = await github.rest.actions.listJobsForWorkflowRun({
-              owner,
-              repo,
-              run_id: context.runId,
-              per_page: 100
-            })
-
-            const jobName = process.env.JOB_NAME + process.env.MATRIX_NAME
-            const job = data.jobs.find(j => j.name.endsWith(jobName))
-            const jobUrl = job?.html_url
-
-            const shaUrl = `${context.serverUrl}/${owner}/${repo}/commit/${{ inputs.check-sha }}`
-
-            let summary = `This check is assosciated with ${shaUrl}\n\n`
-
-            if (jobUrl) {
-              summary += `For run logs, click here: ${jobUrl}`
-            } else {
-              summary += `Run logs could not be found for a job with name: "${jobName}"`
-            }
-
-            return { summary }
-      - name: Create Check
-        uses: LouisBrunner/checks-action@v1.6.0
-        id: check
-        if: inputs.check-sha
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: in_progress
-          name: Lint All
-          sha: ${{ inputs.check-sha }}
-          output: ${{ steps.check-output.outputs.result }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -78,58 +35,24 @@ jobs:
         run: |
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
+      - name: Create Check
+        id: create-check
+        if: ${{ inputs.check-sha }}
+        uses: ./.github/actions/create-check
+        with:
+          name: "Lint All"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ inputs.check-sha }}
       - name: Setup Node
         uses: actions/setup-node@v3
         id: node
         with:
           node-version: 20.x
           check-latest: contains('20.x', '.x')
-
-      # node 10/12/14 ship with npm@6, which is known to fail when updating itself in windows
-      - name: Update Windows npm
-        if: |
-          matrix.platform.os == 'windows-latest' && (
-            startsWith(steps.node.outputs.node-version, 'v10.') || startsWith(steps.node.outputs.node-version, 'v12.') || startsWith(steps.node.outputs.node-version, 'v14.')
-          )
-        run: |
-          curl -sO https://registry.npmjs.org/npm/-/npm-7.5.4.tgz
-          tar xf npm-7.5.4.tgz
-          cd package
-          node lib/npm.js install --no-fund --no-audit -g ..\npm-7.5.4.tgz
-          cd ..
-          rmdir /s /q package
-
-      # Start on Node 10 because we dont test on anything lower
-      - name: Install npm@7 on Node 10
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v10.')
-        id: npm-7
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@7
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@8 on Node 12
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v12.')
-        id: npm-8
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@8
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@9 on Node 14/16/18.0
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v14.') || startsWith(steps.node.outputs.node-version, 'v16.') || startsWith(steps.node.outputs.node-version, 'v18.0.')
-        id: npm-9
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@9
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@latest on Node
-        if: ${{ !(steps.npm-7.outputs.updated || steps.npm-8.outputs.updated || steps.npm-9.outputs.updated) }}
-        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
-
-      - name: npm Version
-        run: npm -v
+      - name: Install Latest npm
+        uses: ./.github/actions/install-latest-npm
+        with:
+          node: ${{ steps.node.outputs.node-version }}
       - name: Install Dependencies
         run: npm i --ignore-scripts --no-audit --no-fund
       - name: Lint
@@ -138,11 +61,11 @@ jobs:
         run: npm run postlint --ignore-scripts
       - name: Conclude Check
         uses: LouisBrunner/checks-action@v1.6.0
-        if: steps.check.outputs.check_id && always()
+        if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           conclusion: ${{ job.status }}
-          check_id: ${{ steps.check.outputs.check_id }}
+          check_id: ${{ steps.create-check.outputs.check-id }}
 
   test-all:
     name: Test All - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
@@ -173,49 +96,6 @@ jobs:
       run:
         shell: ${{ matrix.platform.shell }}
     steps:
-      - name: Get Workflow Job
-        uses: actions/github-script@v6
-        if: inputs.check-sha
-        id: check-output
-        env:
-          JOB_NAME: "Test All"
-          MATRIX_NAME: " - ${{ matrix.platform.name }} - ${{ matrix.node-version }}"
-        with:
-          script: |
-            const { owner, repo } = context.repo
-
-            const { data } = await github.rest.actions.listJobsForWorkflowRun({
-              owner,
-              repo,
-              run_id: context.runId,
-              per_page: 100
-            })
-
-            const jobName = process.env.JOB_NAME + process.env.MATRIX_NAME
-            const job = data.jobs.find(j => j.name.endsWith(jobName))
-            const jobUrl = job?.html_url
-
-            const shaUrl = `${context.serverUrl}/${owner}/${repo}/commit/${{ inputs.check-sha }}`
-
-            let summary = `This check is assosciated with ${shaUrl}\n\n`
-
-            if (jobUrl) {
-              summary += `For run logs, click here: ${jobUrl}`
-            } else {
-              summary += `Run logs could not be found for a job with name: "${jobName}"`
-            }
-
-            return { summary }
-      - name: Create Check
-        uses: LouisBrunner/checks-action@v1.6.0
-        id: check
-        if: inputs.check-sha
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: in_progress
-          name: Test All - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
-          sha: ${{ inputs.check-sha }}
-          output: ${{ steps.check-output.outputs.result }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -224,58 +104,24 @@ jobs:
         run: |
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
+      - name: Create Check
+        id: create-check
+        if: ${{ inputs.check-sha }}
+        uses: ./.github/actions/create-check
+        with:
+          name: "Test All - ${{ matrix.platform.name }} - ${{ matrix.node-version }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ inputs.check-sha }}
       - name: Setup Node
         uses: actions/setup-node@v3
         id: node
         with:
           node-version: ${{ matrix.node-version }}
           check-latest: contains(matrix.node-version, '.x')
-
-      # node 10/12/14 ship with npm@6, which is known to fail when updating itself in windows
-      - name: Update Windows npm
-        if: |
-          matrix.platform.os == 'windows-latest' && (
-            startsWith(steps.node.outputs.node-version, 'v10.') || startsWith(steps.node.outputs.node-version, 'v12.') || startsWith(steps.node.outputs.node-version, 'v14.')
-          )
-        run: |
-          curl -sO https://registry.npmjs.org/npm/-/npm-7.5.4.tgz
-          tar xf npm-7.5.4.tgz
-          cd package
-          node lib/npm.js install --no-fund --no-audit -g ..\npm-7.5.4.tgz
-          cd ..
-          rmdir /s /q package
-
-      # Start on Node 10 because we dont test on anything lower
-      - name: Install npm@7 on Node 10
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v10.')
-        id: npm-7
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@7
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@8 on Node 12
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v12.')
-        id: npm-8
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@8
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@9 on Node 14/16/18.0
-        shell: bash
-        if: startsWith(steps.node.outputs.node-version, 'v14.') || startsWith(steps.node.outputs.node-version, 'v16.') || startsWith(steps.node.outputs.node-version, 'v18.0.')
-        id: npm-9
-        run: |
-          npm i --prefer-online --no-fund --no-audit -g npm@9
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-
-      - name: Install npm@latest on Node
-        if: ${{ !(steps.npm-7.outputs.updated || steps.npm-8.outputs.updated || steps.npm-9.outputs.updated) }}
-        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
-
-      - name: npm Version
-        run: npm -v
+      - name: Install Latest npm
+        uses: ./.github/actions/install-latest-npm
+        with:
+          node: ${{ steps.node.outputs.node-version }}
       - name: Install Dependencies
         run: npm i --ignore-scripts --no-audit --no-fund
       - name: Add Problem Matcher
@@ -284,8 +130,8 @@ jobs:
         run: npm test --ignore-scripts
       - name: Conclude Check
         uses: LouisBrunner/checks-action@v1.6.0
-        if: steps.check.outputs.check_id && always()
+        if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           conclusion: ${{ job.status }}
-          check_id: ${{ steps.check.outputs.check_id }}
+          check_id: ${{ steps.create-check.outputs.check-id }}
