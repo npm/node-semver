@@ -14,7 +14,7 @@ module.exports = {
   dependabot: false,
   oldNode: OLD_NODE,
   ciVersions: [OLD_NODE],
-  backport: 5,
+  backport: 6,
   publish: true,
   allowPaths: [
     '/range.bnf',
@@ -23,7 +23,7 @@ module.exports = {
   rootModule: {
     add: {
       'package.json': {
-        file: './pkg.json',
+        file: './package-json.hbs',
         overwrite: false
       }
     }
