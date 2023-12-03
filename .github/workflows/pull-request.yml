@@ -33,7 +33,6 @@ jobs:
         with:
           node-version: 20.x
           check-latest: contains('20.x', '.x')
-
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |
@@ -46,11 +45,9 @@ jobs:
       - name: Run Commitlint on Commits
         id: commit
         continue-on-error: true
-        run: |
-          npx --offline commitlint -V --from 'origin/${{ github.base_ref }}' --to ${{ github.event.pull_request.head.sha }}
+        run: npx --offline commitlint -V --from 'origin/${{ github.base_ref }}' --to ${{ github.event.pull_request.head.sha }}
       - name: Run Commitlint on PR Title
         if: steps.commit.outcome == 'failure'
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          echo "$PR_TITLE" | npx --offline commitlint -V
+        run: echo "$PR_TITLE" | npx --offline commitlint -V

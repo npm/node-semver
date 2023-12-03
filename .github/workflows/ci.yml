@@ -34,7 +34,6 @@ jobs:
         with:
           node-version: 20.x
           check-latest: contains('20.x', '.x')
-
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |
@@ -79,7 +78,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           check-latest: contains(matrix.node-version, '.x')
-
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |
