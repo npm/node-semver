@@ -1,0 +1,76 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+name: Release Integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      releases:
+        required: true
+        type: string
+        description: 'A json array of releases. Required fields: publish: tagName, publishTag. publish check: pkgName, version'
+  workflow_call:
+    inputs:
+      releases:
+        required: true
+        type: string
+        description: 'A json array of releases. Required fields: publish: tagName, publishTag. publish check: pkgName, version'
+    secrets:
+      PUBLISH_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ fromJSON(inputs.releases)[0].tagName }}
+      - name: Setup Git User
+        run: |
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        id: node
+        with:
+          node-version: 20.x
+          check-latest: contains('20.x', '.x')
+      - name: Install Latest npm
+        uses: ./.github/actions/install-latest-npm
+        with:
+          node: ${{ steps.node.outputs.node-version }}
+      - name: Install Dependencies
+        run: npm i --ignore-scripts --no-audit --no-fund
+      - name: Set npm authToken
+        run: npm config set '//registry.npmjs.org/:_authToken'=\${PUBLISH_TOKEN}
+      - name: Publish
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: |
+          EXIT_CODE=0
+
+          function each_release {
+            if npm publish --provenance --tag="$1"; then
+              echo 0
+            else
+              echo 1
+            fi
+          }
+
+          for release in $(echo '${{ inputs.releases }}' | jq -r '.[] | @base64'); do
+            PUBLISH_TAG=$(echo "$release" | base64 --decode | jq -r .publishTag)
+            STATUS=$(each_release "$PUBLISH_TAG")
+            if [[ "$STATUS" -eq 1 ]]; then
+              EXIT_CODE=$STATUS
+            fi
+          done
+
+          exit $EXIT_CODE

@@ -1,5 +1,4 @@
 {
-  "exclude-packages-from-root": true,
   "group-pull-request-title-pattern": "chore: release ${version}",
   "pull-request-title-pattern": "chore: release${component} ${version}",
   "changelog-sections": [
@@ -25,12 +24,14 @@
     },
     {
       "type": "chore",
-      "hidden": true
+      "section": "Chores",
+      "hidden": false
     }
   ],
   "packages": {
     ".": {
       "package-name": ""
     }
-  }
+  },
+  "prerelease-type": "pre"
 }
