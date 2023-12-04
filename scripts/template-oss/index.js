@@ -23,7 +23,7 @@ module.exports = {
   rootModule: {
     add: {
       'package.json': {
-        file: './pkg.json',
+        file: './package-json.hbs',
         overwrite: false
       }
     }

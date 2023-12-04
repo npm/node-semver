@@ -5,4 +5,4 @@
     # that use "npm:" aliases which are not supported
     jq 'del(.devDependencies["@npmcli/template-oss"])' package.json > package.json-update
     mv package.json-update package.json
-{{> defaultStepDeps }}
+{{> defaultStepDepsYml }}
