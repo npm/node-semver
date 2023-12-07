@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.3.2](https://github.com/npm/node-semver/compare/v6.3.1...v6.3.2) (2023-12-07)
+
+### Chores
+
+* [`e23c0ab`](https://github.com/npm/node-semver/commit/e23c0ab358943ff038f4bdb13dc6a19853bbb90d) [#668](https://github.com/npm/node-semver/pull/668) bump @npmcli/template-oss from 4.21.1 to 4.21.3 (@dependabot[bot])
+* [`bcdd8dd`](https://github.com/npm/node-semver/commit/bcdd8dd754312780128adf7894b287347cad9652) [#653](https://github.com/npm/node-semver/pull/653) postinstall for dependabot template-oss PR (@lukekarrys)
+* [`39ffabc`](https://github.com/npm/node-semver/commit/39ffabcc2a9fc302ad267323f38e909449daec37) [#653](https://github.com/npm/node-semver/pull/653) bump @npmcli/template-oss from 4.19.0 to 4.21.1 (@dependabot[bot])
+* [`0dfc8fa`](https://github.com/npm/node-semver/commit/0dfc8fa1f7a25eda59a70bdd484a6d78657fce3a) [#624](https://github.com/npm/node-semver/pull/624) auto publish (@lukekarrys)
+* [`8618ea0`](https://github.com/npm/node-semver/commit/8618ea0c63061a206176b9c05d14518772313a6f) [#624](https://github.com/npm/node-semver/pull/624) postinstall for dependabot template-oss PR (@lukekarrys)
+* [`3079a07`](https://github.com/npm/node-semver/commit/3079a0769e1a26e3547d22e7675b88d136e88ee7) [#624](https://github.com/npm/node-semver/pull/624) bump @npmcli/template-oss from 4.17.0 to 4.19.0 (@dependabot[bot])
+
 ## [6.3.1](https://github.com/npm/node-semver/compare/v6.3.0...v6.3.1) (2023-07-10)
 
 ### Bug Fixes
