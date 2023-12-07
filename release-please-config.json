@@ -30,7 +30,7 @@
       "type": "chore",
       "section": "Chores",
       "hidden": false,
-      "collapse": true
+      "collapse": false
     }
   ],
   "packages": {
