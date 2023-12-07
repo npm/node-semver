@@ -13,7 +13,7 @@
     "posttest": "npm run lint"
   },
   "devDependencies": {
-    "@npmcli/template-oss": "4.21.1",
+    "@npmcli/template-oss": "4.21.3",
     "tap": "^12.7.0"
   },
   "license": "ISC",
