@@ -110,13 +110,58 @@ test('coerce tests', (t) => {
     ['1.2.3/6', '6.0.0', { rtl: true }],
     ['1.2.3.4', '2.3.4', { rtl: true }],
     ['1.2.3.4xyz', '2.3.4', { rtl: true }],
+
+    ['1-rc.5', '1.0.0-rc.5', { full: true }, true],
+    ['1.2-rc.5', '1.2.0-rc.5', { full: true }, true],
+    ['1.2.3-rc.5', '1.2.3-rc.5', { full: true }, true],
+    ['1.2.3-rc.5/a', '1.2.3-rc.5', { full: true }, true],
+    ['1.2.3.4-rc.5', '1.2.3', { full: true }, true],
+    ['1.2.3.4+rev.6', '1.2.3', { full: true }, true],
+
+    ['1+rev.6', '1.0.0+rev.6', { full: true }, true],
+    ['1.2+rev.6', '1.2.0+rev.6', { full: true }, true],
+    ['1.2.3+rev.6', '1.2.3+rev.6', { full: true }, true],
+    ['1.2.3+rev.6/a', '1.2.3+rev.6', { full: true }, true],
+    ['1.2.3.4-rc.5', '1.2.3', { full: true }, true],
+    ['1.2.3.4+rev.6', '1.2.3', { full: true }, true],
+
+    ['1-rc.5+rev.6', '1.0.0-rc.5+rev.6', { full: true }, true],
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { full: true }, true],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { full: true }, true],
+    ['1.2.3-rc.5+rev.6/a', '1.2.3-rc.5+rev.6', { full: true }, true],
+
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { rtl: true, full: true }, true],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { rtl: true, full: true }, true],
+    ['1.2.3.4-rc.5+rev.6', '2.3.4-rc.5+rev.6', { rtl: true, full: true }, true],
+    ['1.2.3.4-rc.5', '2.3.4-rc.5', { rtl: true, full: true }, true],
+    ['1.2.3.4+rev.6', '2.3.4+rev.6', { rtl: true, full: true }, true],
+    ['1.2.3.4-rc.5+rev.6/7', '7.0.0', { rtl: true, full: true }, true],
+    ['1.2.3.4-rc/7.5+rev.6', '7.5.0+rev.6', { rtl: true, full: true }, true],
+    ['1.2.3.4/7-rc.5+rev.6', '7.0.0-rc.5+rev.6', { rtl: true, full: true }, true],
   ]
-  coerceToValid.forEach(([input, expected, options]) => {
-    const msg = `coerce(${input}) should become ${expected}`
-    t.same((coerce(input, options) || {}).version, expected, msg)
+  coerceToValid.forEach(([input, expected, options, shouldParse]) => {
+    const coerceExpression = `coerce(${input}, ${JSON.stringify(options)})`
+    const coercedVersion = coerce(input, options) || {}
+    let expectedText = expected
+
+    if (shouldParse) {
+      const expectedVersion = parse(expected)
+      expectedText = expectedVersion.version
+      t.equal(
+        expectedVersion.compare(coercedVersion),
+        0,
+        `${coerceExpression} should be equal to ${expectedVersion}`
+      )
+    }
+    t.same(
+      coercedVersion.version,
+      expectedText,
+      `${coerceExpression} should become ${expectedText}`
+    )
   })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
+  t.same(valid(coerce('42.6.7-alpha+rev.1', { full: true })), '42.6.7-alpha')
   t.same(valid(coerce('v2')), '2.0.0')
 
   t.end()
