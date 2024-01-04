@@ -27,7 +27,7 @@ const coerce = (version, options) => {
     // With includePrerelease option set, '1.2.3.4-rc.1' wants to coerce '2.3.4-rc.1', not '1.2'
     //
     // Walk through the string checking with a /g regexp
-    // Manually set the index so, as to pick up overlapping matches.
+    // Manually set the index so as to pick up overlapping matches.
     // Stop when we get a match that ends at the string end, since no
     // coercible string can be more right-ward without the same terminus.
     const coerceRtlRegex = options.includePrerelease ? re[t.COERCERTLFULL] : re[t.COERCERTL]
