@@ -24,7 +24,7 @@ const coerce = (version, options) => {
     // Find the right-most coercible string that does not share
     // a terminus with a more left-ward coercible string.
     // Eg, '1.2.3.4' wants to coerce '2.3.4', not '3.4' or '4'
-    // With includePrerelease option set, '1.2.3.4-pre.1.2' wants to coerce '2.3.4-pre.1.2', not '1.2'
+    // With includePrerelease option set, '1.2.3.4-rc.1.2' wants to coerce '2.3.4-rc.1.2', not '1.2'
     //
     // Walk through the string checking with a /g regexp
     // Manually set the index so, as to pick up overlapping matches.
