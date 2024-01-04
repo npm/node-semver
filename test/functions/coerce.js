@@ -143,9 +143,9 @@ test('coerce tests', (t) => {
     const coerceExpression = `coerce(${input}, ${JSON.stringify(options)})`
     const coercedVersion = coerce(input, options) || {}
     const expectedVersion = parse(expected)
-    t.equal(
-      expectedVersion.compare(coercedVersion) || expectedVersion.compareBuild(coercedVersion),
-      0,
+    t.ok(
+      expectedVersion.compare(coercedVersion) === 0 &&
+        expectedVersion.compareBuild(coercedVersion) === 0,
       `${coerceExpression} should be equal to ${expectedVersion}`
     )
   })
