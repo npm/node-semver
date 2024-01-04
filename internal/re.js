@@ -158,8 +158,8 @@ createToken('COERCEPLAIN', `${'(^|[^\\d])' +
               '(\\d{1,'}${MAX_SAFE_COMPONENT_LENGTH}})` +
               `(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?` +
               `(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?`)
-createToken('COERCE', `${t.COERCEPLAIN}(?:$|[^\\d])`)
-createToken('COERCEFULL', `${COERCEPLAIN}` +
+createToken('COERCE', `${src[t.COERCEPLAIN]}(?:$|[^\\d])`)
+createToken('COERCEFULL', src[t.COERCEPLAIN] +
               `(?:${src[t.PRERELEASE]})?` +
               `(?:${src[t.BUILD]})?` +
               `(?:$|[^\\d])`)

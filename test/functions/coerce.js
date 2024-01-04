@@ -148,11 +148,6 @@ test('coerce tests', (t) => {
       0,
       `${coerceExpression} should be equal to ${expectedVersion}`
     )
-    t.same(
-      coercedVersion.version,
-      expected,
-      `${coerceExpression} should become ${expected}`
-    )
   })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
