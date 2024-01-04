@@ -111,52 +111,47 @@ test('coerce tests', (t) => {
     ['1.2.3.4', '2.3.4', { rtl: true }],
     ['1.2.3.4xyz', '2.3.4', { rtl: true }],
 
-    ['1-rc.5', '1.0.0-rc.5', { includePrerelease: true }, true],
-    ['1.2-rc.5', '1.2.0-rc.5', { includePrerelease: true }, true],
-    ['1.2.3-rc.5', '1.2.3-rc.5', { includePrerelease: true }, true],
-    ['1.2.3-rc.5/a', '1.2.3-rc.5', { includePrerelease: true }, true],
-    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }, true],
-    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }, true],
+    ['1-rc.5', '1.0.0-rc.5', { includePrerelease: true }],
+    ['1.2-rc.5', '1.2.0-rc.5', { includePrerelease: true }],
+    ['1.2.3-rc.5', '1.2.3-rc.5', { includePrerelease: true }],
+    ['1.2.3-rc.5/a', '1.2.3-rc.5', { includePrerelease: true }],
+    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }],
+    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }],
 
-    ['1+rev.6', '1.0.0+rev.6', { includePrerelease: true }, true],
-    ['1.2+rev.6', '1.2.0+rev.6', { includePrerelease: true }, true],
-    ['1.2.3+rev.6', '1.2.3+rev.6', { includePrerelease: true }, true],
-    ['1.2.3+rev.6/a', '1.2.3+rev.6', { includePrerelease: true }, true],
-    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }, true],
-    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }, true],
+    ['1+rev.6', '1.0.0+rev.6', { includePrerelease: true }],
+    ['1.2+rev.6', '1.2.0+rev.6', { includePrerelease: true }],
+    ['1.2.3+rev.6', '1.2.3+rev.6', { includePrerelease: true }],
+    ['1.2.3+rev.6/a', '1.2.3+rev.6', { includePrerelease: true }],
+    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }],
+    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }],
 
-    ['1-rc.5+rev.6', '1.0.0-rc.5+rev.6', { includePrerelease: true }, true],
-    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { includePrerelease: true }, true],
-    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { includePrerelease: true }, true],
-    ['1.2.3-rc.5+rev.6/a', '1.2.3-rc.5+rev.6', { includePrerelease: true }, true],
+    ['1-rc.5+rev.6', '1.0.0-rc.5+rev.6', { includePrerelease: true }],
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { includePrerelease: true }],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { includePrerelease: true }],
+    ['1.2.3-rc.5+rev.6/a', '1.2.3-rc.5+rev.6', { includePrerelease: true }],
 
-    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4-rc.5+rev.6', '2.3.4-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4-rc.5', '2.3.4-rc.5', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4+rev.6', '2.3.4+rev.6', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4-rc.5+rev.6/7', '7.0.0', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4-rc/7.5+rev.6', '7.5.0+rev.6', { rtl: true, includePrerelease: true }, true],
-    ['1.2.3.4/7-rc.5+rev.6', '7.0.0-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { rtl: true, includePrerelease: true }],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4-rc.5+rev.6', '2.3.4-rc.5+rev.6', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4-rc.5', '2.3.4-rc.5', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4+rev.6', '2.3.4+rev.6', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4-rc.5+rev.6/7', '7.0.0', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4-rc/7.5+rev.6', '7.5.0+rev.6', { rtl: true, includePrerelease: true }],
+    ['1.2.3.4/7-rc.5+rev.6', '7.0.0-rc.5+rev.6', { rtl: true, includePrerelease: true }],
   ]
-  coerceToValid.forEach(([input, expected, options, shouldParse]) => {
+  coerceToValid.forEach(([input, expected, options]) => {
     const coerceExpression = `coerce(${input}, ${JSON.stringify(options)})`
     const coercedVersion = coerce(input, options) || {}
-    let expectedText = expected
-
-    if (shouldParse) {
-      const expectedVersion = parse(expected)
-      expectedText = expectedVersion.version
-      t.equal(
-        expectedVersion.compare(coercedVersion),
-        0,
-        `${coerceExpression} should be equal to ${expectedVersion}`
-      )
-    }
+    const expectedVersion = parse(expected)
+    t.equal(
+      expectedVersion.compare(coercedVersion) || expectedVersion.compareBuild(coercedVersion),
+      0,
+      `${coerceExpression} should be equal to ${expectedVersion}`
+    )
     t.same(
       coercedVersion.version,
-      expectedText,
-      `${coerceExpression} should become ${expectedText}`
+      expected,
+      `${coerceExpression} should become ${expected}`
     )
   })
 
