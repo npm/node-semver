@@ -111,33 +111,33 @@ test('coerce tests', (t) => {
     ['1.2.3.4', '2.3.4', { rtl: true }],
     ['1.2.3.4xyz', '2.3.4', { rtl: true }],
 
-    ['1-rc.5', '1.0.0-rc.5', { full: true }, true],
-    ['1.2-rc.5', '1.2.0-rc.5', { full: true }, true],
-    ['1.2.3-rc.5', '1.2.3-rc.5', { full: true }, true],
-    ['1.2.3-rc.5/a', '1.2.3-rc.5', { full: true }, true],
-    ['1.2.3.4-rc.5', '1.2.3', { full: true }, true],
-    ['1.2.3.4+rev.6', '1.2.3', { full: true }, true],
+    ['1-rc.5', '1.0.0-rc.5', { includePrerelease: true }, true],
+    ['1.2-rc.5', '1.2.0-rc.5', { includePrerelease: true }, true],
+    ['1.2.3-rc.5', '1.2.3-rc.5', { includePrerelease: true }, true],
+    ['1.2.3-rc.5/a', '1.2.3-rc.5', { includePrerelease: true }, true],
+    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }, true],
+    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }, true],
 
-    ['1+rev.6', '1.0.0+rev.6', { full: true }, true],
-    ['1.2+rev.6', '1.2.0+rev.6', { full: true }, true],
-    ['1.2.3+rev.6', '1.2.3+rev.6', { full: true }, true],
-    ['1.2.3+rev.6/a', '1.2.3+rev.6', { full: true }, true],
-    ['1.2.3.4-rc.5', '1.2.3', { full: true }, true],
-    ['1.2.3.4+rev.6', '1.2.3', { full: true }, true],
+    ['1+rev.6', '1.0.0+rev.6', { includePrerelease: true }, true],
+    ['1.2+rev.6', '1.2.0+rev.6', { includePrerelease: true }, true],
+    ['1.2.3+rev.6', '1.2.3+rev.6', { includePrerelease: true }, true],
+    ['1.2.3+rev.6/a', '1.2.3+rev.6', { includePrerelease: true }, true],
+    ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }, true],
+    ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }, true],
 
-    ['1-rc.5+rev.6', '1.0.0-rc.5+rev.6', { full: true }, true],
-    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { full: true }, true],
-    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { full: true }, true],
-    ['1.2.3-rc.5+rev.6/a', '1.2.3-rc.5+rev.6', { full: true }, true],
+    ['1-rc.5+rev.6', '1.0.0-rc.5+rev.6', { includePrerelease: true }, true],
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { includePrerelease: true }, true],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { includePrerelease: true }, true],
+    ['1.2.3-rc.5+rev.6/a', '1.2.3-rc.5+rev.6', { includePrerelease: true }, true],
 
-    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { rtl: true, full: true }, true],
-    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { rtl: true, full: true }, true],
-    ['1.2.3.4-rc.5+rev.6', '2.3.4-rc.5+rev.6', { rtl: true, full: true }, true],
-    ['1.2.3.4-rc.5', '2.3.4-rc.5', { rtl: true, full: true }, true],
-    ['1.2.3.4+rev.6', '2.3.4+rev.6', { rtl: true, full: true }, true],
-    ['1.2.3.4-rc.5+rev.6/7', '7.0.0', { rtl: true, full: true }, true],
-    ['1.2.3.4-rc/7.5+rev.6', '7.5.0+rev.6', { rtl: true, full: true }, true],
-    ['1.2.3.4/7-rc.5+rev.6', '7.0.0-rc.5+rev.6', { rtl: true, full: true }, true],
+    ['1.2-rc.5+rev.6', '1.2.0-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3-rc.5+rev.6', '1.2.3-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4-rc.5+rev.6', '2.3.4-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4-rc.5', '2.3.4-rc.5', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4+rev.6', '2.3.4+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4-rc.5+rev.6/7', '7.0.0', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4-rc/7.5+rev.6', '7.5.0+rev.6', { rtl: true, includePrerelease: true }, true],
+    ['1.2.3.4/7-rc.5+rev.6', '7.0.0-rc.5+rev.6', { rtl: true, includePrerelease: true }, true],
   ]
   coerceToValid.forEach(([input, expected, options, shouldParse]) => {
     const coerceExpression = `coerce(${input}, ${JSON.stringify(options)})`
@@ -161,7 +161,7 @@ test('coerce tests', (t) => {
   })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
-  t.same(valid(coerce('42.6.7-alpha+rev.1', { full: true })), '42.6.7-alpha')
+  t.same(valid(coerce('42.6.7-alpha+rev.1', { includePrerelease: true })), '42.6.7-alpha')
   t.same(valid(coerce('v2')), '2.0.0')
 
   t.end()
