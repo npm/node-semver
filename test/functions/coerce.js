@@ -147,7 +147,6 @@ test('coerce tests', (t) => {
       `${coerceExpression} should be equal to ${expectedVersion}`)
     t.equal(expectedVersion.compareBuild(coercedVersion), 0,
       `${coerceExpression} build should be equal to ${expectedVersion}`)
-    )
   })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
