@@ -1,7 +1,8 @@
-const { test } = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
 const rsort = require('../../functions/rsort')
 
-test('sorting', (t) => {
+t.test('sorting', (t) => {
   const list = [
     '1.2.3+1',
     '1.2.3+0',
@@ -16,6 +17,5 @@ test('sorting', (t) => {
     '1.2.3',
     '0.1.2',
   ]
-  t.same(rsort(list), rsorted)
-  t.end()
+  a.deepEqual(rsort(list), rsorted)
 })

@@ -1,45 +1,45 @@
-const { test } = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
+
 const inc = require('../../functions/inc')
 const parse = require('../../functions/parse')
 const increments = require('../fixtures/increments.js')
 
-test('increment versions test', (t) => {
-  increments.forEach(([pre, what, wanted, options, id, base]) => {
+t.test('increment versions test', (t) => {
+  for (const [pre, what, wanted, options, id, base] of increments) {
     const found = inc(pre, what, options, id, base)
     const cmd = `inc(${pre}, ${what}, ${id}, ${base})`
-    t.equal(found, wanted, `${cmd} === ${wanted}`)
+    a.equal(found, wanted, `${cmd} === ${wanted}`)
 
     const parsed = parse(pre, options)
     const parsedAsInput = parse(pre, options)
     if (wanted) {
       parsed.inc(what, id, base)
-      t.equal(parsed.version, wanted, `${cmd} object version updated`)
+      a.equal(parsed.version, wanted, `${cmd} object version updated`)
       if (parsed.build.length) {
-        t.equal(
+        a.equal(
           parsed.raw,
           `${wanted}+${parsed.build.join('.')}`,
           `${cmd} object raw field updated with build`
         )
       } else {
-        t.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
+        a.equal(parsed.raw, wanted, `${cmd} object raw field updated`)
       }
 
       const preIncObject = JSON.stringify(parsedAsInput)
       inc(parsedAsInput, what, options, id, base)
       const postIncObject = JSON.stringify(parsedAsInput)
-      t.equal(
+      a.equal(
         postIncObject,
         preIncObject,
         `${cmd} didn't modify its input`
       )
     } else if (parsed) {
-      t.throws(() => {
+      a.throws(() => {
         parsed.inc(what, id, base)
       })
     } else {
-      t.equal(parsed, null)
+      a.equal(parsed, null)
     }
-  })
-
-  t.end()
+  }
 })

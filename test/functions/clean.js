@@ -1,26 +1,10 @@
-const { test } = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
 const clean = require('../../functions/clean')
+const toClean = require('../fixtures/clean')
 
-test('clean tests', (t) => {
-  // [range, version]
-  // Version should be detectable despite extra characters
-  [
-    ['1.2.3', '1.2.3'],
-    [' 1.2.3 ', '1.2.3'],
-    [' 1.2.3-4 ', '1.2.3-4'],
-    [' 1.2.3-pre ', '1.2.3-pre'],
-    ['  =v1.2.3   ', '1.2.3'],
-    ['v1.2.3', '1.2.3'],
-    [' v1.2.3 ', '1.2.3'],
-    ['\t1.2.3', '1.2.3'],
-    ['>1.2.3', null],
-    ['~1.2.3', null],
-    ['<=1.2.3', null],
-    ['1.2.x', null],
-    ['0.12.0-dev.1150+3c22cecee', '0.12.0-dev.1150'],
-  ].forEach(([range, version]) => {
-    const msg = `clean(${range}) = ${version}`
-    t.equal(clean(range), version, msg)
-  })
-  t.end()
+t.test('clean tests', (t) => {
+  for (const [range, version] of toClean) {
+    a.equal(clean(range), version, `clean(${range}) = ${version}`)
+  }
 })

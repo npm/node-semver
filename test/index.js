@@ -1,11 +1,17 @@
-const t = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
+
 const semver = require('../')
 const { SEMVER_SPEC_VERSION } = require('../internal/constants')
 
-t.match(Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION'), {
-  get: undefined,
-  set: undefined,
-  value: SEMVER_SPEC_VERSION,
-  configurable: true,
-  enumerable: true,
-}, 'just a normal value property')
+t.test('SEMVER_SPEC_VERSION is exported', t => {
+  const descriptor = Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION')
+  a.deepEqual(descriptor, {
+    value: SEMVER_SPEC_VERSION,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  }, 'just a normal value property')
+  a.equal(descriptor.get, undefined, 'no getter')
+  a.equal(descriptor.set, undefined, 'no setter')
+})

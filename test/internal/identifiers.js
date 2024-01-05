@@ -1,19 +1,18 @@
-const { test } = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
+
 const { compareIdentifiers, rcompareIdentifiers } = require('../../internal/identifiers')
 
-test('rcompareIdentifiers and compareIdentifiers', (t) => {
+t.test('rcompareIdentifiers and compareIdentifiers', (t) => {
   const set = [
     ['1', '2'],
     ['alpha', 'beta'],
     ['0', 'beta'],
   ]
-  set.forEach((ab) => {
-    const a = ab[0]
-    const b = ab[1]
-    t.equal(compareIdentifiers(a, b), -1)
-    t.equal(rcompareIdentifiers(a, b), 1)
-  })
-  t.equal(compareIdentifiers('0', '0'), 0)
-  t.equal(rcompareIdentifiers('0', '0'), 0)
-  t.end()
+  for (const [x, y] of set) {
+    a.equal(compareIdentifiers(x, y), -1)
+    a.equal(rcompareIdentifiers(x, y), 1)
+  }
+  a.equal(compareIdentifiers('0', '0'), 0)
+  a.equal(rcompareIdentifiers('0', '0'), 0)
 })

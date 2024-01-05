@@ -1,23 +1,25 @@
-const { test } = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
+
 const { src, re, safeRe } = require('../../internal/re')
 const semver = require('../../')
 
-test('has a list of src, re, and tokens', (t) => {
-  t.match(Object.assign({}, semver), {
-    src: Array,
-    re: Array,
-    tokens: Object,
-  })
-  re.forEach(r => t.match(r, RegExp, 'regexps are regexps'))
-  src.forEach(s => t.match(s, String, 'src is strings'))
+t.test('has a list of src, re, and tokens', (t) => {
+  a.ok(Array.isArray(semver.src), 'src is an array')
+  a.ok(Array.isArray(semver.re), 're is an array')
+  a.equal(typeof semver.tokens, 'object', 'tokesn is an object')
+  for (const r of re) {
+    a.ok(r instanceof RegExp, 'regexps are regexps')
+  }
+  for (const s of src) {
+    a.equal(typeof s, 'string', 'src is strings')
+  }
   for (const i in semver.tokens) {
-    t.match(semver.tokens[i], Number, 'tokens are numbers')
+    a.equal(typeof semver.tokens[i], 'number', 'tokens are numbers')
   }
 
   safeRe.forEach(r => {
-    t.notMatch(r.source, '\\s+', 'safe regex do not contain greedy whitespace')
-    t.notMatch(r.source, '\\s*', 'safe regex do not contain greedy whitespace')
+    a.ok(!r.source.includes('\\s+'), 'safe regex do not contain greedy whitespace')
+    a.ok(!r.source.includes('\\s*'), 'safe regex do not contain greedy whitespace')
   })
-
-  t.end()
 })
