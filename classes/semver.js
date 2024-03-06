@@ -81,6 +81,9 @@ class SemVer {
     if (this.prerelease.length) {
       this.version += `-${this.prerelease.join('.')}`
     }
+    if (this.build.length) {
+      this.version += `+${this.build.join('.')}`
+    }
     return this.version
   }
 
