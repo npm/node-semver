@@ -111,17 +111,22 @@ createToken('BUILD', `(?:\\+(${src[t.BUILDIDENTIFIER]
 // the version string are capturing groups.  The build metadata is not a
 // capturing group, because it should not ever be used in version
 // comparison.
-
 createToken('FULLPLAIN', `v?${src[t.MAINVERSION]
 }${src[t.PRERELEASE]}?${
   src[t.BUILD]}?`)
 
 createToken('FULL', `^${src[t.FULLPLAIN]}$`)
 
+// Versions may be prefixed with a 'v', '=', or 'v=' like v1.2.3 or =1.0.0.
+// In loose mode, spaces before the semantic version as also accepted
+// like 'v=  1.2.3'.
+createToken('PREFIX', '(?:v=|v|=)?')
+createToken('PREFIXLOOSE', `${src[t.PREFIX]}\\s*`)
+
 // like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
 // also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
 // common in the npm registry.
-createToken('LOOSEPLAIN', `[v=\\s]*${src[t.MAINVERSIONLOOSE]
+createToken('LOOSEPLAIN', `${src[t.PREFIXLOOSE]}${src[t.MAINVERSIONLOOSE]
 }${src[t.PRERELEASELOOSE]}?${
   src[t.BUILD]}?`)
 
@@ -135,14 +140,14 @@ createToken('GTLT', '((?:<|>)?=?)')
 createToken('XRANGEIDENTIFIERLOOSE', `${src[t.NUMERICIDENTIFIERLOOSE]}|x|X|\\*`)
 createToken('XRANGEIDENTIFIER', `${src[t.NUMERICIDENTIFIER]}|x|X|\\*`)
 
-createToken('XRANGEPLAIN', `[v=\\s]*(${src[t.XRANGEIDENTIFIER]})` +
+createToken('XRANGEPLAIN', `${src[t.PREFIX]}(${src[t.XRANGEIDENTIFIER]})` +
                    `(?:\\.(${src[t.XRANGEIDENTIFIER]})` +
                    `(?:\\.(${src[t.XRANGEIDENTIFIER]})` +
                    `(?:${src[t.PRERELEASE]})?${
                      src[t.BUILD]}?` +
                    `)?)?`)
 
-createToken('XRANGEPLAINLOOSE', `[v=\\s]*(${src[t.XRANGEIDENTIFIERLOOSE]})` +
+createToken('XRANGEPLAINLOOSE', `${src[t.PREFIXLOOSE]}(${src[t.XRANGEIDENTIFIERLOOSE]})` +
                         `(?:\\.(${src[t.XRANGEIDENTIFIERLOOSE]})` +
                         `(?:\\.(${src[t.XRANGEIDENTIFIERLOOSE]})` +
                         `(?:${src[t.PRERELEASELOOSE]})?${

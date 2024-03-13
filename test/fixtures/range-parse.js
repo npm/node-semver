@@ -86,4 +86,8 @@ module.exports = [
   [`^${MAX_SAFE_INTEGER}.0.0`, null],
   [`=${MAX_SAFE_INTEGER}.0.0`, `${MAX_SAFE_INTEGER}.0.0`],
   [`^${MAX_SAFE_INTEGER - 1}.0.0`, `>=${MAX_SAFE_INTEGER - 1}.0.0 <${MAX_SAFE_INTEGER}.0.0-0`],
+  ['> vv1.0', null],
+  ['> v=vv==  1.0', null],
+  ['> vv1.0', null, { loose: true }],
+  ['> v=vv==  1.0', null, { loose: true }],
 ]
