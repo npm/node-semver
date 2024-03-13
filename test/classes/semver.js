@@ -139,3 +139,20 @@ test('compareBuild', (t) => {
 
   t.end()
 })
+
+test('format method produces correct version string', t => {
+  const formatTestCases = [
+    {version: '1.2.3', options: {}, expected: '1.2.3'},
+    {version: '1.2.3-alpha.1', options: {}, expected: '1.2.3-alpha.1'},
+    {version: '1.2.3+build.11', options: {}, expected: '1.2.3+build.11'},
+    {version: '1.2.3-alpha.1+build.11', options: {}, expected: '1.2.3-alpha.1+build.11'},
+  ];
+
+  t.plan(formatTestCases.length);
+
+  formatTestCases.forEach(({ version, options, expected }) => {
+    const semVer = new SemVer(version, options);
+    t.equal(semVer.format(), expected, `Format of ${version} should be ${expected}`);
+  });
+});
+
