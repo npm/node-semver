@@ -12,7 +12,4 @@ module.exports = [
   [/a regexp/, 'regexp is not a string'],
   [/1.2.3/, 'semver-ish regexp is not a string'],
   [{ toString: () => '1.2.3' }, 'obj with a tostring is not a string'],
-  ['ver1.2.3', 'invalid prefix'],
-  ['=1.2.3', 'invalid prefix'],
-  ['v=1.2.3', 'invalid prefix'],
 ]

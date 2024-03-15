@@ -111,6 +111,7 @@ createToken('BUILD', `(?:\\+(${src[t.BUILDIDENTIFIER]
 // the version string are capturing groups.  The build metadata is not a
 // capturing group, because it should not ever be used in version
 // comparison.
+
 createToken('FULLPLAIN', `v?${src[t.MAINVERSION]
 }${src[t.PRERELEASE]}?${
   src[t.BUILD]}?`)
