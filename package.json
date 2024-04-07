@@ -45,10 +45,10 @@
     ]
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "dependencies": {
-    "lru-cache": "^6.0.0"
+    "lru-cache": "^10.2.0"
   },
   "author": "GitHub Inc.",
   "templateOSS": {
