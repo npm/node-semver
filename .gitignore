@@ -14,6 +14,7 @@ tap-testdir*/
 !/.gitignore
 !/.npmrc
 !/.release-please-manifest.json
+!/benchmarks
 !/bin/
 !/CHANGELOG*
 !/classes/
