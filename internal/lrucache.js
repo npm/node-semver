@@ -1,5 +1,5 @@
 class LRUCache {
-  constructor (max = 0) {
+  constructor (max) {
     if (!Number.isInteger(max) || max < 0) {
       throw new TypeError('max must be a nonnegative integer')
     }

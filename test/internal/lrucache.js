@@ -1,5 +1,5 @@
 const { test } = require('tap')
-const LRUCache = require('../../classes/lrucache')
+const LRUCache = require('../../internal/lrucache')
 
 test('basic cache operation', t => {
   const c = new LRUCache(10)
@@ -94,7 +94,7 @@ test('basic cache operation', t => {
 
 test('good max values', t => {
   // max must be a positive integer
-  t.doesNotThrow(() => new LRUCache())
+  t.doesNotThrow(() => new LRUCache(0))
   t.doesNotThrow(() => new LRUCache(10))
   t.doesNotThrow(() => new LRUCache(1000))
   t.end()
