@@ -105,3 +105,13 @@ test('missing range parameter in range intersect', (t) => {
   'throws type error')
   t.end()
 })
+
+test('cache', (t) => {
+  const cached = Symbol('cached')
+  const r1 = new Range('1.0.0')
+  r1.set[0][cached] = true
+  const r2 = new Range('1.0.0')
+  t.equal(r1.set[0][cached], true)
+  t.equal(r2.set[0][cached], true) // Will be true, showing it's cached.
+  t.end()
+})
