@@ -5,8 +5,8 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 1`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 1`] = `
+Map Iterator [
   Array [
     0,
     0,
@@ -30,8 +30,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 2`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 2`] = `
+Map Iterator [
   Array [
     0,
     0,
@@ -75,8 +75,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 3`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 3`] = `
+Map Iterator [
   Array [
     5,
     5,
@@ -120,8 +120,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 4`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 4`] = `
+Map Iterator [
   Array [
     5,
     5,
@@ -165,53 +165,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 5`] = `
-Generator [
-  Array [
-    10,
-    10,
-  ],
-  Array [
-    11,
-    11,
-  ],
-  Array [
-    12,
-    12,
-  ],
-  Array [
-    13,
-    13,
-  ],
-  Array [
-    14,
-    14,
-  ],
-  Array [
-    15,
-    15,
-  ],
-  Array [
-    16,
-    16,
-  ],
-  Array [
-    17,
-    17,
-  ],
-  Array [
-    18,
-    18,
-  ],
-  Array [
-    19,
-    19,
-  ],
-]
-`
-
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 6`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 5`] = `
+Map Iterator [
   Array [
     10,
     10,
@@ -255,8 +210,53 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 7`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 6`] = `
+Map Iterator [
+  Array [
+    10,
+    10,
+  ],
+  Array [
+    11,
+    11,
+  ],
+  Array [
+    12,
+    12,
+  ],
+  Array [
+    13,
+    13,
+  ],
+  Array [
+    14,
+    14,
+  ],
+  Array [
+    15,
+    15,
+  ],
+  Array [
+    16,
+    16,
+  ],
+  Array [
+    17,
+    17,
+  ],
+  Array [
+    18,
+    18,
+  ],
+  Array [
+    19,
+    19,
+  ],
+]
+`
+
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 7`] = `
+Map Iterator [
   Array [
     0,
     0,
@@ -300,8 +300,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 8`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 8`] = `
+Map Iterator [
   Array [
     0,
     0,
@@ -345,8 +345,8 @@ Generator [
 ]
 `
 
-exports[`test/classes/lrucache.js TAP basic cache operation > must match snapshot 9`] = `
-Generator [
+exports[`test/internal/lrucache.js TAP basic cache operation > must match snapshot 9`] = `
+Map Iterator [
   Array [
     0,
     0,

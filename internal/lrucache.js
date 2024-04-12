@@ -61,10 +61,8 @@ class LRUCache {
     return this.map.size
   }
 
-  * entries () {
-    for (const [key, value] of this.map) {
-      yield [key, value]
-    }
+  entries () {
+    return this.map.entries()
   }
 }
 
