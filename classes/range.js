@@ -198,7 +198,7 @@ class Range {
 
 module.exports = Range
 
-const LRU = require('./lrucache')
+const LRU = require('../internal/lrucache')
 const cache = new LRU(1000)
 
 const parseOptions = require('../internal/parse-options')
