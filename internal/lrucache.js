@@ -1,9 +1,5 @@
 class LRUCache {
   constructor (max) {
-    if (!Number.isInteger(max) || max < 0) {
-      throw new TypeError('max must be a nonnegative integer')
-    }
-
     this.max = max
     this.map = new Map()
   }
@@ -18,10 +14,6 @@ class LRUCache {
       this.map.set(key, value)
       return value
     }
-  }
-
-  has (key) {
-    return this.map.has(key)
   }
 
   delete (key) {
@@ -49,20 +41,8 @@ class LRUCache {
     return this
   }
 
-  clear () {
-    this.map.clear()
-  }
-
-  capacity () {
-    return this.max
-  }
-
   size () {
     return this.map.size
-  }
-
-  entries () {
-    return this.map.entries()
   }
 }
 
