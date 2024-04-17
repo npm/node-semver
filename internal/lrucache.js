@@ -1,6 +1,6 @@
 class LRUCache {
-  constructor (max) {
-    this.max = max
+  constructor () {
+    this.max = 1000
     this.map = new Map()
   }
 
@@ -39,10 +39,6 @@ class LRUCache {
     }
 
     return this
-  }
-
-  size () {
-    return this.map.size
   }
 }
 
