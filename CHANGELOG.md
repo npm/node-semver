@@ -1,5 +1,24 @@
 # Changelog
 
+## [7.6.1](https://github.com/npm/node-semver/compare/v7.6.0...v7.6.1) (2024-05-02)
+
+### Bug Fixes
+
+* [`c570a34`](https://github.com/npm/node-semver/commit/c570a348ffc6612af07fe94fa46b9affa5e4eff0) [#704](https://github.com/npm/node-semver/pull/704) linting: no-unused-vars (@wraithgar)
+* [`ad8ff11`](https://github.com/npm/node-semver/commit/ad8ff11dd200dac3a05097d9a82d1977ccfa1535) [#704](https://github.com/npm/node-semver/pull/704) use internal cache implementation (@mbtools)
+* [`ac9b357`](https://github.com/npm/node-semver/commit/ac9b35769ab0ddfefd5a3af4a3ecaf3da2012352) [#682](https://github.com/npm/node-semver/pull/682) typo in compareBuild debug message (#682) (@mbtools)
+
+### Dependencies
+
+* [`3fabe4d`](https://github.com/npm/node-semver/commit/3fabe4dbfbd199fdb589c076a7f30bc1f18c6614) [#704](https://github.com/npm/node-semver/pull/704) remove lru-cache
+
+### Chores
+
+* [`ec49cdc`](https://github.com/npm/node-semver/commit/ec49cdcece9db0020d6829b246681ff65a393644) [#701](https://github.com/npm/node-semver/pull/701) chore: chore: postinstall for dependabot template-oss PR (@lukekarrys)
+* [`b236c3d`](https://github.com/npm/node-semver/commit/b236c3d2f357a16a733c96ec2ca8c57848b70091) [#696](https://github.com/npm/node-semver/pull/696) add benchmarks (#696) (@H4ad)
+* [`692451b`](https://github.com/npm/node-semver/commit/692451bd6f75b38a71a99f39da405c94a5954a22) [#688](https://github.com/npm/node-semver/pull/688) various improvements to README (#688) (@mbtools)
+* [`074156f`](https://github.com/npm/node-semver/commit/074156f64fa91723fe1ae6af8cc497014b9b7aff) [#701](https://github.com/npm/node-semver/pull/701) bump @npmcli/template-oss from 4.21.3 to 4.21.4 (@dependabot[bot])
+
 ## [7.6.0](https://github.com/npm/node-semver/compare/v7.5.4...v7.6.0) (2024-01-31)
 
 ### Features
