@@ -28,7 +28,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
       - name: Setup Git User
@@ -44,11 +44,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ inputs.check-sha }}
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         id: node
         with:
-          node-version: 20.x
-          check-latest: contains('20.x', '.x')
+          node-version: 22.x
+          check-latest: contains('22.x', '.x')
       - name: Install Latest npm
         uses: ./.github/actions/install-latest-npm
         with:
@@ -80,6 +80,9 @@ jobs:
           - name: macOS
             os: macos-latest
             shell: bash
+          - name: macOS
+            os: macos-13
+            shell: bash
           - name: Windows
             os: windows-latest
             shell: cmd
@@ -91,13 +94,31 @@ jobs:
           - 16.x
           - 18.x
           - 20.x
+          - 22.x
+        exclude:
+          - platform: { name: macOS, os: macos-latest, shell: bash }
+            node-version: 10.0.0
+          - platform: { name: macOS, os: macos-latest, shell: bash }
+            node-version: 10.x
+          - platform: { name: macOS, os: macos-latest, shell: bash }
+            node-version: 12.x
+          - platform: { name: macOS, os: macos-latest, shell: bash }
+            node-version: 14.x
+          - platform: { name: macOS, os: macos-13, shell: bash }
+            node-version: 16.x
+          - platform: { name: macOS, os: macos-13, shell: bash }
+            node-version: 18.x
+          - platform: { name: macOS, os: macos-13, shell: bash }
+            node-version: 20.x
+          - platform: { name: macOS, os: macos-13, shell: bash }
+            node-version: 22.x
     runs-on: ${{ matrix.platform.os }}
     defaults:
       run:
         shell: ${{ matrix.platform.shell }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
       - name: Setup Git User
@@ -113,7 +134,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ inputs.check-sha }}
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         id: node
         with:
           node-version: ${{ matrix.node-version }}

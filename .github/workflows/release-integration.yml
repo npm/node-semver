@@ -30,7 +30,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ fromJSON(inputs.releases)[0].tagName }}
       - name: Setup Git User
@@ -38,11 +38,11 @@ jobs:
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         id: node
         with:
-          node-version: 20.x
-          check-latest: contains('20.x', '.x')
+          node-version: 22.x
+          check-latest: contains('22.x', '.x')
       - name: Install Latest npm
         uses: ./.github/actions/install-latest-npm
         with:
@@ -58,17 +58,10 @@ jobs:
         run: |
           EXIT_CODE=0
 
-          function each_release {
-            if npm publish --provenance --tag="$1"; then
-              echo 0
-            else
-              echo 1
-            fi
-          }
-
           for release in $(echo $RELEASES | jq -r '.[] | @base64'); do
             PUBLISH_TAG=$(echo "$release" | base64 --decode | jq -r .publishTag)
-            STATUS=$(each_release "$PUBLISH_TAG")
+            npm publish --provenance --tag="$PUBLISH_TAG"
+            STATUS=$?
             if [[ "$STATUS" -eq 1 ]]; then
               EXIT_CODE=$STATUS
             fi
