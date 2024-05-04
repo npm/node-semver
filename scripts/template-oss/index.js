@@ -14,6 +14,7 @@ module.exports = {
   dependabot: false,
   oldNode: OLD_NODE,
   ciVersions: [OLD_NODE],
+  latestCiVersion: 20,
   backport: 6,
   publish: true,
   allowPaths: [
