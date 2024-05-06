@@ -13,13 +13,13 @@
     "posttest": "npm run lint"
   },
   "devDependencies": {
-    "@npmcli/template-oss": "4.21.4",
+    "@npmcli/template-oss": "4.22.0",
     "tap": "^12.7.0"
   },
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/npm/node-semver.git"
+    "url": "git+https://github.com/npm/node-semver.git"
   },
   "bin": {
     "semver": "./bin/semver"
@@ -33,6 +33,6 @@
   "templateOSS": {
     "//@npmcli/template-oss": "This file is partially managed by @npmcli/template-oss. Edits may be overwritten.",
     "content": "./scripts/template-oss",
-    "version": "4.21.4"
+    "version": "4.22.0"
   }
 }
