@@ -17,7 +17,7 @@ class LRUCache {
   }
 
   delete (key) {
-    return this.map.delete(key);
+    return this.map.delete(key)
   }
 
   set (key, value) {
