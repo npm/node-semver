@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.6.2](https://github.com/npm/node-semver/compare/v7.6.1...v7.6.2) (2024-05-09)
+
+### Bug Fixes
+
+* [`6466ba9`](https://github.com/npm/node-semver/commit/6466ba9b540252db405fdd2a289dd4651495beea) [#713](https://github.com/npm/node-semver/pull/713) lru: use map.delete() directly (#713) (@negezor, @lukekarrys)
+
 ## [7.6.1](https://github.com/npm/node-semver/compare/v7.6.0...v7.6.1) (2024-05-04)
 
 ### Bug Fixes
