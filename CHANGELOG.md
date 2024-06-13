@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.6.3](https://github.com/npm/node-semver/compare/v7.6.2...v7.6.3) (2024-06-13)
+
+### Documentation
+
+* [`2975ece`](https://github.com/npm/node-semver/commit/2975ece120e17660c9f1ef517de45c09ff821064) [#719](https://github.com/npm/node-semver/pull/719) fix extra backtick typo (#719) (@stdavis)
+
 ## [7.6.2](https://github.com/npm/node-semver/compare/v7.6.1...v7.6.2) (2024-05-09)
 
 ### Bug Fixes
