@@ -21,9 +21,9 @@ class LRUCache {
   }
 
   set (key, value) {
-    const deleted = this.delete(key)
+    this.delete(key)
 
-    if (!deleted && value !== undefined) {
+    if (value !== undefined) {
       // If cache is full, delete the least recently used item
       if (this.map.size >= this.max) {
         const firstKey = this.map.keys().next().value
