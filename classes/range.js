@@ -20,7 +20,7 @@ class Range {
       // just put it in the set and return
       this.raw = range.value
       this.set = [[range]]
-      this.format()
+      this.formatted = undefined
       return this
     }
 
@@ -65,23 +65,29 @@ class Range {
       }
     }
 
-    this.format()
+    this.formatted = undefined
+  }
+
+  get range () {
+    if (this.formatted === undefined) {
+      this.formatted = ''
+      for (let i = 0; i < this.set.length; i++) {
+        if (i > 0) {
+          this.formatted += '||'
+        }
+        const comps = this.set[i]
+        for (let k = 0; k < comps.length; k++) {
+          if (k > 0) {
+            this.formatted += ' '
+          }
+          this.formatted += comps[k].toString().trim()
+        }
+      }
+    }
+    return this.formatted
   }
 
   format () {
-    this.range = ''
-    for (let i = 0; i < this.set.length; i++) {
-      if (i > 0) {
-        this.range += '||'
-      }
-      const comps = this.set[i]
-      for (let k = 0; k < comps.length; k++) {
-        if (k > 0) {
-          this.range += ' '
-        }
-        this.range += comps[k].toString().trim()
-      }
-    }
     return this.range
   }
 

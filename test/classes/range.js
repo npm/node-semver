@@ -82,6 +82,15 @@ test('tostrings', (t) => {
   t.end()
 })
 
+test('formatted value is calculated lazily and cached', (t) => {
+  const r = new Range('>= v1.2.3')
+  t.equal(r.formatted, undefined)
+  t.equal(r.format(), '>=1.2.3')
+  t.equal(r.formatted, '>=1.2.3')
+  t.equal(r.format(), '>=1.2.3')
+  t.end()
+})
+
 test('ranges intersect', (t) => {
   rangeIntersection.forEach(([r0, r1, expect]) => {
     t.test(`${r0} <~> ${r1}`, t => {
