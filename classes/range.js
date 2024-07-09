@@ -69,10 +69,19 @@ class Range {
   }
 
   format () {
-    this.range = this.set
-      .map((comps) => comps.join(' ').trim())
-      .join('||')
-      .trim()
+    this.range = ''
+    for (let i = 0; i < this.set.length; i++) {
+      if (i > 0) {
+        this.range += '||'
+      }
+      const comps = this.set[i]
+      for (let k = 0; k < comps.length; k++) {
+        if (k > 0) {
+          this.range += ' '
+        }
+        this.range += comps[k].toString().trim()
+      }
+    }
     return this.range
   }
 
