@@ -1,5 +1,15 @@
 # Changelog
 
+## [7.6.3](https://github.com/npm/node-semver/compare/v7.6.2...v7.6.3) (2024-07-16)
+
+### Bug Fixes
+
+* [`73a3d79`](https://github.com/npm/node-semver/commit/73a3d79c4ec32d5dd62c9d5f64e5af7fbdad9ec0) [#726](https://github.com/npm/node-semver/pull/726) optimize Range parsing and formatting (#726) (@jviide)
+
+### Documentation
+
+* [`2975ece`](https://github.com/npm/node-semver/commit/2975ece120e17660c9f1ef517de45c09ff821064) [#719](https://github.com/npm/node-semver/pull/719) fix extra backtick typo (#719) (@stdavis)
+
 ## [7.6.2](https://github.com/npm/node-semver/compare/v7.6.1...v7.6.2) (2024-05-09)
 
 ### Bug Fixes
