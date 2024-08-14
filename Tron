@@ -1,0 +1,272 @@
+{
+  "data": [
+    {
+      "address": "41a614f803b6fd780986a42c78ec9c7f77e6ded13c",
+      "balance": 561755255095,
+      "create_time": 1584082830000,
+      "latest_consume_time": 1707088434000,
+      "net_window_size": 28800000,
+      "net_window_optimized": true,
+      "account_resource": {
+        "latest_consume_time_for_energy": 1721918307000,
+        "acquired_delegated_frozen_balance_for_energy": 2368000000,
+        "energy_window_size": 28800000,
+        "energy_window_optimized": true
+      },
+      "owner_permission": {
+        "permission_name": "owner",
+        "threshold": 1,
+        "keys": [
+          {
+            "address": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+            "weight": 1
+          }
+        ]
+      },
+      "active_permission": [
+        {
+          "type": "Active",
+          "id": 2,
+          "permission_name": "active",
+          "threshold": 1,
+          "operations": "7fff1fc0033e0100000000000000000000000000000000000000000000000000",
+          "keys": [
+            {
+              "address": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+              "weight": 1
+            }
+          ]
+        }
+      ],
+      "frozenV2": [
+        {},
+        {
+          "type": "ENERGY"
+        },
+        {
+          "type": "TRON_POWER"
+        }
+      ],
+      "acquired_delegated_frozen_balance_for_bandwidth": 2341000000,
+      "assetV2": [
+        {
+          "key": "1000655",
+          "value": 555000000
+        },
+        {
+          "key": "1001304",
+          "value": 1000000000
+        }
+      ],
+      "free_asset_net_usageV2": [
+        {
+          "key": "1000655",
+          "value": 0
+        },
+        {
+          "key": "1001304",
+          "value": 0
+        }
+      ],
+      "trc20": [
+        {
+          "TRNeBX6pR2VivKeu1fwMqbEKuFn77phZq1": "1000000000000000"
+        },
+        {
+          "TUbKVw4WvPGsw2jWcaV1464V2ixYNFvRa3": "165000000"
+        },
+        {
+          "TDXsJfpAjtXCtyXAdLF3we2ja7pyonCpw5": "10000000"
+        },
+        {
+          "TVpba2D291qDXvtDNGYsVcy2o8nvwQqd36": "11368868620000000000"
+        },
+        {
+          "TK2FHiSoDHkxJpLMtZS7WpFAj1tdtxuzY7": "999920000000000000"
+        },
+        {
+          "TYfSA6vZCzGMW8CQkAqvVWoXXDdW4EVe1A": "2100000000"
+        },
+        {
+          "TATwpFu1oLKGAL2WkXzFz1oqxBU8HmFNGB": "9323892"
+        },
+        {
+          "TSUGRSvDzxGFEM4cQXb851VhNoB76R6koB": "2000000000000000000"
+        },
+        {
+          "TTwmZ1SEuHPN5bPWJn7iybbwj22GLpZtGC": "500000"
+        },
+        {
+          "TFijqXeYq6L5HimQ4QWv5YoYfNyo6irgHC": "500000000"
+        },
+        {
+          "TX8qRpbpsKzkBp1UQHdcYjYvY1Z7HihgRC": "100"
+        },
+        {
+          "TKECUxPZGKPnR2qYTxmwNtbALAoSV5rUpD": "13605400"
+        },
+        {
+          "TRTfY7kZrfnpadGK6kVNhagYZNtuQS4UVE": "815000000"
+        },
+        {
+          "TVJsPe97VPsSdX3qATjZNJD6H2AL9kV3aG": "10000000"
+        },
+        {
+          "TEo7Bp7KLuYB7DfADXKhu9zVNzm9zrBzzH": "2000000"
+        },
+        {
+          "TN1Thki2tWKkS6GewjnR59hPNWmxPkpvHJ": "2000000"
+        },
+        {
+          "TU3abSCFjc8kXS48jYX4TXJ421A9SCZY7K": "4000000000002000000"
+        },
+        {
+          "TH7e8MPKFBNUuQWeKEo5ukXat7TArGWnsK": "2000000000000000000"
+        },
+        {
+          "TM4UNdUxGHe7ToRe5y7jp3ke5LVeD7xg7L": "1150123000"
+        },
+        {
+          "TKv1imDRwBfKbaygQFXAjkRjrsbCK5FiLL": "1000000000000000000"
+        },
+        {
+          "TS2Hzo6KpAc8Ym2nGb3idpMtUpM2GiK2gL": "2"
+        },
+        {
+          "TAi7b1PjSTHdvZMYXggfHEZfLqV8YjXTwN": "15000000000000000000"
+        },
+        {
+          "TWGhDNxwJ6mpP4AXGi1MWT89oc1Ma9yGVP": "20"
+        },
+        {
+          "TF8Kor8VrJVMYVpkVa7NkKEGCmAfDSSpzQ": "1000000"
+        },
+        {
+          "TVTaBLGubBBG4rWnN2qB1SM9zK1unJCvkS": "15000000000000000000"
+        },
+        {
+          "TLqm9LxV7Y6meM6XN1oyYiCd9JS7yfkW7T": "100000000000000000000"
+        },
+        {
+          "TBo8ZFTG13PZZTgSVbuTVBi5FrCZjDedFU": "292009472"
+        },
+        {
+          "THu5ESLBFBnKnVk446AE6MigiVzvbX8HZV": "120000000"
+        },
+        {
+          "TKaTnTZ87mQ6qKajWCDJrz94pGWSqbByoV": "10000"
+        },
+        {
+          "TSiSWDf3TfaSPjWFBSxpSJLW7ijon2f4MY": "2000000"
+        },
+        {
+          "TMYgsRXzRPZRua1xUXMLMJmvyEUcxX8KmY": "15000000000000000000"
+        },
+        {
+          "TXPerKZhUdn26m5QVTTbb3HfVAsov9JZYa": "75000000000000000000"
+        },
+        {
+          "TURwoLuFy7maq1Vea7wVwRNz3HgmcAsJzb": "10000000000000000000"
+        },
+        {
+          "TUfV8CTtoogCdcEeZBtB3xKkQbgWxjWEXc": "18000000000"
+        },
+        {
+          "TYvxbnjh9dnC71mafyRektLS84wU8QTMpc": "100000"
+        },
+        {
+          "TSdZwNqpHofzP6BsBKGQUWdBeJphLmF6id": "22000000"
+        },
+        {
+          "TAxSA1ysLtUxVRGkvguobPu5U6DwmjWHod": "20000000000"
+        },
+        {
+          "TKLq8zcKpaLh4eq7kqgrZBdkHJntjujwpd": "15000000000000000000"
+        },
+        {
+          "TFDEpQtEdfwJ9uHzNk4KHcGDbPJmq85Gud": "1000000000000000"
+        },
+        {
+          "TSmNLezkRLkZGkibA2gqNypJaoM1QFHcbe": "30000000000"
+        },
+        {
+          "TDsYKUpQ3zdgUogkxTNCuJvG9PWHpwmDne": "1000000000"
+        },
+        {
+          "TKZGhVjf1mvDvnZ6KX85a6Xkdo7Ts1bBbf": "2000000000000000000"
+        },
+        {
+          "TBqh2PF1wZAeLgi4M3rRhPCArbiVkeu8Dh": "2000000000000000000"
+        },
+        {
+          "TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh": "14000000"
+        },
+        {
+          "TU22bz4JYmhGfWc31cuRPcowYxV8qyuash": "1000000000000000000"
+        },
+        {
+          "TJ8zFxnsva6Pw4UYE94fXahrPTA4ENP56i": "729890000"
+        },
+        {
+          "TUV1qK5G9szesx4Fa9BDQwwnHAxGTdRTci": "3522570000"
+        },
+        {
+          "TWjJj93GX51rJ8GRFihPVNA15ieLoheKaj": "131590000"
+        },
+        {
+          "TVfnYJhJDwQg3nFC2Nt6wVUFDfbYnq4qzk": "5"
+        },
+        {
+          "TGPacCdabZp2WmLSTQLon485By749CFuBm": "104"
+        },
+        {
+          "TDP6Yz7Eib7NjVkWRHBRRZH5WpSRyr2Bim": "1222000000000000000000"
+        },
+        {
+          "TUDtE6w447VvrusbgdfhdjeKom38tnbFvm": "300042860"
+        },
+        {
+          "TKTHQBpQy1w7mtmvFajAaHnoAYzCenUftn": "1020000000"
+        },
+        {
+          "TP5bc86EyYZjbLQJ96PSghUr81GNhmVc5o": "2420000"
+        },
+        {
+          "TJDWZArrnGysgJ9143H1q7D3fbRN4bjZRp": "1000000000000000000000"
+        },
+        {
+          "TKXsW9u2h6xHRjcCVWjoxdn5GS6hC4XLDr": "22780000"
+        },
+        {
+          "TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs": "6010349782"
+        },
+        {
+          "TEYKWmKvdCHX2NuX4tVmhxdN4P3PVjyMcu": "15232000"
+        },
+        {
+          "TWWeWhg4dJJgQe42ngowbgKP9j7cBgjfHv": "100596800000"
+        },
+        {
+          "TGN4Zgm7fHgK8fo9Pk9rdk79rbaEaEjPFw": "45000000000000000000"
+        },
+        {
+          "THeziZMyeqkiqY5dqMdFEcqDyzjvUexKhw": "2000000"
+        },
+        {
+          "TWRc6X7JWep9Ao8MaSf8Jd5LnanhLYZvEx": "4000000"
+        },
+        {
+          "TWtSB8HHNRNNvBECXunAppTP1AmkmCgLmx": "30000000000000000000"
+        },
+        {
+          "TTkYeqe227UwF5xRYKBxjbWQ3i5feaKKCz": "2000000"
+        }
+      ]
+    }
+  ],
+  "success": true,
+  "meta": {
+    "page_size": 1,
+    "at": 1723630903035
+  }
+}
