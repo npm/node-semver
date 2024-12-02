@@ -141,7 +141,7 @@ A "version" is described by the `v2.0.0` specification found at
 <https://semver.org/>.
 
 A leading `"="` or `"v"` character is stripped off and ignored.
-A leading "v" is kept for compatibility with `v1.0.0` of the SemVer
+Support for stripping a leading "v" is kept for compatibility with `v1.0.0` of the SemVer
 specification but should not be used anymore.
 
 ## Ranges
