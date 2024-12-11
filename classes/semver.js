@@ -177,6 +177,12 @@ class SemVer {
   inc (release, identifier, identifierBase) {
     const inferredIdentifier = identifier || this.prerelease[0] || undefined
     switch (release) {
+      case 'release':
+        if (this.prerelease.length === 0) {
+          throw new Error(`version ${this.raw} is not a prerelease`)
+        }
+        this.prerelease.length = 0
+        break
       case 'premajor':
         if (this.minor || this.patch || this.prerelease.length === 0) {
           this.prerelease.length = 0
