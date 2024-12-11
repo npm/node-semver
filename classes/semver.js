@@ -173,40 +173,31 @@ class SemVer {
     } while (++i)
   }
 
-  // preminor will bump the version up to the next minor release, and immediately
-  // down to pre-release. premajor and prepatch work the same way.
+  // preminor will bump the version up to the next minor release, and immediately down to prerelease. premajor and prepatch work the same way.  If the version is already a prerelease for that release type, only the identifier is incremented instead.
   inc (release, identifier, identifierBase) {
+    const inferredIdentifier = identifier || this.prerelease[0] || undefined
     switch (release) {
       case 'premajor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor = 0
-        this.major++
-        this.inc('pre', identifier, identifierBase)
+        if (this.minor || this.patch || this.prerelease.length === 0) {
+          this.prerelease.length = 0
+          this.inc('major')
+        }
+        this.inc('pre', inferredIdentifier, identifierBase)
         break
       case 'preminor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor++
-        this.inc('pre', identifier, identifierBase)
+        if (this.patch || this.prerelease.length === 0) {
+          this.prerelease.length = 0
+          this.inc('minor')
+        }
+        this.inc('pre', inferredIdentifier, identifierBase)
         break
       case 'prepatch':
-        // If this is already a prerelease, it will bump to the next version
-        // drop any prereleases that might already exist, since they are not
-        // relevant at this point.
-        this.prerelease.length = 0
-        this.inc('patch', identifier, identifierBase)
-        this.inc('pre', identifier, identifierBase)
-        break
-      // If the input is a non-prerelease version, this acts the same as
-      // prepatch.
       case 'prerelease':
         if (this.prerelease.length === 0) {
-          this.inc('patch', identifier, identifierBase)
+          this.inc('patch')
         }
-        this.inc('pre', identifier, identifierBase)
+        this.inc('pre', inferredIdentifier, identifierBase)
         break
-
       case 'major':
         // If this is a pre-major version, bump up to the same major version.
         // Otherwise increment major.
@@ -235,8 +226,8 @@ class SemVer {
         this.prerelease = []
         break
       case 'patch':
-        // If this is not a pre-release version, it will increment the patch.
-        // If it is a pre-release it will bump up to the same patch version.
+        // If this is not a prerelease version, it will increment the patch.
+        // If it is a prerelease it will bump up to the same patch version.
         // 1.2.0-5 patches to 1.2.0
         // 1.2.0 patches to 1.2.1
         if (this.prerelease.length === 0) {
@@ -244,8 +235,7 @@ class SemVer {
         }
         this.prerelease = []
         break
-      // This probably shouldn't be used publicly.
-      // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
+      // This does the "pre" part of "premajor" et al.  If there is not already a prerelease this affects a decrease operation, not an increase.  Because of that it probably shouldn't be used publicly.
       case 'pre': {
         const base = Number(identifierBase) ? 1 : 0
 
