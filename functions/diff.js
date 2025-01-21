@@ -29,14 +29,14 @@ const diff = (version1, version2) => {
 
     // Otherwise it can be determined by checking the high version
 
-    if (highVersion.patch) {
-      // anything higher than a patch bump would result in the wrong version
-      return 'patch'
-    }
-
     if (highVersion.minor) {
       // anything higher than a minor bump would result in the wrong version
       return 'minor'
+    }
+
+    if (highVersion.patch) {
+      // anything higher than a patch bump would result in the wrong version
+      return 'patch'
     }
 
     // bumping major/minor/patch all have same result
