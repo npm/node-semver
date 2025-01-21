@@ -106,6 +106,39 @@ test('incrementing', t => {
   }))
 })
 
+test('invalid increments', (t) => {
+  // pre was used on internally and is not valid anymore
+  t.throws(
+    () => new SemVer('1.2.3').inc('pre'),
+    Error('invalid increment argument: pre')
+  )
+  t.throws(
+    () => new SemVer('1.2.3').inc('prerelease', '', false),
+    Error('invalid increment argument: identifier is empty')
+  )
+  t.throws(
+    () => new SemVer('1.2.3-dev').inc('prerelease', 'dev', false),
+    Error('invalid increment argument: identifier already exists')
+  )
+  t.throws(
+    () => new SemVer('1.2.3').inc('prerelease', 'invalid/preid'),
+    Error('invalid identifier: invalid/preid')
+  )
+
+  t.end()
+})
+
+test('increment side-effects', (t) => {
+  const v = new SemVer('1.0.0')
+  try {
+    v.inc('prerelease', 'hot/mess')
+  } catch (er) {
+    // ignore but check that the version has not changed
+  }
+  t.equal(v.toString(), '1.0.0')
+  t.end()
+})
+
 test('compare main vs pre', (t) => {
   const s = new SemVer('1.2.3')
   t.equal(s.compareMain('2.3.4'), -1)
