@@ -107,11 +107,6 @@ test('incrementing', t => {
 })
 
 test('invalid increments', (t) => {
-  // pre was used on internally and is not valid anymore
-  t.throws(
-    () => new SemVer('1.2.3').inc('pre'),
-    Error('invalid increment argument: pre')
-  )
   t.throws(
     () => new SemVer('1.2.3').inc('prerelease', '', false),
     Error('invalid increment argument: identifier is empty')

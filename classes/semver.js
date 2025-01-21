@@ -176,7 +176,18 @@ class SemVer {
   // preminor will bump the version up to the next minor release, and immediately
   // down to pre-release. premajor and prepatch work the same way.
   inc (release, identifier, identifierBase) {
-    this.#checkIdentifiers(release, identifier, identifierBase)
+    if (release.startsWith('pre')) {
+      if (!identifier && identifierBase === false) {
+        throw new Error('invalid increment argument: identifier is empty')
+      }
+      // Avoid an invalid semver results
+      if (identifier) {
+        const match = `-${identifier}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE])
+        if (!match || match[1] !== identifier) {
+          throw new Error(`invalid identifier: ${identifier}`)
+        }
+      }
+    }
 
     switch (release) {
       case 'premajor':
@@ -184,13 +195,13 @@ class SemVer {
         this.patch = 0
         this.minor = 0
         this.major++
-        this.#pre(identifier, identifierBase)
+        this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
         this.prerelease.length = 0
         this.patch = 0
         this.minor++
-        this.#pre(identifier, identifierBase)
+        this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
         // If this is already a prerelease, it will bump to the next version
@@ -198,7 +209,7 @@ class SemVer {
         // relevant at this point.
         this.prerelease.length = 0
         this.inc('patch', identifier, identifierBase)
-        this.#pre(identifier, identifierBase)
+        this.inc('pre', identifier, identifierBase)
         break
       // If the input is a non-prerelease version, this acts the same as
       // prepatch.
@@ -206,7 +217,7 @@ class SemVer {
         if (this.prerelease.length === 0) {
           this.inc('patch', identifier, identifierBase)
         }
-        this.#pre(identifier, identifierBase)
+        this.inc('pre', identifier, identifierBase)
         break
 
       case 'major':
@@ -246,7 +257,46 @@ class SemVer {
         }
         this.prerelease = []
         break
+      // This probably shouldn't be used publicly.
+      // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
+      case 'pre': {
+        const base = Number(identifierBase) ? 1 : 0
 
+        if (this.prerelease.length === 0) {
+          this.prerelease = [base]
+        } else {
+          let i = this.prerelease.length
+          while (--i >= 0) {
+            if (typeof this.prerelease[i] === 'number') {
+              this.prerelease[i]++
+              i = -2
+            }
+          }
+          if (i === -1) {
+            // didn't increment anything
+            if (identifier === this.prerelease.join('.') && identifierBase === false) {
+              throw new Error('invalid increment argument: identifier already exists')
+            }
+            this.prerelease.push(base)
+          }
+        }
+        if (identifier) {
+          // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
+          // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
+          let prerelease = [identifier, base]
+          if (identifierBase === false) {
+            prerelease = [identifier]
+          }
+          if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
+            if (isNaN(this.prerelease[1])) {
+              this.prerelease = prerelease
+            }
+          } else {
+            this.prerelease = prerelease
+          }
+        }
+        break
+      }
       default:
         throw new Error(`invalid increment argument: ${release}`)
     }
@@ -255,62 +305,6 @@ class SemVer {
       this.raw += `+${this.build.join('.')}`
     }
     return this
-  }
-
-  #checkIdentifiers (release, identifier, identifierBase) {
-    if (release.startsWith('pre')) {
-      if (!identifier && identifierBase === false) {
-        throw new Error('invalid increment argument: identifier is empty')
-      }
-
-      // Avoid an invalid semver results
-      if (identifier) {
-        const match = `-${identifier}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE])
-        if (!match || match[1] !== identifier) {
-          throw new Error(`invalid identifier: ${identifier}`)
-        }
-      }
-    }
-  }
-
-  // Keep 'pre' internal to avoid confusing results
-  // inc('1.0.0', 'pre') would become 1.0.0-0 which is the wrong direction.
-  #pre (identifier, identifierBase) {
-    const base = Number(identifierBase) ? 1 : 0
-
-    if (this.prerelease.length === 0) {
-      this.prerelease = [base]
-    } else {
-      let i = this.prerelease.length
-      while (--i >= 0) {
-        if (typeof this.prerelease[i] === 'number') {
-          this.prerelease[i]++
-          i = -2
-        }
-      }
-      if (i === -1) {
-        // didn't increment anything
-        if (identifier === this.prerelease.join('.') && identifierBase === false) {
-          throw new Error('invalid increment argument: identifier already exists')
-        }
-        this.prerelease.push(base)
-      }
-    }
-    if (identifier) {
-      // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
-      // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
-      let prerelease = [identifier, base]
-      if (identifierBase === false) {
-        prerelease = [identifier]
-      }
-      if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
-        if (isNaN(this.prerelease[1])) {
-          this.prerelease = prerelease
-        }
-      } else {
-        this.prerelease = prerelease
-      }
-    }
   }
 }
 
