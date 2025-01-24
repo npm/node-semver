@@ -479,7 +479,7 @@ strings that they parse.
 
 ### Ranges
 
-* `validRange(range)`: Return the valid range or null if it's not valid
+* `validRange(range)`: Return the valid range or null if it's not valid.
 * `satisfies(version, range)`: Return true if the version satisfies the
   range.
 * `maxSatisfying(versions, range)`: Return the highest version in the list
