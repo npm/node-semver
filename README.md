@@ -100,7 +100,7 @@ Options:
 -i --increment [<level>]
         Increment a version by the specified level.  Level can
         be one of: major, minor, patch, premajor, preminor,
-        prepatch, or prerelease.  Default level is 'patch'.
+        prepatch, prerelease, or release.  Default level is 'patch'.
         Only one version may be specified.
 
 --preid <identifier>
@@ -237,6 +237,13 @@ Which then can be used to increment further:
 ```bash
 $ semver 1.2.4-beta.0 -i prerelease
 1.2.4-beta.1
+```
+
+To get out of the prerelease phase, use the `release` option:
+
+```bash
+$ semver 1.2.4-beta.1 -i release
+1.2.4
 ```
 
 #### Prerelease Identifier Base
@@ -417,10 +424,10 @@ Strict-mode Comparators and Ranges will be strict about the SemVer
 strings that they parse.
 
 * `valid(v)`: Return the parsed version, or null if it's not valid.
-* `inc(v, release, options, identifier, identifierBase)`: 
+* `inc(v, releaseType, options, identifier, identifierBase)`: 
   Return the version incremented by the release
   type (`major`, `premajor`, `minor`, `preminor`, `patch`,
-  `prepatch`, or `prerelease`), or null if it's not valid
+  `prepatch`, `prerelease`, or `release`), or null if it's not valid
   * `premajor` in one call will bump the version up to the next major
     version and down to a prerelease of that major version.
     `preminor`, and `prepatch` work the same way.
@@ -428,6 +435,7 @@ strings that they parse.
     same as `prepatch`. It increments the patch version and then makes a
     prerelease. If the input version is already a prerelease it simply
     increments it.
+  * `release` will remove any prerelease part of the version.
   * `identifier` can be used to prefix `premajor`, `preminor`,
     `prepatch`, or `prerelease` version increments. `identifierBase`
     is the base to be used for the `prerelease` identifier.

@@ -40,7 +40,12 @@ module.exports = [
   ['1.2.3-1', 'premajor', '2.0.0-0'],
   ['1.2.0-1', 'minor', '1.2.0'],
   ['1.0.0-1', 'major', '1.0.0'],
+  ['1.0.0-1', 'release', '1.0.0'],
+  ['1.2.0-1', 'release', '1.2.0'],
+  ['1.2.3-1', 'release', '1.2.3'],
+  ['1.2.3', 'release', null],
 
+  // [version, inc, result, identifierIndex, loose, identifier]
   ['1.2.3', 'major', '2.0.0', false, 'dev'],
   ['1.2.3', 'minor', '1.3.0', false, 'dev'],
   ['1.2.3', 'patch', '1.2.4', false, 'dev'],
@@ -88,7 +93,7 @@ module.exports = [
   ['1.2.3-1.1', 'prerelease', '1.2.3-1.2', false, '1'],
   ['1.2.3-1.1', 'prerelease', '1.2.3-2.0', false, '2'],
 
-  // [version, inc, result, identifierIndex, loose, identifier]
+  // [version, inc, result, identifierIndex, loose, identifier, identifierBase]
   ['1.2.0-1', 'prerelease', '1.2.0-alpha.0', false, 'alpha', '0'],
   ['1.2.1', 'prerelease', '1.2.2-alpha.0', false, 'alpha', '0'],
   ['0.2.0', 'prerelease', '0.2.1-alpha.0', false, 'alpha', '0'],
