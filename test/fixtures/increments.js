@@ -129,4 +129,7 @@ module.exports = [
   ['1.2.0-dev', 'prepatch', '1.2.1-dev', false, 'dev', false],
   ['1.2.0', 'prerelease', null, false, '', false],
   ['1.0.0-rc.1+build.4', 'prerelease', '1.0.0-rc.2', 'rc', false],
+  ['1.2.0', 'prerelease', null, false, 'invalid/preid'],
+  ['1.2.0', 'prerelease', null, false, 'invalid+build'],
+  ['1.2.0beta', 'prerelease', null, { loose: true }, 'invalid/preid'],
 ]
