@@ -34,6 +34,13 @@ test('diff versions test', (t) => {
     ['1.0.0-1', '2.0.0-1', 'premajor'],
     ['1.0.0-1', '1.1.0-1', 'preminor'],
     ['1.0.0-1', '1.0.1-1', 'prepatch'],
+    ['1.7.2-1', '1.8.1', 'minor'],
+    ['1.1.1-pre', '2.1.1-pre', 'premajor'],
+    ['1.1.1-pre', '2.1.1', 'major'],
+    ['1.2.3-1', '1.2.3', 'patch'],
+    ['1.4.0-1', '2.3.5', 'major'],
+    ['1.6.1-5', '1.7.2', 'minor'],
+    ['2.0.0-1', '2.1.1', 'major'],
   ].forEach((v) => {
     const version1 = v[0]
     const version2 = v[1]
