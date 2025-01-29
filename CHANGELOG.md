@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.7.0](https://github.com/npm/node-semver/compare/v7.6.3...v7.7.0) (2025-01-29)
+### Features
+* [`0864b3c`](https://github.com/npm/node-semver/commit/0864b3ce7932667013e0c7c5ec764777d4682883) [#753](https://github.com/npm/node-semver/pull/753) add "release" inc type (#753) (@mbtools)
+### Bug Fixes
+* [`d588e37`](https://github.com/npm/node-semver/commit/d588e3782864b1cab2fe9f2452b848e8c7f609d1) [#755](https://github.com/npm/node-semver/pull/755) diff: fix prerelease to stable version diff logic (#755) (@eminberkayd, berkay.daglar)
+* [`8a34bde`](https://github.com/npm/node-semver/commit/8a34bdecc783407f4e1a8a1ee1f67906b84a4b78) [#754](https://github.com/npm/node-semver/pull/754) add identifier validation to `inc()` (#754) (@mbtools)
+### Documentation
+* [`67e5478`](https://github.com/npm/node-semver/commit/67e54785a0f871361230f84323cbb631b9b6d834) [#756](https://github.com/npm/node-semver/pull/756) readme: added missing period for consistency (#756) (@shaymolcho)
+* [`868d4bb`](https://github.com/npm/node-semver/commit/868d4bbe3d318c52544f38d5f9977a1103e924c2) [#749](https://github.com/npm/node-semver/pull/749) clarify comment about obsolete prefixes (#749) (@mbtools, @ljharb)
+### Chores
+* [`145c554`](https://github.com/npm/node-semver/commit/145c554b8c7b7ecfcb451153ad18bdb2f24ad10d) [#741](https://github.com/npm/node-semver/pull/741) bump @npmcli/eslint-config from 4.0.5 to 5.0.0 (@dependabot[bot])
+* [`753e02b`](https://github.com/npm/node-semver/commit/753e02b9d0cb3ac23e085dc33efcab3e08d61f2b) [#747](https://github.com/npm/node-semver/pull/747) bump @npmcli/template-oss from 4.23.3 to 4.23.4 (#747) (@dependabot[bot], @npm-cli-bot)
+* [`0b812d5`](https://github.com/npm/node-semver/commit/0b812d5fb5fbb208e89dc1250e2efafeaa549437) [#744](https://github.com/npm/node-semver/pull/744) postinstall for dependabot template-oss PR (@hashtagchris)
+
 ## [7.6.3](https://github.com/npm/node-semver/compare/v7.6.2...v7.6.3) (2024-07-16)
 
 ### Bug Fixes
