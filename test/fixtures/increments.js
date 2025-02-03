@@ -32,6 +32,7 @@ module.exports = [
   ['1.2.3-alpha.9.beta', 'prerelease', '1.2.3-alpha.10.beta'],
   ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.11.beta'],
   ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta'],
+  ['1.0.0', 'prepatch', '1.0.1-alpha.1.1a.0', null, 'alpha.1.1a'],
   ['1.2.0', 'prepatch', '1.2.1-0'],
   ['1.2.0-1', 'prepatch', '1.2.1-0'],
   ['1.2.0', 'preminor', '1.3.0-0'],
