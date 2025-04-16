@@ -306,3 +306,9 @@ jobs:
           comment-id: ${{ steps.found-comment.outputs.comment-id }}
           body: ${{ steps.comment-text.outputs.result }}
           edit-mode: 'replace'
+      - name: First interaction
+
+    # Token for the repository. Can be passed in using {{ secrets.GITHUB_TOKEN }} repo-token: 
+    # Comment to post on an individual's first issue-message: # optional
+    # Comment to post on an individual's first pull requespr-message: # optional
+          
