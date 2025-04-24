@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const parseOptions = require('../internal/parse-options')
 const suite = new Benchmark.Suite()

@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const constants = require('../../internal/constants')
 

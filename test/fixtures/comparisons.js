@@ -1,3 +1,5 @@
+'use strict'
+
 // [version1, version2]
 // version1 should be greater than version2
 // used by the cmp, eq, gt, lt, and neq tests

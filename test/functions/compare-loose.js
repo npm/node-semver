@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const compareLoose = require('../../functions/compare-loose')
 const SemVer = require('../../classes/semver')
