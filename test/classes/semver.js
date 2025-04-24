@@ -3,7 +3,22 @@ const SemVer = require('../../classes/semver')
 const increments = require('../fixtures/increments.js')
 const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')
-const invalidVersions = require('../fixtures/invalid-versions')
+const invalidVersions = require('../fixtures/invalid-versions.js')
+const validVersions = require('../fixtures/valid-versions.js')
+
+test('valid versions', t => {
+  t.plan(validVersions.length)
+  validVersions.forEach(([v, major, minor, patch, prerelease, build]) => t.test(v, t => {
+    const s = new SemVer(v)
+    t.strictSame(s.major, major)
+    t.strictSame(s.minor, minor)
+    t.strictSame(s.patch, patch)
+    t.strictSame(s.prerelease, prerelease)
+    t.strictSame(s.build, build)
+    t.strictSame(s.raw, v)
+    t.end()
+  }))
+})
 
 test('comparisons', t => {
   t.plan(comparisons.length)
