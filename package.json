@@ -11,7 +11,8 @@
     "lintfix": "npm run eslint -- --fix",
     "posttest": "npm run lint",
     "template-oss-apply": "template-oss-apply --force",
-    "eslint": "eslint \"**/*.{js,cjs,ts,mjs,jsx,tsx}\""
+    "eslint": "eslint \"**/*.{js,cjs,ts,mjs,jsx,tsx}\"",
+    "install-latest-npm": "node .github/actions/install-latest-npm/action.yml"
   },
   "devDependencies": {
     "@npmcli/eslint-config": "^5.0.0",

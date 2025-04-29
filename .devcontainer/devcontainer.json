@@ -1,0 +1,21 @@
+{
+  "name": "Node.js Dev Container",
+  "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-16",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "files.autoSave": "afterDelay"
+  },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next"
+  ],
+  "postCreateCommand": "npm install",
+  "tasks": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "build": "npm install"
+  }
+}

@@ -56,3 +56,6 @@ runs:
     - name: npm Version
       shell: bash
       run: npm -v
+    - name: Run install-latest-npm script
+      shell: bash
+      run: npm run install-latest-npm
