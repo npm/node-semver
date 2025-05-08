@@ -118,6 +118,13 @@ test('coerce tests', (t) => {
     ['1.2.3.4-rc.5', '1.2.3', { includePrerelease: true }],
     ['1.2.3.4+rev.6', '1.2.3', { includePrerelease: true }],
 
+    ['1.0.0-1a', '1.0.0-1a', { includePrerelease: true }],
+    ['1.0.0-alpha.12ab', '1.0.0-alpha.12ab', { includePrerelease: true }],
+    ['1.0.0-alpha.1234.23cd', '1.0.0-alpha.1234.23cd', { includePrerelease: true }],
+    ['1.0.0-nightly.abc123', '1.0.0-nightly.abc123', { includePrerelease: true }],
+    ['1.0.0-nightly.abcdef', '1.0.0-nightly.abcdef', { includePrerelease: true }],
+    ['1.0.0-nightly.123456', '1.0.0-nightly.123456', { includePrerelease: true }],
+
     ['1+rev.6', '1.0.0+rev.6', { includePrerelease: true }],
     ['1.2+rev.6', '1.2.0+rev.6', { includePrerelease: true }],
     ['1.2.3+rev.6', '1.2.3+rev.6', { includePrerelease: true }],
