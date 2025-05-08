@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const parse = require('../functions/parse')
 const { MAX_SAFE_INTEGER } = require('../internal/constants')

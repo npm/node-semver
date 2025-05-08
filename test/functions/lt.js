@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const lt = require('../../functions/lt')
 const comparisons = require('../fixtures/comparisons.js')

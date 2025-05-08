@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const satisfies = require('../../functions/satisfies')
 const rangeInclude = require('../fixtures/range-include.js')

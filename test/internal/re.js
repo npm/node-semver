@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const { src, re, safeRe, safeSrc } = require('../../internal/re')
 const semver = require('../../')

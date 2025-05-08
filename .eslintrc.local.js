@@ -12,6 +12,7 @@ module.exports = {
           },
         ],
         'import/no-nodejs-modules': ['error'],
+        strict: ['error', 'global'],
       },
     },
   ],

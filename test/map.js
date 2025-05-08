@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const { resolve, join, relative, extname, dirname, basename } = require('path')
 const { statSync, readdirSync } = require('fs')

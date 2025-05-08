@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const satisfies = require('../functions/satisfies')
 const suite = new Benchmark.Suite()

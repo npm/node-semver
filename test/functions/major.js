@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const major = require('../../functions/major')
 

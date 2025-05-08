@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const parse = require('../../functions/parse')
 const SemVer = require('../../classes/semver')

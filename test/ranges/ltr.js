@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const ltr = require('../../ranges/ltr')
 const versionLtr = require('../fixtures/version-lt-range')

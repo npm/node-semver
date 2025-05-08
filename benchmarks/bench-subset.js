@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const subset = require('../ranges/subset')
 const suite = new Benchmark.Suite()

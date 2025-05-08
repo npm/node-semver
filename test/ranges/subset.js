@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const subset = require('../../ranges/subset.js')
 const Range = require('../../classes/range')

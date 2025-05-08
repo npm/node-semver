@@ -1,3 +1,5 @@
+'use strict'
+
 // [version1, version2]
 // version1 should be equivalent to version2
 module.exports = [

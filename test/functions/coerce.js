@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const coerce = require('../../functions/coerce')
 const parse = require('../../functions/parse')

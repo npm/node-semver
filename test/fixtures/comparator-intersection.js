@@ -1,3 +1,5 @@
+'use strict'
+
 // c0, c1, expected intersection, includePrerelease
 module.exports = [
   // One is a Version

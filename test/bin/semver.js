@@ -1,4 +1,5 @@
 'use strict'
+
 const t = require('tap')
 
 const thisVersion = require('../../package.json').version

@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const SemVer = require('../../classes/semver')
 const increments = require('../fixtures/increments.js')

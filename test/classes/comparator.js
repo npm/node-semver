@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const Comparator = require('../../classes/comparator')
 const comparatorIntersection = require('../fixtures/comparator-intersection.js')

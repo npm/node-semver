@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const minVersion = require('../../ranges/min-version')
 

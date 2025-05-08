@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const Range = require('../../classes/range')
 const Comparator = require('../../classes/comparator')

@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const SemVer = require('../classes/semver')
 const suite = new Benchmark.Suite()
