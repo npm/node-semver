@@ -19,6 +19,10 @@ on:
       PUBLISH_TOKEN:
         required: true
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     name: Publish
