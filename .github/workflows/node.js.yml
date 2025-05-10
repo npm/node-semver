@@ -1,0 +1,99 @@
+# Thi                       - name: Rational Performance Tester GitHub Action
+  # You may pin to the exact commit or the version.
+  # uses: IBM/devopsauto-perftest-actions@01df3e50f975ce359966c15da94a9279a2d50504
+  uses: IBM/devopsauto-perftest-actions@v1
+  with:
+    # The complete path to the Eclipse workspace, required if Config File is not specified
+    workspace: 
+    # The name of a project within the workspace to use, required if Config File is not specified
+    project: 
+    # Specify the relative path from the project to the test including the file name of the test. A test can be a Performance test, Schedule, or Compound test and required if configFile is not specified.
+    suite: 
+    # The path to the IMShared folder in your local installation, if it is not at default location. This is where plugins and product dependencies will be located by the execution agent, required if Config File is not specified
+    imShared: # optional
+    # Use this option to specify the complete path to a file that contains the parameters for a test run. If Config file is specified then no other fields will be required.
+    configFile: # optional
+    # You can use this option to specify the duration of the stages in the Rate Schedule
+    duration: # optional
+    # You can use this option to specify the file directory path to store the exported HTTP test log. You can provide multiple parameter entries when running multiple tests. You must use a colon to separate the parameter entries. For example: c:/logexport.txt:c:/secondlogexport.txt
+    exportLog: # optional
+    # You can use this option to specify a comma-separated list of report IDs along with exportstats or exportstatshtml to list the reports that you want to export in place of the default reports, or the reports selected under Preferences. To retrieve the report IDs, navigate to Window > Preferences > Test > Performance Test Reports > Export Reports from Rational Performance Tester and under Select reports to export, select the required reports, and click Copy ID to clipboard.
+    exportStatReportList: 
+    # Use this option to provide the complete path to a directory that you can use to store the exported report in a comma-separated values (CSV) format.
+    exportStats: # optional
+    # Use this option to enter one or more formats for the reports that you want to export by using a comma as a separator. The options are simple.csv, full.csv, simple.json, full.json, csv, and json. When you want to export both simple and full reports in json or csv format, you can specify json or csv as the options. The reports are saved to the location specified in the exportStats field. This field must be used in conjunction with exportStats field.
+    exportStatsFormat: 
+    # Use this option to provide the complete path to a directory that you can use to export web analytic results. You can analyze the results on a web browser without using Rational Performance Tester.
+    exportStatsHtml: 
+    # Use this option to add labels to test results. To add multiple labels to a test result, you must separate each label by using a comma.
+    labels: # optional
+    # Use this option to enable the Resource Monitoring from Service option for a performance schedule if the Resource Monitoring from Service option is not enabled from the schedule editor in Rational Performance Tester, ignore Resource Monitoring sources that were set in the performance schedule and to change for a label matching mode, replace an existing set of Resource Monitoring labels that were set in the performance schedule and run the schedule with a new set of Resource Monitoring labels.
+    overrideRmLabels: # optional
+    # Determines whether a result file with the same name is overwritten. The default value, false, indicates that the new result file is created. If the value is true, the file is overwritten and retains the same file name.
+    overwrite: # optional
+    # You can use this option to publish test results to the Server. The format is: serverURL#project.name=projectName&teamspace.name=teamspaceName. If the name of the project or team space contains a special character, then you must replace it with %<Hex_value_of_special_character>.
+    publish: # optional
+    # Use this option to publish the test results based on the completion status of the tests. The supported values are FAIL,PASS,INCONCLUSIVE,ERROR,ALL.
+    publishFor: # optional
+    # Use this option to publish specific test results to Rational Test Automation Server. The supported values are STATS, TESTLOG.
+    publishReports: # optional
+    # Use this option to specify a rate that you want to achieve for a workload in the Rate Runner group. For example, "Rate Runner Group 1=1/s, 3/m", where, Rate Runner Group1 is the name of the rate runner group that has two stages. The desired rate for the first stage is one iteration per second and the rate for the second stage is three iterations per minute.
+    rate: # optional
+    # Use this option when you want to view a record of all events that occurred during a test or schedule run. Supported values are jaeger, testlog, null
+    reportHistory: # optional
+    # Use this option to specify the name of the results file. The default name of the result file is the test or schedule name with a timestamp appended. You must specify a folder name that is relative to the project to store the test results.
+    results: # optional
+    # Use this option to replace dataset values during a test or schedule run. You must ensure that both original and new datasets are in the same workspace and have the same column names. You must also include the path to the dataset. For example, /project_name/ds_path/ds_filename.csv:/project_name/ds_path/new_ds_filename.csv'
+    swapDatasets: # optional
+    # Use this option to add text that you want to display in the user comments row of the report.
+    userComments: # optional
+    # Overrides the default number of virtual users in the run. For a schedule, the default is the number of users specified in the schedule editor. For a test, the default is one user.
+    users: # optional
+    # Use this option to specify the complete path to the XML file that contains the variable initialization.
+    varFile: # optional
+    # Use this option to specify the Java maximum heap size for the Java process that controls the playback. For example, when you input the value as -Xmx4096m, it specifies the maximum heap size as 4GB.
+    vmArgs: # optional
+           - name: Paperspace Deploy
+  # You may pin to the exact commit or the version.
+  # uses: Paperspace/deploy-action@e19c92caa3220cff5d5bf62f86832c0d87745612
+  uses: Paperspace/deploy-action@v1.4
+  with:
+    # Paperspace API Key. Defaults to env.PAPERSPACE_API_KEY.
+    apiKey: # optional
+    # Project ID that the deployment lives under.
+    projectId: 
+    # Relative path to configuration file to deploy.
+    configPath: # optional
+    # Optional container image to use for the deployment.
+    image: # optional
+          s workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
