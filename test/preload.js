@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const preload = require('../preload.js')
 const index = require('../index.js')

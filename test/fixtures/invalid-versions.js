@@ -1,3 +1,5 @@
+'use strict'
+
 // none of these are semvers
 // [value, reason, opt]
 const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../../internal/constants')

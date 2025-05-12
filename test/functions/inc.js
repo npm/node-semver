@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const inc = require('../../functions/inc')
 const parse = require('../../functions/parse')

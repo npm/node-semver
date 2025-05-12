@@ -1,3 +1,5 @@
+'use strict'
+
 const debug = require('../internal/debug')
 const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../internal/constants')
 const { safeRe: re, t } = require('../internal/re')

@@ -1,3 +1,5 @@
+'use strict'
+
 const main = () => {
   const t = require('tap')
   const { spawn } = require('child_process')

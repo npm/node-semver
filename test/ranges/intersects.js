@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const intersects = require('../../ranges/intersects')
 const Range = require('../../classes/range')

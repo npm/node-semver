@@ -1,3 +1,5 @@
+'use strict'
+
 const Benchmark = require('benchmark')
 const diff = require('../functions/diff')
 const suite = new Benchmark.Suite()

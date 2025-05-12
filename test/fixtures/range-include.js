@@ -1,3 +1,5 @@
+'use strict'
+
 // [range, version, options]
 // version should be included by range
 module.exports = [

@@ -1,3 +1,5 @@
+'use strict'
+
 const t = require('tap')
 const semver = require('../')
 const { SEMVER_SPEC_VERSION } = require('../internal/constants')

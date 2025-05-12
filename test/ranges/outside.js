@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 const outside = require('../../ranges/outside')
 const versionGtr = require('../fixtures/version-gt-range')
