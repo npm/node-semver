@@ -245,6 +245,7 @@ jobs:
     if: needs.release.outputs.releases
     uses: ./.github/workflows/release-integration.yml
     permissions:
+      contents: read
       id-token: write
     secrets:
       PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
