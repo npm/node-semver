@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Semver",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "nodenext",
+    "lib": [
+      "ESNext", "DOM.Iterable", "ESNext.Iterator", "DOM"
+    ],
+    "moduleResolution": "nodenext",
+    "noEmitOnError": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": false,
+    "declaration": true,
+    "declarationMap": true,
+    "pretty": true,
+    "skipLibCheck": true,
+    "incremental": true,
+  },
+  "include": [
+    "src/**/*",
+    "src/index.ts"
+  ],
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true,
+  }
+}

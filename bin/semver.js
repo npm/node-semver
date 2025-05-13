@@ -1,9 +1,20 @@
 #!/usr/bin/env node
+/* eslint-disable no-undef */
 // Standalone semver comparison program.
 // Exits successfully and prints matching version(s) if
 // any supplied version is valid and passes all tests.
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { readFile } from 'node:fs/promises'
+import * as semver from '../build/index.js'
+import parseOptions from '../build/internal/parse-options.js'
 
-'use strict'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const packagePath = path.join(__dirname, '..', 'package.json')
+
+const pkg = await readFile(packagePath, 'utf8')
+const pkgJson = JSON.parse(pkg)
 
 const argv = process.argv.slice(2)
 
@@ -13,7 +24,7 @@ const range = []
 
 let inc = null
 
-const version = require('../package.json').version
+const version = pkgJson.version
 
 let loose = false
 
@@ -26,9 +37,6 @@ let rtl = false
 let identifier
 
 let identifierBase
-
-const semver = require('../')
-const parseOptions = require('../internal/parse-options')
 
 let reverse = false
 
@@ -47,22 +55,35 @@ const main = () => {
       argv.unshift(value)
     }
     switch (a) {
-      case '-rv': case '-rev': case '--rev': case '--reverse':
+      case '-rv':
+      case '-rev':
+      case '--rev':
+      case '--reverse':
         reverse = true
         break
-      case '-l': case '--loose':
+      case '-l':
+      case '--loose':
         loose = true
         break
-      case '-p': case '--include-prerelease':
+      case '-p':
+      case '--include-prerelease':
         includePrerelease = true
         break
-      case '-v': case '--version':
+      case '-v':
+      case '--version':
         versions.push(argv.shift())
         break
-      case '-i': case '--inc': case '--increment':
+      case '-i':
+      case '--inc':
+      case '--increment':
         switch (argv[0]) {
-          case 'major': case 'minor': case 'patch': case 'prerelease':
-          case 'premajor': case 'preminor': case 'prepatch':
+          case 'major':
+          case 'minor':
+          case 'patch':
+          case 'prerelease':
+          case 'premajor':
+          case 'preminor':
+          case 'prepatch':
           case 'release':
             inc = argv.shift()
             break
@@ -74,7 +95,8 @@ const main = () => {
       case '--preid':
         identifier = argv.shift()
         break
-      case '-r': case '--range':
+      case '-r':
+      case '--range':
         range.push(argv.shift())
         break
       case '-n':
@@ -83,7 +105,8 @@ const main = () => {
           identifierBase = false
         }
         break
-      case '-c': case '--coerce':
+      case '-c':
+      case '--coerce':
         coerce = true
         break
       case '--rtl':
@@ -92,7 +115,9 @@ const main = () => {
       case '--ltr':
         rtl = false
         break
-      case '-h': case '--help': case '-?':
+      case '-h':
+      case '--help':
+      case '-?':
         return help()
       default:
         versions.push(a)
@@ -102,11 +127,13 @@ const main = () => {
 
   options = parseOptions({ loose, includePrerelease, rtl })
 
-  versions = versions.map((v) => {
-    return coerce ? (semver.coerce(v, options) || { version: v }).version : v
-  }).filter((v) => {
-    return semver.valid(v)
-  })
+  versions = versions
+    .map((v) => {
+      return coerce ? (semver.coerce(v, options) || { version: v }).version : v
+    })
+    .filter((v) => {
+      return semver.valid(v)
+    })
   if (!versions.length) {
     return fail()
   }
@@ -124,9 +151,9 @@ const main = () => {
   }
   versions
     .sort((a, b) => semver[reverse ? 'rcompare' : 'compare'](a, b, options))
-    .map(v => semver.clean(v, options))
-    .map(v => inc ? semver.inc(v, inc, options, identifier, identifierBase) : v)
-    .forEach(v => console.log(v))
+    .map((v) => semver.clean(v, options))
+    .map((v) => (inc ? semver.inc(v, inc, options, identifier, identifierBase) : v))
+    .forEach((v) => console.log(v))
 }
 
 const failInc = () => {
@@ -136,8 +163,9 @@ const failInc = () => {
 
 const fail = () => process.exit(1)
 
-const help = () => console.log(
-`SemVer ${version}
+const help = () =>
+  console.log(
+    `SemVer ${version}
 
 A JavaScript implementation of the https://semver.org/ specification
 Copyright Isaac Z. Schlueter
@@ -186,6 +214,7 @@ all supplied ranges, and prints all satisfying versions.
 If no satisfying versions are found, then exits failure.
 
 Versions are printed in ascending order, so supplying
-multiple versions to the utility will just sort them.`)
+multiple versions to the utility will just sort them.`
+  )
 
 main()

@@ -1,42 +1,21 @@
-# This file is automatically added by @npmcli/template-oss. Do not edit.
+## editors
+/.idea
+/.vscode
 
-# ignore everything in the root
-/*
+## system files
+.DS_Store
 
-!**/.gitignore
-!/.commitlintrc.js
-!/.eslint.config.js
-!/.eslintrc.js
-!/.eslintrc.local.*
-!/.git-blame-ignore-revs
-!/.github/
-!/.gitignore
-!/.npmrc
-!/.prettierignore
-!/.prettierrc.js
-!/.release-please-manifest.json
-!/benchmarks
-!/bin/
-!/CHANGELOG*
-!/classes/
-!/CODE_OF_CONDUCT.md
-!/CONTRIBUTING.md
-!/docs/
-!/functions/
-!/index.js
-!/internal/
-!/lib/
-!/LICENSE*
-!/map.js
-!/package.json
-!/preload.js
-!/range.bnf
-!/ranges/
-!/README*
-!/release-please-config.json
-!/scripts/
-!/SECURITY.md
-!/tap-snapshots/
-!/test/
-!/tsconfig.json
-tap-testdir*/
+## npm
+/node_modules/
+/npm-debug.log
+
+## testing
+/coverage/
+
+## temp folders
+/.tmp/
+
+# build
+/_site/
+/dist/
+build/

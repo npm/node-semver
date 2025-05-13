@@ -1,0 +1,1 @@
+{"fullyTracked":false,"platform":"darwin","arch":"arm64","nodeVersion":"v22.15.0","command":"prettier \"**/*.ts\" --check","extraArgs":[],"clean":true,"files":{},"output":[],"dependencies":{},"env":{}}
