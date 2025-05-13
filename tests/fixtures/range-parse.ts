@@ -1,4 +1,5 @@
 import { MAX_SAFE_INTEGER } from '../../src/internal/constants.js'
+import type { Options } from '../../src/internal/parse-options.js'
 
 // [range, canonical result, options]
 // null result means it's not a valid range
@@ -87,4 +88,4 @@ export default [
   [`^${MAX_SAFE_INTEGER}.0.0`, null],
   [`=${MAX_SAFE_INTEGER}.0.0`, `${MAX_SAFE_INTEGER}.0.0`],
   [`^${MAX_SAFE_INTEGER - 1}.0.0`, `>=${MAX_SAFE_INTEGER - 1}.0.0 <${MAX_SAFE_INTEGER}.0.0-0`],
-]
+] as [string, string, (Options | boolean)?][]

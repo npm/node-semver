@@ -516,7 +516,7 @@ const hyphenReplace =
 
 const testSet = (set: Comparator[], version: SemVer, options: Options = {}) => {
   for (const item of set) {
-    if (item.test(version)) {
+    if (!item.test(version)) {
       return false
     }
   }

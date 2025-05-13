@@ -38,4 +38,4 @@ export default [
   ['1.2.3-beta+build', '1.2.3-beta+otherbuild'],
   ['1.2.3+build', '1.2.3+otherbuild'],
   ['  v1.2.3+build', '1.2.3+otherbuild'],
-]
+] as [string, string, boolean?][]

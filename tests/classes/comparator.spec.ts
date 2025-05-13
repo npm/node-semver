@@ -18,7 +18,7 @@ test('toString', ({ assert }) => {
   assert.equal(new Comparator('>= v1.2.3').toString(), '>=1.2.3')
 })
 
-test('intersect comparators')
+test('intersect comparators #{$i}')
   .with(comparatorIntersection)
   .run(({ assert }, [c0, c1, expect, includePrerelease]) => {
     const comp0 = new Comparator(c0)

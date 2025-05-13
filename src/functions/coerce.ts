@@ -3,7 +3,23 @@ import parse from './parse.js'
 import { safeRe as re, t } from '../internal/re.js'
 import type { Options } from '../internal/parse-options.js'
 
-export default (version: SemVer | string, options: Options = {}) => {
+/**
+ * Coerces a value to a SemVer object if possible.
+ *
+ * Attempts to convert the input `version` into a valid `SemVer` object. It handles
+ * various input types, including strings, numbers, and existing `SemVer` objects.
+ * If the input cannot be coerced, it returns `null`.
+ *
+ * @param version The value to coerce into a `SemVer` object.
+ *   If a `SemVer` object is passed, it is returned directly. If a number is passed,
+ *   it is converted to a string before coercion. If a string is passed, it is
+ *   parsed and coerced according to the provided options.
+ * @param options Options to control the coercion process.
+ *   See the documentation for `parseOptions` for details on available options.
+ * @returns A `SemVer` object representing the coerced version, or
+ *   `null` if coercion fails.
+ */
+export default (version: SemVer | string | number, options: Options = {}): SemVer | null => {
   if (version instanceof SemVer) {
     return version
   }
@@ -15,8 +31,6 @@ export default (version: SemVer | string, options: Options = {}) => {
   if (typeof version !== 'string') {
     return null
   }
-
-  options = options || {}
 
   let match = null
   if (!options.rtl) {
@@ -32,7 +46,7 @@ export default (version: SemVer | string, options: Options = {}) => {
     // Stop when we get a match that ends at the string end, since no
     // coercible string can be more right-ward without the same terminus.
     const coerceRtlRegex = options.includePrerelease ? re[t.COERCERTLFULL] : re[t.COERCERTL]
-    let next
+    let next: RegExpExecArray | null
     while ((next = coerceRtlRegex.exec(version)) && (!match || match.index + match[0].length !== version.length)) {
       if (!match || next.index + next[0].length !== match.index + match[0].length) {
         match = next

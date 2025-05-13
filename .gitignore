@@ -19,3 +19,6 @@
 /_site/
 /dist/
 build/
+.wireit
+tsconfig.tsbuildinfo
+benchmarks/history/

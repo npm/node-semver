@@ -2,8 +2,8 @@ import SemVer from '../classes/semver.js'
 import Range from '../classes/range.js'
 import type { Options } from '../internal/parse-options.js'
 
-export default (versions: SemVer[], range: Range, options?: Options | boolean): SemVer | null => {
-  let min: SemVer | undefined
+export default <T = SemVer | string>(versions: T[], range: Range | string, options?: Options | boolean): T | null => {
+  let min: T | undefined
   let minSV: SemVer | undefined
   let rangeObj: Range
   try {
@@ -12,12 +12,12 @@ export default (versions: SemVer[], range: Range, options?: Options | boolean): 
     return null
   }
   versions.forEach((v) => {
-    if (rangeObj.test(v)) {
+    if (rangeObj.test(v as string)) {
       // satisfies(v, range, options)
-      if (!min || (minSV && minSV.compare(v) === 1)) {
+      if (!min || (minSV && minSV.compare(v as string) === 1)) {
         // compare(min, v, true)
         min = v
-        minSV = new SemVer(min, options)
+        minSV = new SemVer(min as string, options)
       }
     }
   })

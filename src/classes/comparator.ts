@@ -97,6 +97,15 @@ export default class Comparator {
     return cmp(version as SemVer, this.operator, this.semver, this.options)
   }
 
+  /**
+   * Checks if this comparator intersects with another comparator.
+   * Two comparators intersect if there is a version that satisfies both.
+   *
+   * @param comp The comparator to check for intersection.
+   * @param options Options or loose value as boolean.
+   * @returns True if the comparators intersect, false otherwise.
+   * @throws {TypeError} If `comp` is not a Comparator instance.
+   */
   intersects(comp: Comparator, options?: Options | boolean): boolean {
     if (!(comp instanceof Comparator)) {
       throw new TypeError('a Comparator is required')
@@ -132,14 +141,17 @@ export default class Comparator {
     if (this.operator.startsWith('<') && comp.operator.startsWith('<')) {
       return true
     }
-    const typed = this.semver as SemVer
     // same SemVer and both sides are inclusive (<= or >=)
-    if (typed.version === typed.version && this.operator.includes('=') && comp.operator.includes('=')) {
+    if (
+      (this.semver as SemVer).version === (comp.semver as SemVer).version &&
+      this.operator.includes('=') &&
+      comp.operator.includes('=')
+    ) {
       return true
     }
     // opposite directions less than
     if (
-      cmp(typed, '<', comp.semver as SemVer, options) &&
+      cmp(this.semver as SemVer, '<', comp.semver as SemVer, options) &&
       this.operator.startsWith('>') &&
       comp.operator.startsWith('<')
     ) {
@@ -147,7 +159,7 @@ export default class Comparator {
     }
     // opposite directions greater than
     if (
-      cmp(typed, '>', comp.semver as SemVer, options) &&
+      cmp(this.semver as SemVer, '>', comp.semver as SemVer, options) &&
       this.operator.startsWith('<') &&
       comp.operator.startsWith('>')
     ) {

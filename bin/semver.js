@@ -6,7 +6,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readFile } from 'node:fs/promises'
-import * as semver from '../build/index.js'
+import semver from '../build/index.js'
 import parseOptions from '../build/internal/parse-options.js'
 
 const __filename = fileURLToPath(import.meta.url)

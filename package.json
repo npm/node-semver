@@ -2,9 +2,9 @@
   "name": "@pawel-up/semver",
   "version": "0.1.0",
   "description": "The semantic version parser for the web.",
-  "main": "./build/src/index.js",
-  "module": "./build/src/index.js",
-  "types": "./build/src/index.d.ts",
+  "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "npm run build:ts && npm run lint",
@@ -16,9 +16,15 @@
     "format": "npm run format:prettier && npm run format:prettier",
     "format:prettier": "wireit",
     "format:eslint": "wireit",
-    "test": "node --import ts-node-maintained/register/esm --enable-source-maps bin/test.ts",
+    "test": "npm run build:ts && node --import ts-node-maintained/register/esm --enable-source-maps bin/test.ts",
     "test:coverage": "c8 --reporter lcov --reporter text node --import ts-node-maintained/register/esm --enable-source-maps bin/test.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "bench:compare": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-compare.ts",
+    "bench:diff": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-diff.ts",
+    "bench:parse-options": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-parse-options.ts",
+    "bench:parse": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-parse.ts",
+    "bench:satisfies": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-satisfies.ts",
+    "bench:subset": "node --import ts-node-maintained/register/esm --enable-source-maps benchmarks/bench-subset.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -26,6 +32,7 @@
     "@eslint/js": "^9.26.0",
     "@japa/assert": "^4.0.1",
     "@japa/runner": "^4.2.0",
+    "@pawel-up/benchmark": "^1.0.2",
     "@types/sinon": "^17.0.4",
     "c8": "^10.1.3",
     "eslint": "^9.26.0",

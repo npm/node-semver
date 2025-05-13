@@ -1,3 +1,5 @@
+import type { Options } from '../../src/internal/parse-options.js'
+
 // [version1, version2]
 // version1 should be greater than version2
 // used by the cmp, eq, gt, lt, and neq tests
@@ -33,4 +35,4 @@ export default [
   ['1.2.3-a.b.c.10.d.5', '1.2.3-a.b.c.5.d.100'],
   ['1.2.3-r2', '1.2.3-r100'],
   ['1.2.3-r100', '1.2.3-R2'],
-]
+] as [string, string, (Options | boolean)?][]

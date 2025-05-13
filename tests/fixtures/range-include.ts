@@ -1,4 +1,7 @@
 // [range, version, options]
+
+import type { Options } from '../../src/internal/parse-options.js'
+
 // version should be included by range
 export default [
   ['1.0.0 - 2.0.0', '1.2.3'],
@@ -124,4 +127,4 @@ export default [
   ['<=0.7.x', '0.7.0-asdf', { includePrerelease: true }],
 
   ['>=1.0.0 <=1.1.0', '1.1.0-pre', { includePrerelease: true }],
-]
+] as [string, string, (Options | boolean)?][]

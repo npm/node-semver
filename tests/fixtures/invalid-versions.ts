@@ -1,4 +1,5 @@
 import { MAX_LENGTH, MAX_SAFE_INTEGER } from '../../src/internal/constants.js'
+import type { Options } from '../../src/internal/parse-options.js'
 
 // none of these are semvers
 // [value, reason, opt]
@@ -13,4 +14,4 @@ export default [
   [/a regexp/, 'regexp is not a string'],
   [/1.2.3/, 'semver-ish regexp is not a string'],
   [{ toString: () => '1.2.3' }, 'obj with a tostring is not a string'],
-]
+] as [string | number | RegExp, string, Options?][]

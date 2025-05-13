@@ -59,4 +59,4 @@ export default [
   ['1', '1.0.0beta', true],
   ['>=0.7.x', '0.6.2'],
   ['>1.2.3', '1.3.0-alpha'],
-]
+] as [string, string, boolean?][]

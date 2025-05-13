@@ -1,3 +1,4 @@
+import type { Options } from '../../src/internal/parse-options.js'
 // r0, r1, expected intersection
 export default [
   ['1.3.0 || <1.0.0 >2.0.0', '1.3.0 || <1.0.0 >2.0.0', true],
@@ -54,4 +55,4 @@ export default [
   ['1.x', '1.3.0 || <1.0.0 >2.0.0', true],
   ['*', '*', true],
   ['x', '', true],
-]
+] as [string, string, (Options | boolean)?][]

@@ -2,8 +2,8 @@ import SemVer from '../classes/semver.js'
 import Range from '../classes/range.js'
 import type { Options } from '../internal/parse-options.js'
 
-export default (versions: SemVer[], range: Range, options?: Options | boolean): SemVer | null => {
-  let max: SemVer | undefined
+export default <T = SemVer | string>(versions: T[], range: Range | string, options?: Options | boolean): T | null => {
+  let max: T | undefined
   let maxSV: SemVer | undefined
   let rangeObj: Range
   try {
@@ -12,12 +12,12 @@ export default (versions: SemVer[], range: Range, options?: Options | boolean): 
     return null
   }
   versions.forEach((v) => {
-    if (rangeObj.test(v)) {
+    if (rangeObj.test(v as string)) {
       // satisfies(v, range, options)
-      if (!max || (maxSV && maxSV.compare(v) === -1)) {
+      if (!max || (maxSV && maxSV.compare(v as string) === -1)) {
         // compare(max, v, true)
         max = v
-        maxSV = new SemVer(max, options)
+        maxSV = new SemVer(max as string, options)
       }
     }
   })

@@ -28,4 +28,4 @@ export default [
 
   // mixed
   ['1.2.3-alpha+build', 1, 2, 3, ['alpha'], ['build']],
-]
+] as [string, number, number, number, string[], string[]][]

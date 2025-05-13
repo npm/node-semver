@@ -1,13 +1,13 @@
-export default class LRUCache<T = unknown> {
+export default class LRUCache<T = unknown, K = string> {
   max: number
-  map: Map<string, T>
+  map: Map<K, T>
 
   constructor() {
     this.max = 1000
     this.map = new Map()
   }
 
-  get(key: string): T | undefined {
+  get(key: K): T | undefined {
     const value = this.map.get(key)
     if (value === undefined) {
       return undefined
@@ -19,18 +19,18 @@ export default class LRUCache<T = unknown> {
     }
   }
 
-  delete(key: string) {
+  delete(key: K) {
     return this.map.delete(key)
   }
 
-  set(key: string, value: T) {
+  set(key: K, value: T) {
     const deleted = this.delete(key)
 
     if (!deleted && value !== undefined) {
       // If cache is full, delete the least recently used item
       if (this.map.size >= this.max) {
         const firstKey = this.map.keys().next().value
-        this.delete(firstKey as string)
+        this.delete(firstKey as K)
       }
 
       this.map.set(key, value)

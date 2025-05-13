@@ -1,3 +1,4 @@
+import type { Options } from '../../src/internal/parse-options.js'
 //  [version, inc, result, options, identifier, identifierBase]
 //  inc(version, inc, options, identifier, identifierBase) -> result
 export default [
@@ -133,4 +134,4 @@ export default [
   ['1.2.0', 'prerelease', null, false, 'invalid/preid'],
   ['1.2.0', 'prerelease', null, false, 'invalid+build'],
   ['1.2.0beta', 'prerelease', null, { loose: true }, 'invalid/preid'],
-]
+] as [string, string, string | null, Options | boolean | undefined, string, boolean][]

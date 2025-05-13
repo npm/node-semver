@@ -3,7 +3,7 @@ import Range from '../classes/range.js'
 import gt from '../functions/gt.js'
 import type { Options } from '../internal/parse-options.js'
 
-export default (range: Range, loose?: Options | boolean): SemVer | null => {
+export default (range: Range | string, loose?: Options | boolean): SemVer | null => {
   range = new Range(range, loose)
 
   let minver: SemVer | undefined = new SemVer('0.0.0')

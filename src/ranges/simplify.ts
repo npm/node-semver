@@ -7,7 +7,7 @@ import type { Options } from '../internal/parse-options.js'
 import type SemVer from '../classes/semver.js'
 import type Range from '../classes/range.js'
 
-export default (versions: (string | SemVer)[], range: Range, options?: Options | boolean) => {
+export default (versions: (string | SemVer)[], range: Range | string, options?: Options | boolean) => {
   const set = []
   let first = null
   let prev = null
@@ -46,6 +46,6 @@ export default (versions: (string | SemVer)[], range: Range, options?: Options |
     }
   }
   const simplified = ranges.join(' || ')
-  const original = typeof range.raw === 'string' ? range.raw : String(range)
+  const original = typeof range === 'string' ? range : range.raw
   return simplified.length < original.length ? simplified : range
 }
