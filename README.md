@@ -121,6 +121,10 @@ Options:
 -p --include-prerelease
         Always include prerelease versions in range matching
 
+-s --strict
+        Reject version strings with leading 'v' prefix
+        (throws error if version starts with 'v' or 'V')
+
 -c --coerce
         Coerce a string into SemVer if possible
         (does not imply --loose)
