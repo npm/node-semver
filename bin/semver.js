@@ -23,6 +23,8 @@ let coerce = false
 
 let rtl = false
 
+let strict = false
+
 let identifier
 
 let identifierBase
@@ -55,6 +57,9 @@ const main = () => {
         break
       case '-p': case '--include-prerelease':
         includePrerelease = true
+        break
+      case '-s': case '--strict':
+        strict = true
         break
       case '-v': case '--version':
         versions.push(argv.shift())
@@ -100,12 +105,23 @@ const main = () => {
     }
   }
 
-  options = parseOptions({ loose, includePrerelease, rtl })
+  options = parseOptions({ loose, includePrerelease, rtl, strict })
 
   versions = versions.map((v) => {
     return coerce ? (semver.coerce(v, options) || { version: v }).version : v
   }).filter((v) => {
-    return semver.valid(v)
+    if (strict) {
+      // In strict mode, throw errors instead of filtering
+      try {
+        new (require('../classes/semver'))(v, options)
+        return true
+      } catch (err) {
+        console.error(`Error: ${err.message}`)
+        process.exit(1)
+      }
+    } else {
+      return semver.valid(v)
+    }
   })
   if (!versions.length) {
     return fail()
@@ -164,6 +180,10 @@ Options:
 
 -p --include-prerelease
         Always include prerelease versions in range matching
+
+-s --strict
+        Reject version strings with leading 'v' prefix
+        (throws error if version starts with 'v' or 'V')
 
 -c --coerce
         Coerce a string into SemVer if possible
