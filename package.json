@@ -3,6 +3,7 @@
   "version": "7.7.2",
   "description": "The semantic version parser used by npm.",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "tap",
     "snap": "tap",
