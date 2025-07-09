@@ -81,3 +81,15 @@ t.test('args with equals', t => Promise.all([
   t.equal(res1.out.trim(), expected)
   t.strictSame(res1, res2, args.join(' '))
 })))
+
+t.test('strict mode tests', t => Promise.all([
+  // Default behavior - v-prefix allowed
+  ['v1.2.3'],
+  ['V1.2.3'],
+  // Strict mode rejects v-prefix
+  ['v1.2.3', '--strict'],
+  ['V1.2.3', '-s'],
+  // Strict mode allows normal versions
+  ['1.2.3', '--strict'],
+  ['1.2.3-alpha.1', '-s'],
+].map(args => t.resolveMatchSnapshot(run(args), args.join(' ')))))

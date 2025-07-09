@@ -83,6 +83,10 @@ Object {
     -p --include-prerelease
             Always include prerelease versions in range matching
     
+    -s --strict
+            Reject version strings with leading 'v' prefix
+            (throws error if version starts with 'v' or 'V')
+    
     -c --coerce
             Coerce a string into SemVer if possible
             (does not imply --loose)
@@ -143,6 +147,10 @@ Object {
     
     -p --include-prerelease
             Always include prerelease versions in range matching
+    
+    -s --strict
+            Reject version strings with leading 'v' prefix
+            (throws error if version starts with 'v' or 'V')
     
     -c --coerce
             Coerce a string into SemVer if possible
@@ -205,6 +213,10 @@ Object {
     -p --include-prerelease
             Always include prerelease versions in range matching
     
+    -s --strict
+            Reject version strings with leading 'v' prefix
+            (throws error if version starts with 'v' or 'V')
+    
     -c --coerce
             Coerce a string into SemVer if possible
             (does not imply --loose)
@@ -265,6 +277,10 @@ Object {
     
     -p --include-prerelease
             Always include prerelease versions in range matching
+    
+    -s --strict
+            Reject version strings with leading 'v' prefix
+            (throws error if version starts with 'v' or 'V')
     
     -c --coerce
             Coerce a string into SemVer if possible
@@ -344,15 +360,6 @@ Object {
   "code": 0,
   "err": "",
   "out": "2.0.0-beta.0\\n",
-  "signal": null,
-}
-`
-
-exports[`test/bin/semver.js TAP inc tests > -i release 1.0.0-pre`] = `
-Object {
-  "code": 0,
-  "err": "",
-  "out": "1.0.0\\n",
   "signal": null,
 }
 `
@@ -481,6 +488,60 @@ Object {
     2.3.4
     
   ),
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > 1.2.3 --strict 1`] = `
+Object {
+  "code": 0,
+  "err": "",
+  "out": "1.2.3\\n",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > 1.2.3-alpha.1 -s 1`] = `
+Object {
+  "code": 0,
+  "err": "",
+  "out": "1.2.3-alpha.1\\n",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > V1.2.3 -s 1`] = `
+Object {
+  "code": 1,
+  "err": "Error: Invalid version in strict mode: version cannot start with 'v'. Got: V1.2.3\\n",
+  "out": "",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > V1.2.3 1`] = `
+Object {
+  "code": 1,
+  "err": "",
+  "out": "",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > v1.2.3 --strict 1`] = `
+Object {
+  "code": 1,
+  "err": "Error: Invalid version in strict mode: version cannot start with 'v'. Got: v1.2.3\\n",
+  "out": "",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP strict mode tests > v1.2.3 1`] = `
+Object {
+  "code": 0,
+  "err": "",
+  "out": "1.2.3\\n",
   "signal": null,
 }
 `
