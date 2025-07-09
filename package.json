@@ -52,7 +52,7 @@
   "author": "GitHub Inc.",
   "templateOSS": {
     "//@npmcli/template-oss": "This file is partially managed by @npmcli/template-oss. Edits may be overwritten.",
-    "version": "4.24.4",
+    "version": "4.25.0",
     "engines": ">=10",
     "distPaths": [
       "classes/",
