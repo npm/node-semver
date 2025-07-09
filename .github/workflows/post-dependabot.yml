@@ -54,7 +54,7 @@ jobs:
           else
             # strip leading slash from directory so it works as a
             # a path to the workspace flag
-            echo "workspace=-w ${dependabot_dir#/}" >> $GITHUB_OUTPUT
+            echo "workspace=--workspace ${dependabot_dir#/}" >> $GITHUB_OUTPUT
           fi
 
       - name: Apply Changes
