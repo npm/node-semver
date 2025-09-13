@@ -8,7 +8,7 @@ const increments = require('../fixtures/increments.js')
 test('increment versions test', (t) => {
   increments.forEach(([pre, what, wanted, options, id, base]) => {
     const found = inc(pre, what, options, id, base)
-    const cmd = `inc(${pre}, ${what}, ${id}, ${base})`
+    const cmd = `inc(${pre}, ${what}, ${options}, ${id}, ${base})`
     t.equal(found, wanted, `${cmd} === ${wanted}`)
 
     const parsed = parse(pre, options)
@@ -41,6 +41,19 @@ test('increment versions test', (t) => {
     } else {
       t.equal(parsed, null)
     }
+  })
+
+  t.end()
+})
+
+test('special increment version test', (t) => {
+  [
+    ['1.2.3', 'prepatch', '1.2.4-foo.1', 'foo', '1', undefined],
+    ['1.2.3', 'prepatch', '1.2.4-foo.1', {}, 'foo', '1'],
+  ].forEach(([pre, what, wanted, options, id, base]) => {
+    const found = inc(pre, what, options, id, base)
+    const cmd = `inc(${pre}, ${what}, ${options}, ${id}, ${base})`
+    t.equal(found, wanted, `${cmd} === ${wanted}`)
   })
 
   t.end()
