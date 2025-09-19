@@ -1,23 +1,23 @@
 'use strict'
 
 const Benchmark = require('benchmark')
-const parse = require('../functions/parse')
-const validVersions = require('../test/fixtures/valid-versions')
 const invalidVersions = require('../test/fixtures/invalid-versions')
+const inc = require('../functions/inc')
+const validVersions = require('../test/fixtures/valid-versions')
 const suite = new Benchmark.Suite()
 
 const cases = validVersions.map(invalid => invalid[0])
 const invalidCases = invalidVersions.map(invalid => invalid[0])
 
 for (const test of cases) {
-  suite.add(`parse(${test})`, function () {
-    parse(test)
+  suite.add(`inc(${test})`, function () {
+    inc(test, 'release')
   })
 }
 
 for (const test of invalidCases) {
-  suite.add(`invalid parse(${test})`, function () {
-    parse(test)
+  suite.add(`invalid inc(${test})`, function () {
+    inc(test, 'release')
   })
 }
 

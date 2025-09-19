@@ -6,6 +6,15 @@ const { safeRe: re, t } = require('../internal/re')
 
 const parseOptions = require('../internal/parse-options')
 const { compareIdentifiers } = require('../internal/identifiers')
+
+function handleErrorOnSemver (semver, errorMessage, noThrow) {
+  if (!noThrow) {
+    throw new TypeError(errorMessage)
+  } else {
+    semver.errorMessage = errorMessage
+  }
+}
+
 class SemVer {
   constructor (version, options) {
     options = parseOptions(options)
@@ -18,13 +27,11 @@ class SemVer {
         version = version.version
       }
     } else if (typeof version !== 'string') {
-      throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`)
+      return handleErrorOnSemver(this, `Invalid version. Must be a string. Got type "${typeof version}".`, options.noThrow)
     }
 
     if (version.length > MAX_LENGTH) {
-      throw new TypeError(
-        `version is longer than ${MAX_LENGTH} characters`
-      )
+      return handleErrorOnSemver(this, `version is longer than ${MAX_LENGTH} characters`, options.noThrow)
     }
 
     debug('SemVer', version, options)
@@ -37,7 +44,7 @@ class SemVer {
     const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
 
     if (!m) {
-      throw new TypeError(`Invalid Version: ${version}`)
+      return handleErrorOnSemver(this, `Invalid Version: ${version}`, options.noThrow)
     }
 
     this.raw = version
@@ -48,15 +55,15 @@ class SemVer {
     this.patch = +m[3]
 
     if (this.major > MAX_SAFE_INTEGER || this.major < 0) {
-      throw new TypeError('Invalid major version')
+      return handleErrorOnSemver(this, 'Invalid major version', options.noThrow)
     }
 
     if (this.minor > MAX_SAFE_INTEGER || this.minor < 0) {
-      throw new TypeError('Invalid minor version')
+      return handleErrorOnSemver(this, 'Invalid minor version', options.noThrow)
     }
 
     if (this.patch > MAX_SAFE_INTEGER || this.patch < 0) {
-      throw new TypeError('Invalid patch version')
+      return handleErrorOnSemver(this, 'Invalid patch version', options.noThrow)
     }
 
     // numberify any prerelease numeric ids

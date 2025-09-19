@@ -97,6 +97,19 @@ test('invalid version numbers', (t) => {
   t.end()
 })
 
+test('invalid version numbers without throw', (t) => {
+  ['1.2.3.4', 'NOT VALID', 1.2, null, 'Infinity.NaN.Infinity'].forEach((v) => {
+    const parsed = new SemVer(v, undefined, false)
+
+    t.strictSame(parsed.errorMessage, typeof v === 'string'
+      ? `Invalid Version: ${v}`
+      : `Invalid version. Must be a string. Got type "${typeof v}".`
+    )
+  })
+
+  t.end()
+})
+
 test('incrementing', t => {
   t.plan(increments.length)
   increments.forEach(([
