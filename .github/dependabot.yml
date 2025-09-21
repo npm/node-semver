@@ -1,0 +1,53 @@
+# This file is automatically added by @npmcli/template-oss. Do not edit.
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    target-branch: "main"
+    allow:
+      - dependency-type: direct
+    versioning-strategy: increase-if-necessary
+    commit-message:
+      prefix: deps
+      prefix-development: chore
+    labels:
+      - "Dependencies"
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    target-branch: "release/v5"
+    allow:
+      - dependency-type: direct
+        dependency-name: "@npmcli/template-oss"
+    versioning-strategy: increase-if-necessary
+    commit-message:
+      prefix: deps
+      prefix-development: chore
+    labels:
+      - "Dependencies"
+      - "Backport"
+      - "release/v5"
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    target-branch: "release/v6"
+    allow:
+      - dependency-type: direct
+        dependency-name: "@npmcli/template-oss"
+    versioning-strategy: increase-if-necessary
+    commit-message:
+      prefix: deps
+      prefix-development: chore
+    labels:
+      - "Dependencies"
+      - "Backport"
+      - "release/v6"
+    open-pull-requests-limit: 10
