@@ -8,6 +8,9 @@ on:
     # "At 08:00 UTC (01:00 PT) on Monday" https://crontab.guru/#0_8_*_*_1
     - cron: "0 8 * * 1"
 
+permissions:
+  contents: read
+
 jobs:
   audit:
     name: Audit Dependencies
@@ -18,15 +21,17 @@ jobs:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Git User
         run: |
           git config --global user.email "npm-cli+bot@github.com"
           git config --global user.name "npm CLI robot"
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
+        id: node
         with:
-          node-version: 18.x
+          node-version: 20.x
+          check-latest: contains('20.x', '.x')
       - name: Remove Template-OSS
         if: matrix && matrix.node-version == '6.17.1'
         run: |

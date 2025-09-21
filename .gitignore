@@ -3,12 +3,14 @@
 # ignore everything in the root
 /*
 
-# keep these
 !**/.gitignore
 !/.commitlintrc.js
+!/.git-blame-ignore-revs
 !/.github/
 !/.gitignore
 !/.npmrc
+!/.prettierignore
+!/.prettierrc.js
 !/.release-please-manifest.json
 !/bin/
 !/CHANGELOG*
@@ -27,3 +29,5 @@
 !/semver.js
 !/tap-snapshots/
 !/test/
+!/tsconfig.json
+tap-testdir*/

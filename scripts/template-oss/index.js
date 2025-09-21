@@ -13,10 +13,10 @@ module.exports = {
   eslint: false,
   dependabot: false,
   oldNode: OLD_NODE,
-  ciVersions: [
-    OLD_NODE,
-    'latest',
-  ],
+  ciVersions: [OLD_NODE],
+  latestCiVersion: 20,
+  backport: 6,
+  publish: true,
   allowPaths: [
     '/range.bnf',
     '/semver.js',
@@ -24,7 +24,7 @@ module.exports = {
   rootModule: {
     add: {
       'package.json': {
-        file: './pkg.json',
+        file: './package-json.hbs',
         overwrite: false
       }
     }

@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.7.2](https://github.com/npm/node-semver/compare/v5.7.1...v5.7.2) (2023-07-10)
+
+### Bug Fixes
+
+* [`2f8fd41`](https://github.com/npm/node-semver/commit/2f8fd41487acf380194579ecb6f8b1bbfe116be0) [#585](https://github.com/npm/node-semver/pull/585) better handling of whitespace (#585) (@joaomoreno, @lukekarrys)
+
 ## 5.7
 
 * Add `minVersion` method
