@@ -184,3 +184,96 @@ test('compareBuild', (t) => {
 
   t.end()
 })
+
+test('strict option behavior', (t) => {
+  // Default behavior - v-prefix allowed
+  t.test('default allows v-prefix', (t) => {
+    const v = new SemVer('v1.2.3')
+    t.equal(v.version, '1.2.3')
+    t.equal(v.major, 1)
+    t.equal(v.minor, 2)
+    t.equal(v.patch, 3)
+    t.end()
+  })
+
+  // Explicit strict: false - v-prefix allowed
+  t.test('strict: false allows v-prefix', (t) => {
+    const v = new SemVer('v1.2.3', { strict: false })
+    t.equal(v.version, '1.2.3')
+    t.equal(v.major, 1)
+    t.equal(v.minor, 2)
+    t.equal(v.patch, 3)
+    t.end()
+  })
+
+  // Strict: true without v-prefix - should work
+  t.test('strict: true allows valid version', (t) => {
+    const v = new SemVer('1.2.3', { strict: true })
+    t.equal(v.version, '1.2.3')
+    t.equal(v.major, 1)
+    t.equal(v.minor, 2)
+    t.equal(v.patch, 3)
+    t.end()
+  })
+
+  // Strict: true with prerelease - should work
+  t.test('strict: true allows valid prerelease version', (t) => {
+    const v = new SemVer('1.2.3-alpha.1', { strict: true })
+    t.equal(v.version, '1.2.3-alpha.1')
+    t.equal(v.major, 1)
+    t.equal(v.minor, 2)
+    t.equal(v.patch, 3)
+    t.strictSame(v.prerelease, ['alpha', 1])
+    t.end()
+  })
+
+  // Strict: true with lowercase v-prefix - should throw
+  t.test('strict: true rejects lowercase v-prefix', (t) => {
+    t.throws(
+      () => new SemVer('v1.2.3', { strict: true }),
+      {
+        name: 'TypeError',
+        message: "Invalid version in strict mode: version cannot start with 'v'. Got: v1.2.3",
+      }
+    )
+    t.end()
+  })
+
+  // Strict: true with uppercase V-prefix - should throw
+  t.test('strict: true rejects uppercase V-prefix', (t) => {
+    t.throws(
+      () => new SemVer('V1.2.3', { strict: true }),
+      {
+        name: 'TypeError',
+        message: "Invalid version in strict mode: version cannot start with 'v'. Got: V1.2.3",
+      }
+    )
+    t.end()
+  })
+
+  // Strict: true with v-prefix and prerelease - should throw
+  t.test('strict: true rejects v-prefix with prerelease', (t) => {
+    t.throws(
+      () => new SemVer('v1.2.3-alpha.1', { strict: true }),
+      {
+        name: 'TypeError',
+        message: "Invalid version in strict mode: version cannot start with 'v'. Got: v1.2.3-alpha.1",
+      }
+    )
+    t.end()
+  })
+
+  // Strict: true with whitespace and v-prefix - should throw
+  t.test('strict: true rejects v-prefix with whitespace', (t) => {
+    t.throws(
+      () => new SemVer('  v1.2.3  ', { strict: true }),
+      {
+        name: 'TypeError',
+        message: "Invalid version in strict mode: version cannot start with 'v'. Got:   v1.2.3  ",
+      }
+    )
+    t.end()
+  })
+
+  t.end()
+})

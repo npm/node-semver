@@ -32,6 +32,8 @@ t.test('any object passed is returned', t => {
   t.strictSame(parseOptions({ loose: true }), { loose: true })
   t.strictSame(parseOptions({ rtl: true }), { rtl: true })
   t.strictSame(parseOptions({ includePrerelease: true }), { includePrerelease: true })
+  t.strictSame(parseOptions({ strict: true }), { strict: true })
+  t.strictSame(parseOptions({ strict: false }), { strict: false })
   t.strictSame(parseOptions({ loose: true, rtl: true }), { loose: true, rtl: true })
   t.strictSame(parseOptions({ loose: true, includePrerelease: true }), {
     loose: true,
@@ -40,6 +42,11 @@ t.test('any object passed is returned', t => {
   t.strictSame(parseOptions({ rtl: true, includePrerelease: true }), {
     rtl: true,
     includePrerelease: true,
+  })
+  t.strictSame(parseOptions({ loose: true, includePrerelease: true, strict: true }), {
+    loose: true,
+    includePrerelease: true,
+    strict: true,
   })
   t.end()
 })
