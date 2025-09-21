@@ -103,12 +103,23 @@ test('\ncoerce tests', function (t) {
       r('1')(16) + '.' + r('2')(16) + '.' + r('3')(16)],
     ['1.2.3.' + r('4')(252) + '.5', '1.2.3'],
     ['1.2.3.' + r('4')(1024), '1.2.3'],
-    [r('1')(17) + '.4.7.4', '4.7.4']
-  ].forEach(function (tuple) {
+    [r('1')(17) + '.4.7.4', '4.7.4'],
+    [10, '10.0.0'],
+    ['1.2.3/a/b/c/2.3.4', '2.3.4', { rtl: true }],
+    ['1.2.3.4.5.6', '4.5.6', { rtl: true }],
+    ['1.2.3.4.5/6', '6.0.0', { rtl: true }],
+    ['1.2.3.4./6', '6.0.0', { rtl: true }],
+    ['1.2.3.4/6', '6.0.0', { rtl: true }],
+    ['1.2.3./6', '6.0.0', { rtl: true }],
+    ['1.2.3/6', '6.0.0', { rtl: true }],
+    ['1.2.3.4', '2.3.4', { rtl: true }],
+    ['1.2.3.4xyz', '2.3.4', { rtl: true }],
+  ].forEach(function (tuple, i) {
     var input = tuple[0]
     var expected = tuple[1]
+    var options = tuple[2]
     var msg = 'coerce(' + input + ') should become ' + expected
-    t.same((coerce(input) || {}).version, expected, msg)
+    t.same((coerce(input, options) || {}).version, expected, msg)
   })
 
   t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')

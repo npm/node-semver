@@ -19,6 +19,8 @@ var includePrerelease = false
 
 var coerce = false
 
+var rtl = false
+
 var identifier
 
 var semver = require('../semver')
@@ -71,6 +73,12 @@ function main () {
       case '-c': case '--coerce':
         coerce = true
         break
+      case '--rtl':
+        rtl = true
+        break
+      case '--ltr':
+        rtl = false
+        break
       case '-h': case '--help': case '-?':
         return help()
       default:
@@ -79,10 +87,10 @@ function main () {
     }
   }
 
-  var options = { loose: loose, includePrerelease: includePrerelease }
+  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }
 
   versions = versions.map(function (v) {
-    return coerce ? (semver.coerce(v) || { version: v }).version : v
+    return coerce ? (semver.coerce(v, options) || { version: v }).version : v
   }).filter(function (v) {
     return semver.valid(v)
   })
@@ -148,6 +156,12 @@ function help () {
     '-c --coerce',
     '        Coerce a string into SemVer if possible',
     '        (does not imply --loose)',
+    '',
+    '--rtl',
+    '        Coerce version strings right to left',
+    '',
+    '--ltr',
+    '        Coerce version strings left to right (default)',
     '',
     'Program exits successfully if any valid version satisfies',
     'all supplied ranges, and prints all satisfying versions.',
