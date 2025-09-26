@@ -33,7 +33,7 @@ class Range {
     // First reduce all whitespace as much as possible so we do not have to rely
     // on potentially slow regexes like \s*. This is then stored and used for
     // future error messages as well.
-    this.raw = range.trim().replace(SPACE_CHARACTERS, ' ').replace(/\+[^ ]*/g, '')
+    this.raw = range.trim().replace(SPACE_CHARACTERS, ' ')
 
     // First, split on ||
     this.set = this.raw
@@ -255,6 +255,7 @@ const isSatisfiable = (comparators, options) => {
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
 const parseComparator = (comp, options) => {
+  comp = comp.replace(re[t.BUILD], '')
   debug('comp', comp, options)
   comp = replaceCarets(comp, options)
   debug('caret', comp)
@@ -398,11 +399,6 @@ const replaceXRange = (comp, options) => {
     const xm = xM || isX(m)
     const xp = xm || isX(p)
     const anyX = xp
-
-    // Disallow prerelease with any X-range or partial version
-    if ((xM || xm || xp) && pr) {
-      throw new TypeError('Prerelease not allowed with X-ranges or partial versions')
-    }
 
     if (gtlt === '=' && anyX) {
       gtlt = ''
