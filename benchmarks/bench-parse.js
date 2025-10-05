@@ -2,21 +2,20 @@
 
 const Benchmark = require('benchmark')
 const parse = require('../functions/parse')
-const { MAX_SAFE_INTEGER } = require('../internal/constants')
 const suite = new Benchmark.Suite()
 
-const cases = ['1.2.1', '1.2.2-4', '1.2.3-pre']
-const invalidCases = [`${MAX_SAFE_INTEGER}0.0.0`, 'hello, world', 'xyz']
+const cases = require(`../test/fixtures/valid-versions`)
+const invalidCases = require(`../test/fixtures/invalid-versions`)
 
 for (const test of cases) {
-  suite.add(`parse(${test})`, function () {
-    parse(test)
+  suite.add(`parse(${test[0]})`, function () {
+    parse(test[0])
   })
 }
 
 for (const test of invalidCases) {
-  suite.add(`invalid parse(${test})`, function () {
-    parse(test)
+  suite.add(`invalid parse(${test[0]})`, function () {
+    parse(test[0])
   })
 }
 
