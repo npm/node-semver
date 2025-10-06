@@ -8,6 +8,7 @@ test('rcompareIdentifiers and compareIdentifiers', (t) => {
     ['1', '2'],
     ['alpha', 'beta'],
     ['0', 'beta'],
+    [1, 2],
   ]
   set.forEach((ab) => {
     const a = ab[0]
@@ -17,5 +18,7 @@ test('rcompareIdentifiers and compareIdentifiers', (t) => {
   })
   t.equal(compareIdentifiers('0', '0'), 0)
   t.equal(rcompareIdentifiers('0', '0'), 0)
+  t.equal(compareIdentifiers(1, 1), 0)
+  t.equal(rcompareIdentifiers(1, 1), 0)
   t.end()
 })
