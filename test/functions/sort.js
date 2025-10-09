@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const sort = require('../../functions/sort')
 
-test('sorting', (t) => {
+test('sorting', () => {
   const list = [
     '1.2.3+1',
     '1.2.3+0',
@@ -19,6 +20,5 @@ test('sorting', (t) => {
     '5.9.6',
   ]
 
-  t.same(sort(list), sorted)
-  t.end()
+  a.deepEqual(sort(list), sorted)
 })

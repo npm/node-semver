@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const patch = require('../../functions/patch')
 
-test('patch tests', (t) => {
+test('patch tests', () => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -21,7 +22,6 @@ test('patch tests', (t) => {
     const version = tuple[1]
     const loose = tuple[2] || false
     const msg = `patch(${range}) = ${version}`
-    t.equal(patch(range, loose), version, msg)
+    a.equal(patch(range, loose), version, msg)
   })
-  t.end()
 })

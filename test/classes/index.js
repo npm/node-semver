@@ -1,7 +1,7 @@
 'use strict'
 
-const t = require('tap')
-t.same(require('../../classes'), {
+const a = require('node:assert')
+a.deepEqual(require('../../classes'), {
   SemVer: require('../../classes/semver'),
   Range: require('../../classes/range'),
   Comparator: require('../../classes/comparator'),

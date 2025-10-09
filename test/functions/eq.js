@@ -1,28 +1,29 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const eq = require('../../functions/eq')
 const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')
 
-test('comparison tests', t => {
-  t.plan(comparisons.length)
-  comparisons.forEach(([v0, v1, loose]) => t.test(`${v0} ${v1} ${loose}`, t => {
-    t.plan(4)
-    t.notOk(eq(v0, v1, loose), `!eq(${v0}, ${v1})`)
-    t.notOk(eq(v1, v0, loose), `!eq(${v1}, ${v0})`)
-    t.ok(eq(v1, v1, loose), `eq('${v1}', '${v1}')`)
-    t.ok(eq(v0, v0, loose), `eq('${v0}', '${v0}')`)
-  }))
+test('comparison tests', async (t) => {
+  for (const [v0, v1, loose] of comparisons) {
+    await t.test(`${v0} ${v1} ${loose}`, () => {
+      a.ok(!eq(v0, v1, loose), `!eq(${v0}, ${v1})`)
+      a.ok(!eq(v1, v0, loose), `!eq(${v1}, ${v0})`)
+      a.ok(eq(v1, v1, loose), `eq('${v1}', '${v1}')`)
+      a.ok(eq(v0, v0, loose), `eq('${v0}', '${v0}')`)
+    })
+  }
 })
 
-test('equality tests', t => {
-  t.plan(equality.length)
-  equality.forEach(([v0, v1, loose]) => t.test(`${v0} ${v1} ${loose}`, t => {
-    t.plan(4)
-    t.ok(eq(v0, v1, loose), `eq(${v0}, ${v1})`)
-    t.ok(eq(v1, v0, loose), `eq(${v1}, ${v0})`)
-    t.ok(eq(v0, v0, loose), `eq(${v0}, ${v0})`)
-    t.ok(eq(v1, v1, loose), `eq(${v1}, ${v1})`)
-  }))
+test('equality tests', async (t) => {
+  for (const [v0, v1, loose] of equality) {
+    await t.test(`${v0} ${v1} ${loose}`, () => {
+      a.ok(eq(v0, v1, loose), `eq(${v0}, ${v1})`)
+      a.ok(eq(v1, v0, loose), `eq(${v1}, ${v0})`)
+      a.ok(eq(v0, v0, loose), `eq(${v0}, ${v0})`)
+      a.ok(eq(v1, v1, loose), `eq(${v1}, ${v1})`)
+    })
+  }
 })

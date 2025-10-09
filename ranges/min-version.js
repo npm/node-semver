@@ -44,7 +44,7 @@ const minVersion = (range, loose) => {
         case '<=':
           /* Ignore maximum versions */
           break
-        /* istanbul ignore next */
+        /* c8 ignore next 2 */
         default:
           throw new Error(`Unexpected operation: ${comparator.operator}`)
       }

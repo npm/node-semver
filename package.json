@@ -4,8 +4,8 @@
   "description": "The semantic version parser used by npm.",
   "main": "index.js",
   "scripts": {
-    "test": "tap",
-    "snap": "tap",
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100",
+    "snap": "node --test --test-update-snapshots",
     "lint": "npm run eslint",
     "postlint": "template-oss-check",
     "lintfix": "npm run eslint -- --fix",
@@ -35,17 +35,10 @@
     "internal/",
     "ranges/",
     "index.js",
+    "map.js",
     "preload.js",
     "range.bnf"
   ],
-  "tap": {
-    "timeout": 30,
-    "coverage-map": "map.js",
-    "nyc-arg": [
-      "--exclude",
-      "tap-snapshots/**"
-    ]
-  },
   "engines": {
     "node": ">=10"
   },

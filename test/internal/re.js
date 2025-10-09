@@ -1,28 +1,26 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const { src, re, safeRe, safeSrc } = require('../../internal/re')
 const semver = require('../../')
 
-test('Semver itself has a list of src, re, and tokens', (t) => {
-  t.match(Object.assign({}, semver), {
-    re: Array,
-    src: Array,
-    tokens: Object,
-  })
-  re.forEach(r => t.match(r, RegExp, 'regexps are regexps'))
-  safeRe.forEach(r => t.match(r, RegExp, 'safe regexps are regexps'))
-  src.forEach(s => t.match(s, String, 'src are strings'))
-  safeSrc.forEach(s => t.match(s, String, 'safe srcare strings'))
-  t.ok(Object.keys(semver.tokens).length, 'there are tokens')
+test('Semver itself has a list of src, re, and tokens', () => {
+  a.ok(Array.isArray(semver.re))
+  a.ok(Array.isArray(semver.src))
+  a.equal(typeof semver.tokens, 'object')
+
+  re.forEach(r => a.ok(r instanceof RegExp, 'regexps are regexps'))
+  safeRe.forEach(r => a.ok(r instanceof RegExp, 'safe regexps are regexps'))
+  src.forEach(s => a.equal(typeof s, 'string', 'src are strings'))
+  safeSrc.forEach(s => a.equal(typeof s, 'string', 'safe src are strings'))
+  a.ok(Object.keys(semver.tokens).length, 'there are tokens')
   for (const i in semver.tokens) {
-    t.match(semver.tokens[i], Number, 'tokens are numbers')
+    a.equal(typeof semver.tokens[i], 'number', 'tokens are numbers')
   }
 
   safeRe.forEach(r => {
-    t.notMatch(r.source, '\\s+', 'safe regex do not contain greedy whitespace')
-    t.notMatch(r.source, '\\s*', 'safe regex do not contain greedy whitespace')
+    a.doesNotMatch(r.source, /\s\+/, 'safe regex do not contain greedy whitespace')
+    a.doesNotMatch(r.source, /\s\*/, 'safe regex do not contain greedy whitespace')
   })
-
-  t.end()
 })

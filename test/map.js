@@ -1,6 +1,7 @@
 'use strict'
 
-const t = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
 const { resolve, join, relative, extname, dirname, basename } = require('path')
 const { statSync, readdirSync } = require('fs')
 const map = require('../map.js')
@@ -30,19 +31,16 @@ const walkAll = (items, relativeTo) => items
   .map((f) => relative(relativeTo, f))
   .sort()
 
-t.test('tests match system', t => {
-  const sut = walkAll([pkg.tap['coverage-map'], ...pkg.files], ROOT)
+t.test('tests match system', async (t) => {
+  const sut = walkAll(pkg.files, ROOT)
   const tests = walkAll([basename(TEST)], TEST)
     .filter(f => !IGNORE_DIRS.includes(dirname(f)))
 
-  t.strictSame(sut, tests, 'test files should match system files')
+  a.deepEqual(sut, tests, 'test files should match system files')
 
   for (const f of tests) {
-    t.test(f, t => {
-      t.plan(1)
-      t.ok(sut.includes(map(f)), 'test covers a file')
+    await t.test(f, () => {
+      a.ok(sut.includes(map(f)), 'test covers a file')
     })
   }
-
-  t.end()
 })

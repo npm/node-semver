@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const toComparators = require('../../ranges/to-comparators')
 
-test('comparators test', (t) => {
+test('comparators test', () => {
   // [range, comparators]
   // turn range into a set of individual comparators
   [['1.0.0 - 2.0.0', [['>=1.0.0', '<=2.0.0']]],
@@ -82,8 +83,6 @@ test('comparators test', (t) => {
   ].forEach(([pre, wanted]) => {
     const found = toComparators(pre)
     const jw = JSON.stringify(wanted)
-    t.same(found, wanted, `toComparators(${pre}) === ${jw}`)
+    a.deepEqual(found, wanted, `toComparators(${pre}) === ${jw}`)
   })
-
-  t.end()
 })
