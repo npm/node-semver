@@ -5,7 +5,10 @@
 const SEMVER_SPEC_VERSION = '2.0.0'
 
 const MAX_LENGTH = 256
-const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || /* c8 ignore next */ 9007199254740991
+/* node:coverage disable */
+const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER ||
+  9007199254740991
+/* node:coverage enable */
 
 // Max safe segment length for coercion.
 const MAX_SAFE_COMPONENT_LENGTH = 16

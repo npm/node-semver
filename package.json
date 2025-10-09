@@ -4,7 +4,7 @@
   "description": "The semantic version parser used by npm.",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100",
+    "test": "node --test --experimental-test-coverage --test-timeout=3000 --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100",
     "snap": "node --test --test-update-snapshots",
     "lint": "npm run eslint",
     "postlint": "template-oss-check",
