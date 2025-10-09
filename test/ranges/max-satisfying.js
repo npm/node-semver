@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const maxSatisfying = require('../../ranges/max-satisfying')
 
-test('max satisfying', (t) => {
+test('max satisfying', () => {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.4'],
     [['1.2.4', '1.2.3'], '1.2', '1.2.4'],
     [['1.2.3', '1.2.4', '1.2.5', '1.2.6'], '~1.2.3', '1.2.6'],
@@ -15,13 +16,11 @@ test('max satisfying', (t) => {
     const expect = v[2]
     const loose = v[3]
     const actual = maxSatisfying(versions, range, loose)
-    t.equal(actual, expect)
+    a.equal(actual, expect)
   })
-  t.end()
 })
 
-test('bad ranges in max satisfying', (t) => {
+test('bad ranges in max satisfying', () => {
   const r = 'some frogs and sneks-v2.5.6'
-  t.equal(maxSatisfying([], r), null)
-  t.end()
+  a.equal(maxSatisfying([], r), null)
 })

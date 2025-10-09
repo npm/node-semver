@@ -1,6 +1,7 @@
 'use strict'
 
-const t = require('tap')
+const t = require('node:test')
+const a = require('node:assert')
 const subset = require('../../ranges/subset.js')
 const Range = require('../../classes/range')
 
@@ -105,40 +106,40 @@ const cases = [
   ['>2.0.0', '>=2.0.0', true],
 ]
 
-t.plan(cases.length + 1)
-cases.forEach(([sub, dom, expect, options]) => {
-  const msg = `${sub || "''"} ⊂ ${dom || "''"} = ${expect}` +
-    (options ? ' ' + Object.keys(options).join(',') : '')
-  t.equal(subset(sub, dom, options), expect, msg)
+t.test('subset test cases', () => {
+  for (const [sub, dom, expect, options] of cases) {
+    const msg = `${sub || "''"} ⊂ ${dom || "''"} = ${expect}` +
+      (options ? ' ' + Object.keys(options).join(',') : '')
+    a.equal(subset(sub, dom, options), expect, msg)
+  }
 })
 
-t.test('range should be subset of itself in obj or string mode', t => {
+t.test('range should be subset of itself in obj or string mode', () => {
   const range = '^1'
-  t.equal(subset(range, range), true)
-  t.equal(subset(range, new Range(range)), true)
-  t.equal(subset(new Range(range), range), true)
-  t.equal(subset(new Range(range), new Range(range)), true)
+  a.equal(subset(range, range), true)
+  a.equal(subset(range, new Range(range)), true)
+  a.equal(subset(new Range(range), range), true)
+  a.equal(subset(new Range(range), new Range(range)), true)
 
   // test with using the same actual object
   const r = new Range(range)
-  t.equal(subset(r, r), true)
+  a.equal(subset(r, r), true)
 
   // different range object with same set array
   const r2 = new Range(range)
   r2.set = r.set
-  t.equal(subset(r2, r), true)
-  t.equal(subset(r, r2), true)
+  a.equal(subset(r2, r), true)
+  a.equal(subset(r, r2), true)
 
   // different range with set with same simple set arrays
   const r3 = new Range(range)
   r3.set = [...r.set]
-  t.equal(subset(r3, r), true)
-  t.equal(subset(r, r3), true)
+  a.equal(subset(r3, r), true)
+  a.equal(subset(r, r3), true)
 
   // different range with set with simple sets with same comp objects
   const r4 = new Range(range)
   r4.set = r.set.map(s => [...s])
-  t.equal(subset(r4, r), true)
-  t.equal(subset(r, r4), true)
-  t.end()
+  a.equal(subset(r4, r), true)
+  a.equal(subset(r, r4), true)
 })

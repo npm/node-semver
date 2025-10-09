@@ -1,11 +1,12 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const coerce = require('../../functions/coerce')
 const parse = require('../../functions/parse')
 const valid = require('../../functions/valid')
 
-test('coerce tests', (t) => {
+test('coerce tests', () => {
   // Expected to be null (cannot be coerced).
   const coerceToNull = [
     null,
@@ -29,7 +30,7 @@ test('coerce tests', (t) => {
   ]
   coerceToNull.forEach((input) => {
     const msg = `coerce(${input}) should be null`
-    t.same(coerce(input), null, msg)
+    a.deepEqual(coerce(input), null, msg)
   })
 
   // Expected to be valid.
@@ -152,15 +153,13 @@ test('coerce tests', (t) => {
     const coerceExpression = `coerce(${input}, ${JSON.stringify(options)})`
     const coercedVersion = coerce(input, options) || {}
     const expectedVersion = parse(expected)
-    t.equal(expectedVersion.compare(coercedVersion), 0,
+    a.equal(expectedVersion.compare(coercedVersion), 0,
       `${coerceExpression} should be equal to ${expectedVersion}`)
-    t.equal(expectedVersion.compareBuild(coercedVersion), 0,
+    a.equal(expectedVersion.compareBuild(coercedVersion), 0,
       `${coerceExpression} build should be equal to ${expectedVersion}`)
   })
 
-  t.same(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
-  t.same(valid(coerce('42.6.7-alpha+rev.1', { includePrerelease: true })), '42.6.7-alpha')
-  t.same(valid(coerce('v2')), '2.0.0')
-
-  t.end()
+  a.deepEqual(valid(coerce('42.6.7.9.3-alpha')), '42.6.7')
+  a.deepEqual(valid(coerce('42.6.7-alpha+rev.1', { includePrerelease: true })), '42.6.7-alpha')
+  a.deepEqual(valid(coerce('v2')), '2.0.0')
 })

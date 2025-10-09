@@ -1,13 +1,13 @@
 'use strict'
 
-const t = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const semver = require('../')
 const { SEMVER_SPEC_VERSION } = require('../internal/constants')
 
-t.match(Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION'), {
-  get: undefined,
-  set: undefined,
-  value: SEMVER_SPEC_VERSION,
-  configurable: true,
-  enumerable: true,
-}, 'just a normal value property')
+test('SEMVER_SPEC_VERSION property', () => {
+  const descriptor = Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION')
+  a.equal(descriptor.value, SEMVER_SPEC_VERSION, 'should have correct value')
+  a.equal(descriptor.configurable, true, 'should be configurable')
+  a.equal(descriptor.enumerable, true, 'should be enumerable')
+})

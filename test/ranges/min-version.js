@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const minVersion = require('../../ranges/min-version')
 
-test('minimum version in range tests', (t) => {
+test('minimum version in range tests', () => {
   // [range, minimum, loose]
   [
     // Stars
@@ -72,10 +73,9 @@ test('minimum version in range tests', (t) => {
     const loose = tuple[2] || false
     const msg = `minVersion(${range}, ${loose}) = ${version}`
     const min = minVersion(range, loose)
-    t.ok(min === version || (min && min.version === version), msg, {
+    a.ok(min === version || (min && min.version === version), msg, {
       found: min,
       wanted: version,
     })
   })
-  t.end()
 })

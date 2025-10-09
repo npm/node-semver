@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const major = require('../../functions/major')
 
-test('major tests', (t) => {
+test('major tests', () => {
   // [range, version]
   // Version should be detectable despite extra characters
   [
@@ -21,7 +22,6 @@ test('major tests', (t) => {
     const version = tuple[1]
     const loose = tuple[2] || false
     const msg = `major(${range}) = ${version}`
-    t.equal(major(range, loose), version, msg)
+    a.equal(major(range, loose), version, msg)
   })
-  t.end()
 })

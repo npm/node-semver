@@ -44,7 +44,7 @@ const minVersion = (range, loose) => {
         case '<=':
           /* Ignore maximum versions */
           break
-        /* istanbul ignore next */
+        /* node:coverage ignore next 2 */
         default:
           throw new Error(`Unexpected operation: ${comparator.operator}`)
       }

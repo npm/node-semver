@@ -1,14 +1,15 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const validRange = require('../../ranges/valid')
 const rangeParse = require('../fixtures/range-parse.js')
 
-test('valid range test', (t) => {
+test('valid range test', () => {
   // validRange(range) -> result
   // translate ranges into their canonical form
-  t.plan(rangeParse.length)
-  rangeParse.forEach(([pre, wanted, options]) =>
-    t.equal(validRange(pre, options), wanted,
-      `validRange(${pre}) === ${wanted} ${JSON.stringify(options)}`))
+  for (const [pre, wanted, options] of rangeParse) {
+    a.equal(validRange(pre, options), wanted,
+      `validRange(${pre}) === ${wanted} ${JSON.stringify(options)}`)
+  }
 })

@@ -1,13 +1,12 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const rcompare = require('../../functions/rcompare')
 
-test('rcompare', (t) => {
-  t.equal(rcompare('1.0.0', '1.0.1'), 1)
-  t.equal(rcompare('1.0.0', '1.0.0'), 0)
-  t.equal(rcompare('1.0.0+0', '1.0.0'), 0)
-  t.equal(rcompare('1.0.1', '1.0.0'), -1)
-
-  t.end()
+test('rcompare', () => {
+  a.equal(rcompare('1.0.0', '1.0.1'), 1)
+  a.equal(rcompare('1.0.0', '1.0.0'), 0)
+  a.equal(rcompare('1.0.0+0', '1.0.0'), 0)
+  a.equal(rcompare('1.0.1', '1.0.0'), -1)
 })

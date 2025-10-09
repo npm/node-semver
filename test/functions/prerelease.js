@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const prerelease = require('../../functions/prerelease')
 
-test('prerelease', (t) => {
+test('prerelease', () => {
   // [prereleaseParts, version, loose]
   [
     [['alpha', 1], '1.2.2-alpha.1'],
@@ -20,7 +21,6 @@ test('prerelease', (t) => {
     const version = tuple[1]
     const loose = tuple[2]
     const msg = `prerelease(${version})`
-    t.same(prerelease(version, loose), expected, msg)
+    a.deepEqual(prerelease(version, loose), expected, msg)
   })
-  t.end()
 })

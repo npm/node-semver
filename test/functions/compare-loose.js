@@ -1,11 +1,12 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const compareLoose = require('../../functions/compare-loose')
 const SemVer = require('../../classes/semver')
 const eq = require('../../functions/eq')
 
-test('strict vs loose version numbers', (t) => {
+test('strict vs loose version numbers', () => {
   [['=1.2.3', '1.2.3'],
     ['01.02.03', '1.2.3'],
     ['1.2.3-beta.01', '1.2.3-beta.1'],
@@ -14,19 +15,18 @@ test('strict vs loose version numbers', (t) => {
   ].forEach((v) => {
     const loose = v[0]
     const strict = v[1]
-    t.throws(() => {
+    a.throws(() => {
       SemVer(loose) // eslint-disable-line no-new
     })
     const lv = new SemVer(loose, true)
-    t.equal(lv.version, strict)
-    t.ok(eq(loose, strict, true))
-    t.throws(() => {
+    a.equal(lv.version, strict)
+    a.ok(eq(loose, strict, true))
+    a.throws(() => {
       eq(loose, strict)
     })
-    t.throws(() => {
+    a.throws(() => {
       new SemVer(strict).compare(loose)
     })
-    t.equal(compareLoose(v[0], v[1]), 0)
+    a.equal(compareLoose(v[0], v[1]), 0)
   })
-  t.end()
 })

@@ -1,9 +1,10 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const a = require('node:assert')
 const diff = require('../../functions/diff')
 
-test('diff versions test', (t) => {
+test('diff versions test', () => {
 //  [version1, version2, result]
 //  diff(version1, version2) -> result
   [
@@ -49,18 +50,15 @@ test('diff versions test', (t) => {
     const wanted = v[2]
     const found = diff(version1, version2)
     const cmd = `diff(${version1}, ${version2})`
-    t.equal(found, wanted, `${cmd} === ${wanted}`)
+    a.equal(found, wanted, `${cmd} === ${wanted}`)
   })
-
-  t.end()
 })
 
-test('throws on bad version', (t) => {
-  t.throws(() => {
+test('throws on bad version', () => {
+  a.throws(() => {
     diff('bad', '1.2.3')
   }, {
     message: 'Invalid Version: bad',
     name: 'TypeError',
   })
-  t.end()
 })
