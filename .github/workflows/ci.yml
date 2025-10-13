@@ -68,7 +68,6 @@ jobs:
             os: windows-latest
             shell: cmd
         node-version:
-          - 20.x
           - 22.x
           - 24.x
         exclude:
