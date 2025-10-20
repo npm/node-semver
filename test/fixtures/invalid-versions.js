@@ -9,7 +9,7 @@ module.exports = [
   [`0.${MAX_SAFE_INTEGER}0.0`, 'too big'],
   [`0.0.${MAX_SAFE_INTEGER}0`, 'too big'],
   ['hello, world', 'not a version'],
-  ['hello, world', true, 'even loose, its still junk'],
+  ['hello, world', 'even loose, its still junk', true],
   ['xyz', 'even loose as an opt, same', { loose: true }],
   [/a regexp/, 'regexp is not a string'],
   [/1.2.3/, 'semver-ish regexp is not a string'],
