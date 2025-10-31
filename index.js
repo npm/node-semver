@@ -1,10 +1,16 @@
 'use strict'
 
 // just pre-load all the stuff that index.js lazily exports
-const internalRe = require('./internal/re.js')
-const constants = require('./internal/constants.js')
+const { re, src, t: tokens } = require('./internal/re.js')
+const {
+  RELEASE_TYPES,
+  SEMVER_SPEC_VERSION,
+} = require('./internal/constants.js')
 const SemVer = require('./classes/semver.js')
-const identifiers = require('./internal/identifiers.js')
+const {
+  compareIdentifiers,
+  rcompareIdentifiers,
+} = require('./internal/identifiers.js')
 const parse = require('./functions/parse.js')
 const valid = require('./functions/valid.js')
 const clean = require('./functions/clean.js')
@@ -81,11 +87,11 @@ module.exports = {
   simplifyRange,
   subset,
   SemVer,
-  re: internalRe.re,
-  src: internalRe.src,
-  tokens: internalRe.t,
-  SEMVER_SPEC_VERSION: constants.SEMVER_SPEC_VERSION,
-  RELEASE_TYPES: constants.RELEASE_TYPES,
-  compareIdentifiers: identifiers.compareIdentifiers,
-  rcompareIdentifiers: identifiers.rcompareIdentifiers,
+  re,
+  src,
+  tokens,
+  SEMVER_SPEC_VERSION,
+  RELEASE_TYPES,
+  compareIdentifiers,
+  rcompareIdentifiers,
 }
