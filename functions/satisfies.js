@@ -1,6 +1,6 @@
 'use strict'
 
-const Range = require('../classes/range')
+const Range = require('../classes/range.js')
 const satisfies = (version, range, options) => {
   try {
     range = new Range(range, options)

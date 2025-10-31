@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const { src, re, safeRe, safeSrc } = require('../../internal/re')
+const { src, re, safeRe, safeSrc } = require('../../internal/re.js')
 const semver = require('../../index.js')
 
 test('Semver itself has a list of src, re, and tokens', (t) => {

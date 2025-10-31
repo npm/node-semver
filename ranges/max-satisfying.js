@@ -1,7 +1,7 @@
 'use strict'
 
-const SemVer = require('../classes/semver')
-const Range = require('../classes/range')
+const SemVer = require('../classes/semver.js')
+const Range = require('../classes/range.js')
 
 const maxSatisfying = (versions, range, options) => {
   let max = null

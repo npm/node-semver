@@ -4,8 +4,8 @@ const {
   MAX_SAFE_COMPONENT_LENGTH,
   MAX_SAFE_BUILD_LENGTH,
   MAX_LENGTH,
-} = require('./constants')
-const debug = require('./debug')
+} = require('./constants.js')
+const debug = require('./debug.js')
 exports = module.exports = {}
 
 // The actual regexps go on exports.re

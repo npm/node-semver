@@ -1,7 +1,7 @@
 'use strict'
 
 const Benchmark = require('benchmark')
-const subset = require('../ranges/subset')
+const subset = require('../ranges/subset.js')
 const suite = new Benchmark.Suite()
 
 // taken from tests

@@ -1,9 +1,9 @@
 'use strict'
 
 const { test } = require('tap')
-const ltr = require('../../ranges/ltr')
-const versionLtr = require('../fixtures/version-lt-range')
-const versionNotLtr = require('../fixtures/version-not-lt-range')
+const ltr = require('../../ranges/ltr.js')
+const versionLtr = require('../fixtures/version-lt-range.js')
+const versionNotLtr = require('../fixtures/version-not-lt-range.js')
 
 test('ltr tests', (t) => {
   // [range, version, options]

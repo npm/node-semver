@@ -1,9 +1,9 @@
 'use strict'
 
 const { test } = require('tap')
-const coerce = require('../../functions/coerce')
-const parse = require('../../functions/parse')
-const valid = require('../../functions/valid')
+const coerce = require('../../functions/coerce.js')
+const parse = require('../../functions/parse.js')
+const valid = require('../../functions/valid.js')
 
 test('coerce tests', (t) => {
   // Expected to be null (cannot be coerced).

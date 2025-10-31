@@ -1,8 +1,8 @@
 'use strict'
 
-const SemVer = require('../classes/semver')
-const Range = require('../classes/range')
-const gt = require('../functions/gt')
+const SemVer = require('../classes/semver.js')
+const Range = require('../classes/range.js')
+const gt = require('../functions/gt.js')
 
 const minVersion = (range, loose) => {
   range = new Range(range, loose)

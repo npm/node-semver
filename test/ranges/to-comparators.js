@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const toComparators = require('../../ranges/to-comparators')
+const toComparators = require('../../ranges/to-comparators.js')
 
 test('comparators test', (t) => {
   // [range, comparators]

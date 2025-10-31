@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const sort = require('../../functions/sort')
+const sort = require('../../functions/sort.js')
 
 test('sorting', (t) => {
   const list = [

@@ -135,9 +135,9 @@ class Comparator {
 
 module.exports = Comparator
 
-const parseOptions = require('../internal/parse-options')
-const { safeRe: re, t } = require('../internal/re')
-const cmp = require('../functions/cmp')
-const debug = require('../internal/debug')
-const SemVer = require('./semver')
-const Range = require('./range')
+const parseOptions = require('../internal/parse-options.js')
+const { safeRe: re, t } = require('../internal/re.js')
+const cmp = require('../functions/cmp.js')
+const debug = require('../internal/debug.js')
+const SemVer = require('./semver.js')
+const Range = require('./range.js')

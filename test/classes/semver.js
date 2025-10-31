@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const SemVer = require('../../classes/semver')
+const SemVer = require('../../classes/semver.js')
 const increments = require('../fixtures/increments.js')
 const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')

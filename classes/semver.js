@@ -1,11 +1,11 @@
 'use strict'
 
-const debug = require('../internal/debug')
-const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../internal/constants')
-const { safeRe: re, t } = require('../internal/re')
+const debug = require('../internal/debug.js')
+const { MAX_LENGTH, MAX_SAFE_INTEGER } = require('../internal/constants.js')
+const { safeRe: re, t } = require('../internal/re.js')
 
-const parseOptions = require('../internal/parse-options')
-const { compareIdentifiers } = require('../internal/identifiers')
+const parseOptions = require('../internal/parse-options.js')
+const { compareIdentifiers } = require('../internal/identifiers.js')
 class SemVer {
   constructor (version, options) {
     options = parseOptions(options)

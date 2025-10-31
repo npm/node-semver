@@ -1,8 +1,8 @@
 'use strict'
 
 const { test } = require('tap')
-const Range = require('../../classes/range')
-const Comparator = require('../../classes/comparator')
+const Range = require('../../classes/range.js')
+const Comparator = require('../../classes/comparator.js')
 const rangeIntersection = require('../fixtures/range-intersection.js')
 
 const rangeInclude = require('../fixtures/range-include.js')

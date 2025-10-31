@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const minor = require('../../functions/minor')
+const minor = require('../../functions/minor.js')
 
 test('minor tests', (t) => {
   // [range, version]

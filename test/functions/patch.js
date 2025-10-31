@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const patch = require('../../functions/patch')
+const patch = require('../../functions/patch.js')
 
 test('patch tests', (t) => {
   // [range, version]

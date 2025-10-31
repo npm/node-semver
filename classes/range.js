@@ -214,21 +214,21 @@ class Range {
 
 module.exports = Range
 
-const LRU = require('../internal/lrucache')
+const LRU = require('../internal/lrucache.js')
 const cache = new LRU()
 
-const parseOptions = require('../internal/parse-options')
-const Comparator = require('./comparator')
-const debug = require('../internal/debug')
-const SemVer = require('./semver')
+const parseOptions = require('../internal/parse-options.js')
+const Comparator = require('./comparator.js')
+const debug = require('../internal/debug.js')
+const SemVer = require('./semver.js')
 const {
   safeRe: re,
   t,
   comparatorTrimReplace,
   tildeTrimReplace,
   caretTrimReplace,
-} = require('../internal/re')
-const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants')
+} = require('../internal/re.js')
+const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants.js')
 
 const isNullSet = c => c.value === '<0.0.0-0'
 const isAny = c => c.value === ''

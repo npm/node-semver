@@ -36,7 +36,7 @@ const main = () => {
 }
 
 if (process.argv[2] === 'child') {
-  require('../../internal/debug')('hello, world')
+  require('../../internal/debug.js')('hello, world')
 } else {
   main()
 }

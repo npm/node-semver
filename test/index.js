@@ -2,7 +2,7 @@
 
 const t = require('tap')
 const semver = require('../index.js')
-const { SEMVER_SPEC_VERSION } = require('../internal/constants')
+const { SEMVER_SPEC_VERSION } = require('../internal/constants.js')
 
 t.match(Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION'), {
   get: undefined,

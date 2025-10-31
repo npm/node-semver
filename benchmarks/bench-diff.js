@@ -1,7 +1,7 @@
 'use strict'
 
 const Benchmark = require('benchmark')
-const diff = require('../functions/diff')
+const diff = require('../functions/diff.js')
 const suite = new Benchmark.Suite()
 
 const cases = [

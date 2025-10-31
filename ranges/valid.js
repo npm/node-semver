@@ -1,6 +1,6 @@
 'use strict'
 
-const Range = require('../classes/range')
+const Range = require('../classes/range.js')
 const validRange = (range, options) => {
   try {
     // Return '*' instead of '' so that truthiness works.

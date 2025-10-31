@@ -28,7 +28,7 @@ let identifier
 let identifierBase
 
 const semver = require('../index.js')
-const parseOptions = require('../internal/parse-options')
+const parseOptions = require('../internal/parse-options.js')
 
 let reverse = false
 
