@@ -1,5 +1,11 @@
 'use strict'
 
+const parseOptions = require('../internal/parse-options.js')
+const { safeRe: re, t } = require('../internal/re.js')
+const cmp = require('../functions/cmp.js')
+const debug = require('../internal/debug.js')
+const SemVer = require('./semver.js')
+
 const ANY = Symbol('SemVer ANY')
 // hoisted class for cyclic dependency
 class Comparator {
@@ -134,10 +140,5 @@ class Comparator {
 }
 
 module.exports = Comparator
-
-const parseOptions = require('../internal/parse-options.js')
-const { safeRe: re, t } = require('../internal/re.js')
-const cmp = require('../functions/cmp.js')
-const debug = require('../internal/debug.js')
-const SemVer = require('./semver.js')
+// circular dependency must be imported after exports is assigned:
 const Range = require('./range.js')
