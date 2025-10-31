@@ -1,7 +1,7 @@
 'use strict'
 
 const t = require('tap')
-const semver = require('../')
+const semver = require('../index.js')
 const { SEMVER_SPEC_VERSION } = require('../internal/constants')
 
 t.match(Object.getOwnPropertyDescriptor(semver, 'SEMVER_SPEC_VERSION'), {

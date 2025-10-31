@@ -2,7 +2,7 @@
 
 const { test } = require('tap')
 const { src, re, safeRe, safeSrc } = require('../../internal/re')
-const semver = require('../../')
+const semver = require('../../index.js')
 
 test('Semver itself has a list of src, re, and tokens', (t) => {
   t.match(Object.assign({}, semver), {
