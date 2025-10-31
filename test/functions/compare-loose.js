@@ -1,9 +1,9 @@
 'use strict'
 
 const { test } = require('tap')
-const compareLoose = require('../../functions/compare-loose')
-const SemVer = require('../../classes/semver')
-const eq = require('../../functions/eq')
+const compareLoose = require('../../functions/compare-loose.js')
+const SemVer = require('../../classes/semver.js')
+const eq = require('../../functions/eq.js')
 
 test('strict vs loose version numbers', (t) => {
   [['=1.2.3', '1.2.3'],

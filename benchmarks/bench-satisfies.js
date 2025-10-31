@@ -1,7 +1,7 @@
 'use strict'
 
 const Benchmark = require('benchmark')
-const satisfies = require('../functions/satisfies')
+const satisfies = require('../functions/satisfies.js')
 const suite = new Benchmark.Suite()
 
 const versions = ['1.0.3||^2.0.0', '2.2.2||~3.0.0', '2.3.0||<4.0.0']

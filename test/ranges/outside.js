@@ -1,11 +1,11 @@
 'use strict'
 
 const { test } = require('tap')
-const outside = require('../../ranges/outside')
-const versionGtr = require('../fixtures/version-gt-range')
-const versionNotGtr = require('../fixtures/version-not-gt-range')
-const versionLtr = require('../fixtures/version-lt-range')
-const versionNotLtr = require('../fixtures/version-not-lt-range')
+const outside = require('../../ranges/outside.js')
+const versionGtr = require('../fixtures/version-gt-range.js')
+const versionNotGtr = require('../fixtures/version-not-gt-range.js')
+const versionLtr = require('../fixtures/version-lt-range.js')
+const versionNotLtr = require('../fixtures/version-not-lt-range.js')
 
 test('gtr tests', (t) => {
   // [range, version, options]

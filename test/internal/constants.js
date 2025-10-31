@@ -1,7 +1,7 @@
 'use strict'
 
 const t = require('tap')
-const constants = require('../../internal/constants')
+const constants = require('../../internal/constants.js')
 
 t.match(constants, {
   MAX_LENGTH: Number,

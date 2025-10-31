@@ -1,10 +1,10 @@
 'use strict'
 
 const t = require('tap')
-const valid = require('../../functions/valid')
-const SemVer = require('../../classes/semver')
-const invalidVersions = require('../fixtures/invalid-versions')
-const { MAX_SAFE_INTEGER } = require('../../internal/constants')
+const valid = require('../../functions/valid.js')
+const SemVer = require('../../classes/semver.js')
+const invalidVersions = require('../fixtures/invalid-versions.js')
+const { MAX_SAFE_INTEGER } = require('../../internal/constants.js')
 
 t.test('returns null instead of throwing when presented with garbage', t => {
   t.plan(invalidVersions.length)

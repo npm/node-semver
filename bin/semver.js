@@ -13,7 +13,8 @@ const range = []
 
 let inc = null
 
-const version = require('../package.json').version
+const pkg = require('../package.json')
+const version = pkg.version
 
 let loose = false
 
@@ -27,8 +28,8 @@ let identifier
 
 let identifierBase
 
-const semver = require('../')
-const parseOptions = require('../internal/parse-options')
+const semver = require('../index.js')
+const parseOptions = require('../internal/parse-options.js')
 
 let reverse = false
 

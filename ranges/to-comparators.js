@@ -1,6 +1,6 @@
 'use strict'
 
-const Range = require('../classes/range')
+const Range = require('../classes/range.js')
 
 // Mostly just for testing and legacy API reasons
 const toComparators = (range, options) =>

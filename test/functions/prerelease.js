@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const prerelease = require('../../functions/prerelease')
+const prerelease = require('../../functions/prerelease.js')
 
 test('prerelease', (t) => {
   // [prereleaseParts, version, loose]

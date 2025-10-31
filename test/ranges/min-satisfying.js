@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const minSatisfying = require('../../ranges/min-satisfying')
+const minSatisfying = require('../../ranges/min-satisfying.js')
 
 test('min satisfying', (t) => {
   [[['1.2.3', '1.2.4'], '1.2', '1.2.3'],

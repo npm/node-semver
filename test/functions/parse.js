@@ -1,9 +1,9 @@
 'use strict'
 
 const t = require('tap')
-const parse = require('../../functions/parse')
-const SemVer = require('../../classes/semver')
-const invalidVersions = require('../fixtures/invalid-versions')
+const parse = require('../../functions/parse.js')
+const SemVer = require('../../classes/semver.js')
+const invalidVersions = require('../fixtures/invalid-versions.js')
 
 t.test('returns null instead of throwing when presented with garbage', t => {
   t.plan(invalidVersions.length)

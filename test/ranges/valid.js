@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const validRange = require('../../ranges/valid')
+const validRange = require('../../ranges/valid.js')
 const rangeParse = require('../fixtures/range-parse.js')
 
 test('valid range test', (t) => {

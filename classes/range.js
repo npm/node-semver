@@ -1,5 +1,18 @@
 'use strict'
 
+const LRU = require('../internal/lrucache.js')
+const parseOptions = require('../internal/parse-options.js')
+const debug = require('../internal/debug.js')
+const SemVer = require('./semver.js')
+const {
+  safeRe: re,
+  t,
+  comparatorTrimReplace,
+  tildeTrimReplace,
+  caretTrimReplace,
+} = require('../internal/re.js')
+const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants.js')
+
 const SPACE_CHARACTERS = /\s+/g
 
 // hoisted class for cyclic dependency
@@ -213,22 +226,10 @@ class Range {
 }
 
 module.exports = Range
+// circular dependency must be imported after exports is assigned:
+const Comparator = require('./comparator.js')
 
-const LRU = require('../internal/lrucache')
 const cache = new LRU()
-
-const parseOptions = require('../internal/parse-options')
-const Comparator = require('./comparator')
-const debug = require('../internal/debug')
-const SemVer = require('./semver')
-const {
-  safeRe: re,
-  t,
-  comparatorTrimReplace,
-  tildeTrimReplace,
-  caretTrimReplace,
-} = require('../internal/re')
-const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants')
 
 const isNullSet = c => c.value === '<0.0.0-0'
 const isAny = c => c.value === ''
