@@ -1,8 +1,10 @@
 'use strict'
 
+const t = require('tap')
+const { spawn } = require('child_process')
+const debug = require('../../internal/debug.js')
+
 const main = () => {
-  const t = require('tap')
-  const { spawn } = require('child_process')
   t.plan(2)
   t.test('without env set', t => {
     const c = spawn(process.execPath, [__filename, 'child'], { env: {
@@ -36,7 +38,7 @@ const main = () => {
 }
 
 if (process.argv[2] === 'child') {
-  require('../../internal/debug.js')('hello, world')
+  debug('hello, world')
 } else {
   main()
 }

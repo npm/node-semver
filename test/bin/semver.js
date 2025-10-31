@@ -2,11 +2,12 @@
 
 const t = require('tap')
 
-const thisVersion = require('../../package.json').version
+const pkg = require('../../package.json')
+const thisVersion = pkg.version
 t.cleanSnapshot = str => str.split(thisVersion).join('@@VERSION@@')
 
-const spawn = require('child_process').spawn
-const bin = require.resolve('../../bin/semver')
+const { spawn } = require('child_process')
+const bin = require.resolve('../../bin/semver.js')
 const run = args => new Promise((resolve, reject) => {
   const c = spawn(process.execPath, [bin].concat(args))
   c.on('error', reject)

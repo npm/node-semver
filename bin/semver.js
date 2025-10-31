@@ -13,7 +13,8 @@ const range = []
 
 let inc = null
 
-const version = require('../package.json').version
+const pkg = require('../package.json')
+const version = pkg.version
 
 let loose = false
 
