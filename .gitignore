@@ -28,6 +28,7 @@
 !/lib/
 !/LICENSE*
 !/map.js
+!/package-lock.json
 !/package.json
 !/preload.js
 !/range.bnf

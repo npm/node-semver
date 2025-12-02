@@ -73,6 +73,7 @@
       "/range.bnf",
       "/benchmarks"
     ],
+    "lockfile": "true",
     "publish": "true"
   }
 }
