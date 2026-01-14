@@ -23,6 +23,11 @@ semver.lt('1.2.3', '9.8.7') // true
 semver.minVersion('>=1.0.0') // '1.0.0'
 semver.valid(semver.coerce('v2')) // '2.0.0'
 semver.valid(semver.coerce('42.6.7.9.3-alpha')) // '42.6.7'
+
+// Strict mode - rejects version strings with 'v' prefix
+semver.valid('v1.2.3') // '1.2.3' (default behavior)
+semver.valid('v1.2.3', { strict: true }) // throws TypeError
+semver.valid('1.2.3', { strict: true }) // '1.2.3'
 ```
 
 You can also just load the module for the function that you care about if
@@ -116,6 +121,10 @@ Options:
 
 -p --include-prerelease
         Always include prerelease versions in range matching
+
+-s --strict
+        Reject version strings with leading 'v' prefix
+        (throws error if version starts with 'v' or 'V')
 
 -c --coerce
         Coerce a string into SemVer if possible
@@ -420,6 +429,10 @@ are:
   behavior](https://github.com/npm/node-semver#prerelease-tags) of
   excluding prerelease tagged versions from ranges unless they are
   explicitly opted into.
+- `strict`: When set to `true`, versions with leading "v" or "V" prefixes
+  will be rejected and throw a TypeError. By default (when `false`), such
+  prefixes are allowed and stripped. This option enforces strict SemVer
+  compliance where version strings must not contain prefixes.
 
 Strict-mode Comparators and Ranges will be strict about the SemVer
 strings that they parse.

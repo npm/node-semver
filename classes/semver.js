@@ -34,6 +34,11 @@ class SemVer {
     // don't run into trouble passing this.options around.
     this.includePrerelease = !!options.includePrerelease
 
+    // Check for strict mode - reject versions with leading 'v'
+    if (options.strict && /^v/i.test(version.trim())) {
+      throw new TypeError(`Invalid version in strict mode: version cannot start with 'v'. Got: ${version}`)
+    }
+
     const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
 
     if (!m) {
