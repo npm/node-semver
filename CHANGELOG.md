@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.7.4](https://github.com/npm/node-semver/compare/v7.7.3...v7.7.4) (2026-01-16)
+### Bug Fixes
+* [`a29faa5`](https://github.com/npm/node-semver/commit/a29faa5f3309a01c8e5aeb965fb5c02c4c4e80e2) [#835](https://github.com/npm/node-semver/pull/835) cli: pass options to semver.valid() for loose version validation (#835) (@mldangelo)
+### Documentation
+* [`1d28d5e`](https://github.com/npm/node-semver/commit/1d28d5e82de16163daf721a7c76fff93e0d333ab) [#836](https://github.com/npm/node-semver/pull/836) fix typos and update -n CLI option documentation (#836) (@mldangelo)
+### Dependencies
+* [`120968b`](https://github.com/npm/node-semver/commit/120968b76760cb0db85a72bde2adedd0e9628793) [#840](https://github.com/npm/node-semver/pull/840) `@npmcli/template-oss@4.29.0` (#840)
+### Chores
+* [`44d7130`](https://github.com/npm/node-semver/commit/44d7130c60cedd3703048aa671bb1d659b79ab07) [#824](https://github.com/npm/node-semver/pull/824) bump @npmcli/eslint-config from 5.1.0 to 6.0.0 (#824) (@dependabot[bot])
+* [`7073576`](https://github.com/npm/node-semver/commit/70735767b68a1775eb67ac816b183b4a422101f4) [#820](https://github.com/npm/node-semver/pull/820) reorder parameters in invalid-versions.js test (#820) (@reggi)
+* [`5816d4c`](https://github.com/npm/node-semver/commit/5816d4cfd6d85169527a2bc22fbd5bf4c64f34e3) [#829](https://github.com/npm/node-semver/pull/829) bump @npmcli/template-oss from 4.28.0 to 4.28.1 (#829) (@dependabot[bot], @npm-cli-bot)
+
 ## [7.7.3](https://github.com/npm/node-semver/compare/v7.7.2...v7.7.3) (2025-10-06)
 ### Bug Fixes
 * [`e37e0ca`](https://github.com/npm/node-semver/commit/e37e0ca0b5fc910d2b1948d25dbc83cc3a0921ea) [#813](https://github.com/npm/node-semver/pull/813) faster paths for compare (#813) (@H4ad)
