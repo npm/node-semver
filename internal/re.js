@@ -1,19 +1,17 @@
-'use strict'
-
-const {
+import {
   MAX_SAFE_COMPONENT_LENGTH,
   MAX_SAFE_BUILD_LENGTH,
   MAX_LENGTH,
-} = require('./constants')
-const debug = require('./debug')
-exports = module.exports = {}
+} from './constants.js'
+import debug from './debug.js'
+// Exports defined below
 
 // The actual regexps go on exports.re
-const re = exports.re = []
-const safeRe = exports.safeRe = []
-const src = exports.src = []
-const safeSrc = exports.safeSrc = []
-const t = exports.t = {}
+const re = []
+const safeRe = []
+const src = []
+const safeSrc = []
+const t = {}
 let R = 0
 
 const LETTERDASHNUMBER = '[a-zA-Z0-9-]'
@@ -177,7 +175,7 @@ createToken('COERCERTLFULL', src[t.COERCEFULL], true)
 createToken('LONETILDE', '(?:~>?)')
 
 createToken('TILDETRIM', `(\\s*)${src[t.LONETILDE]}\\s+`, true)
-exports.tildeTrimReplace = '$1~'
+export const tildeTrimReplace = '$1~'
 
 createToken('TILDE', `^${src[t.LONETILDE]}${src[t.XRANGEPLAIN]}$`)
 createToken('TILDELOOSE', `^${src[t.LONETILDE]}${src[t.XRANGEPLAINLOOSE]}$`)
@@ -187,7 +185,7 @@ createToken('TILDELOOSE', `^${src[t.LONETILDE]}${src[t.XRANGEPLAINLOOSE]}$`)
 createToken('LONECARET', '(?:\\^)')
 
 createToken('CARETTRIM', `(\\s*)${src[t.LONECARET]}\\s+`, true)
-exports.caretTrimReplace = '$1^'
+export const caretTrimReplace = '$1^'
 
 createToken('CARET', `^${src[t.LONECARET]}${src[t.XRANGEPLAIN]}$`)
 createToken('CARETLOOSE', `^${src[t.LONECARET]}${src[t.XRANGEPLAINLOOSE]}$`)
@@ -200,7 +198,7 @@ createToken('COMPARATOR', `^${src[t.GTLT]}\\s*(${src[t.FULLPLAIN]})$|^$`)
 // it modifies, so that `> 1.2.3` ==> `>1.2.3`
 createToken('COMPARATORTRIM', `(\\s*)${src[t.GTLT]
 }\\s*(${src[t.LOOSEPLAIN]}|${src[t.XRANGEPLAIN]})`, true)
-exports.comparatorTrimReplace = '$1$2$3'
+export const comparatorTrimReplace = '$1$2$3'
 
 // Something like `1.2.3 - 1.2.4`
 // Note that these all use the loose form, because they'll be
@@ -221,3 +219,10 @@ createToken('STAR', '(<|>)?=?\\s*\\*')
 // >=0.0.0 is like a star
 createToken('GTE0', '^\\s*>=\\s*0\\.0\\.0\\s*$')
 createToken('GTE0PRE', '^\\s*>=\\s*0\\.0\\.0-0\\s*$')
+
+export {
+  re,
+  safeRe,
+  src,
+  t,
+}

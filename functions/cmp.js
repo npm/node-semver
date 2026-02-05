@@ -1,11 +1,9 @@
-'use strict'
-
-const eq = require('./eq')
-const neq = require('./neq')
-const gt = require('./gt')
-const gte = require('./gte')
-const lt = require('./lt')
-const lte = require('./lte')
+import eq from './eq.js'
+import neq from './neq.js'
+import gt from './gt.js'
+import gte from './gte.js'
+import lt from './lt.js'
+import lte from './lte.js'
 
 const cmp = (a, op, b, loose) => {
   switch (op) {
@@ -51,4 +49,4 @@ const cmp = (a, op, b, loose) => {
       throw new TypeError(`Invalid operator: ${op}`)
   }
 }
-module.exports = cmp
+export default cmp

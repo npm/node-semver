@@ -1,8 +1,6 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
-const parse = require('./parse')
-const { safeRe: re, t } = require('../internal/re')
+import SemVer from '../classes/semver.js'
+import parse from './parse.js'
+import { safeRe as re, t } from '../internal/re.js'
 
 const coerce = (version, options) => {
   if (version instanceof SemVer) {
@@ -59,4 +57,4 @@ const coerce = (version, options) => {
 
   return parse(`${major}.${minor}.${patch}${prerelease}${build}`, options)
 }
-module.exports = coerce
+export default coerce

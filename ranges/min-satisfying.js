@@ -1,7 +1,5 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
-const Range = require('../classes/range')
+import SemVer from '../classes/semver.js'
+import Range from '../classes/range.js'
 const minSatisfying = (versions, range, options) => {
   let min = null
   let minSV = null
@@ -23,4 +21,4 @@ const minSatisfying = (versions, range, options) => {
   })
   return min
 }
-module.exports = minSatisfying
+export default minSatisfying

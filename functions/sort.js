@@ -1,5 +1,3 @@
-'use strict'
-
-const compareBuild = require('./compare-build')
+import compareBuild from './compare-build.js'
 const sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose))
-module.exports = sort
+export default sort

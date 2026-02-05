@@ -1,10 +1,8 @@
-'use strict'
-
-const Range = require('../classes/range.js')
-const Comparator = require('../classes/comparator.js')
+import Range from '../classes/range.js'
+import Comparator from '../classes/comparator.js'
 const { ANY } = Comparator
-const satisfies = require('../functions/satisfies.js')
-const compare = require('../functions/compare.js')
+import satisfies from '../functions/satisfies.js'
+import compare from '../functions/compare.js'
 
 // Complex range `r1 || r2 || ...` is a subset of `R1 || R2 || ...` iff:
 // - Every simple range `r1, r2, ...` is a null set, OR
@@ -246,4 +244,4 @@ const lowerLT = (a, b, options) => {
     : a
 }
 
-module.exports = subset
+export default subset

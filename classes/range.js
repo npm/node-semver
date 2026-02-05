@@ -1,5 +1,3 @@
-'use strict'
-
 const SPACE_CHARACTERS = /\s+/g
 
 // hoisted class for cyclic dependency
@@ -212,23 +210,22 @@ class Range {
   }
 }
 
-module.exports = Range
-
-const LRU = require('../internal/lrucache')
+export default Range
+import LRU from '../internal/lrucache.js'
 const cache = new LRU()
 
-const parseOptions = require('../internal/parse-options')
-const Comparator = require('./comparator')
-const debug = require('../internal/debug')
-const SemVer = require('./semver')
-const {
-  safeRe: re,
+import parseOptions from '../internal/parse-options.js'
+import Comparator from './comparator.js'
+import debug from '../internal/debug.js'
+import SemVer from './semver.js'
+import {
+  safeRe as re,
   t,
   comparatorTrimReplace,
   tildeTrimReplace,
   caretTrimReplace,
-} = require('../internal/re')
-const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants')
+} from '../internal/re.js'
+import { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } from '../internal/constants.js'
 
 const isNullSet = c => c.value === '<0.0.0-0'
 const isAny = c => c.value === ''

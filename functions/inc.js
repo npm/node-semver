@@ -1,6 +1,4 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
+import SemVer from '../classes/semver.js'
 
 const inc = (version, release, options, identifier, identifierBase) => {
   if (typeof (options) === 'string') {
@@ -18,4 +16,4 @@ const inc = (version, release, options, identifier, identifierBase) => {
     return null
   }
 }
-module.exports = inc
+export default inc

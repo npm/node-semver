@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Export Structure Test
  *
@@ -8,9 +6,13 @@
  * migration to verify exports are preserved.
  */
 
-const fs = require('fs')
-const path = require('path')
-const { test } = require('tap')
+import fs from 'fs'
+import path from 'path'
+import { test } from 'tap'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Directories containing modules to test
 const MODULE_DIRS = ['internal', 'classes', 'functions', 'ranges']
@@ -97,9 +99,12 @@ function getAllModules () {
 /**
  * Inspect a module's exports
  */
-function inspectModule (modulePath) {
+async function inspectModule (modulePath) {
   const fullPath = path.join(__dirname, '..', modulePath)
-  const exported = require(fullPath)
+  const module = await import(fullPath)
+
+  // Handle default export
+  const exported = module.default !== undefined ? module.default : module
   const exportType = typeof exported
 
   const result = {
@@ -122,13 +127,13 @@ function inspectModule (modulePath) {
   return result
 }
 
-test('capture export structure', (t) => {
+test('capture export structure', async (t) => {
   const modules = getAllModules()
   const exportStructure = {}
 
   for (const modulePath of modules) {
     try {
-      exportStructure[modulePath] = inspectModule(modulePath)
+      exportStructure[modulePath] = await inspectModule(modulePath)
     } catch (err) {
       t.fail(`Failed to inspect ${modulePath}: ${err.message}`)
     }
@@ -157,7 +162,7 @@ test('capture export structure', (t) => {
   t.end()
 })
 
-test('verify export structure (if snapshot exists)', (t) => {
+test('verify export structure (if snapshot exists)', async (t) => {
   const snapshotPath = path.join(__dirname, 'export-structure.json')
 
   if (!fs.existsSync(snapshotPath)) {
@@ -177,7 +182,7 @@ test('verify export structure (if snapshot exists)', (t) => {
     }
 
     try {
-      const actual = inspectModule(modulePath)
+      const actual = await inspectModule(modulePath)
 
       t.equal(actual.exportType, expected.exportType,
         `${modulePath}: export type matches`)

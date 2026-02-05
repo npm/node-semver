@@ -1,8 +1,6 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
-const Range = require('../classes/range')
-const gt = require('../functions/gt')
+import SemVer from '../classes/semver.js'
+import Range from '../classes/range.js'
+import gt from '../functions/gt.js'
 
 const minVersion = (range, loose) => {
   range = new Range(range, loose)
@@ -60,4 +58,4 @@ const minVersion = (range, loose) => {
 
   return null
 }
-module.exports = minVersion
+export default minVersion

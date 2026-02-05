@@ -1,5 +1,3 @@
-'use strict'
-
 const numeric = /^[0-9]+$/
 const compareIdentifiers = (a, b) => {
   if (typeof a === 'number' && typeof b === 'number') {
@@ -23,7 +21,7 @@ const compareIdentifiers = (a, b) => {
 
 const rcompareIdentifiers = (a, b) => compareIdentifiers(b, a)
 
-module.exports = {
+export {
   compareIdentifiers,
   rcompareIdentifiers,
 }

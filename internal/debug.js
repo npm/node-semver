@@ -1,5 +1,3 @@
-'use strict'
-
 const debug = (
   typeof process === 'object' &&
   process.env &&
@@ -8,4 +6,4 @@ const debug = (
 ) ? (...args) => console.error('SEMVER', ...args)
   : () => {}
 
-module.exports = debug
+export default debug

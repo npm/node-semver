@@ -451,7 +451,7 @@
       },
       "simplifyRange": {
         "type": "function",
-        "name": "anonymous",
+        "name": "default",
         "isClass": false
       },
       "sort": {
@@ -631,10 +631,6 @@
         "length": 43
       },
       "safeRe": {
-        "type": "array",
-        "length": 43
-      },
-      "safeSrc": {
         "type": "array",
         "length": 43
       },
@@ -884,7 +880,7 @@
       },
       "simplifyRange": {
         "type": "function",
-        "name": "anonymous",
+        "name": "default",
         "isClass": false
       },
       "sort": {
@@ -1034,7 +1030,7 @@
     "exportType": "function",
     "details": {
       "type": "function",
-      "name": "anonymous",
+      "name": "default",
       "isClass": false
     }
   },

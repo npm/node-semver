@@ -1,5 +1,3 @@
-'use strict'
-
 class LRUCache {
   constructor () {
     this.max = 1000
@@ -39,4 +37,4 @@ class LRUCache {
   }
 }
 
-module.exports = LRUCache
+export default LRUCache

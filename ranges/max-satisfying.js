@@ -1,7 +1,5 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
-const Range = require('../classes/range')
+import SemVer from '../classes/semver.js'
+import Range from '../classes/range.js'
 
 const maxSatisfying = (versions, range, options) => {
   let max = null
@@ -24,4 +22,4 @@ const maxSatisfying = (versions, range, options) => {
   })
   return max
 }
-module.exports = maxSatisfying
+export default maxSatisfying

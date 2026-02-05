@@ -1,7 +1,9 @@
-'use strict'
+import SemVer from './semver.js'
+import Range from './range.js'
+import Comparator from './comparator.js'
 
-module.exports = {
-  SemVer: require('./semver.js'),
-  Range: require('./range.js'),
-  Comparator: require('./comparator.js'),
+export default {
+  SemVer,
+  Range,
+  Comparator,
 }

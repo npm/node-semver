@@ -1,6 +1,4 @@
-'use strict'
-
-const SemVer = require('../classes/semver')
+import SemVer from '../classes/semver.js'
 const parse = (version, options, throwErrors = false) => {
   if (version instanceof SemVer) {
     return version
@@ -15,4 +13,4 @@ const parse = (version, options, throwErrors = false) => {
   }
 }
 
-module.exports = parse
+export default parse

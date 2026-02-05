@@ -1,48 +1,46 @@
-'use strict'
-
 // just pre-load all the stuff that index.js lazily exports
-const internalRe = require('./internal/re')
-const constants = require('./internal/constants')
-const SemVer = require('./classes/semver')
-const identifiers = require('./internal/identifiers')
-const parse = require('./functions/parse')
-const valid = require('./functions/valid')
-const clean = require('./functions/clean')
-const inc = require('./functions/inc')
-const diff = require('./functions/diff')
-const major = require('./functions/major')
-const minor = require('./functions/minor')
-const patch = require('./functions/patch')
-const prerelease = require('./functions/prerelease')
-const compare = require('./functions/compare')
-const rcompare = require('./functions/rcompare')
-const compareLoose = require('./functions/compare-loose')
-const compareBuild = require('./functions/compare-build')
-const sort = require('./functions/sort')
-const rsort = require('./functions/rsort')
-const gt = require('./functions/gt')
-const lt = require('./functions/lt')
-const eq = require('./functions/eq')
-const neq = require('./functions/neq')
-const gte = require('./functions/gte')
-const lte = require('./functions/lte')
-const cmp = require('./functions/cmp')
-const coerce = require('./functions/coerce')
-const Comparator = require('./classes/comparator')
-const Range = require('./classes/range')
-const satisfies = require('./functions/satisfies')
-const toComparators = require('./ranges/to-comparators')
-const maxSatisfying = require('./ranges/max-satisfying')
-const minSatisfying = require('./ranges/min-satisfying')
-const minVersion = require('./ranges/min-version')
-const validRange = require('./ranges/valid')
-const outside = require('./ranges/outside')
-const gtr = require('./ranges/gtr')
-const ltr = require('./ranges/ltr')
-const intersects = require('./ranges/intersects')
-const simplifyRange = require('./ranges/simplify')
-const subset = require('./ranges/subset')
-module.exports = {
+import { re, src, t } from './internal/re.js'
+import { SEMVER_SPEC_VERSION, RELEASE_TYPES } from './internal/constants.js'
+import SemVer from './classes/semver.js'
+import { compareIdentifiers, rcompareIdentifiers } from './internal/identifiers.js'
+import parse from './functions/parse.js'
+import valid from './functions/valid.js'
+import clean from './functions/clean.js'
+import inc from './functions/inc.js'
+import diff from './functions/diff.js'
+import major from './functions/major.js'
+import minor from './functions/minor.js'
+import patch from './functions/patch.js'
+import prerelease from './functions/prerelease.js'
+import compare from './functions/compare.js'
+import rcompare from './functions/rcompare.js'
+import compareLoose from './functions/compare-loose.js'
+import compareBuild from './functions/compare-build.js'
+import sort from './functions/sort.js'
+import rsort from './functions/rsort.js'
+import gt from './functions/gt.js'
+import lt from './functions/lt.js'
+import eq from './functions/eq.js'
+import neq from './functions/neq.js'
+import gte from './functions/gte.js'
+import lte from './functions/lte.js'
+import cmp from './functions/cmp.js'
+import coerce from './functions/coerce.js'
+import Comparator from './classes/comparator.js'
+import Range from './classes/range.js'
+import satisfies from './functions/satisfies.js'
+import toComparators from './ranges/to-comparators.js'
+import maxSatisfying from './ranges/max-satisfying.js'
+import minSatisfying from './ranges/min-satisfying.js'
+import minVersion from './ranges/min-version.js'
+import validRange from './ranges/valid.js'
+import outside from './ranges/outside.js'
+import gtr from './ranges/gtr.js'
+import ltr from './ranges/ltr.js'
+import intersects from './ranges/intersects.js'
+import simplifyRange from './ranges/simplify.js'
+import subset from './ranges/subset.js'
+export default {
   parse,
   valid,
   clean,
@@ -81,11 +79,11 @@ module.exports = {
   simplifyRange,
   subset,
   SemVer,
-  re: internalRe.re,
-  src: internalRe.src,
-  tokens: internalRe.t,
-  SEMVER_SPEC_VERSION: constants.SEMVER_SPEC_VERSION,
-  RELEASE_TYPES: constants.RELEASE_TYPES,
-  compareIdentifiers: identifiers.compareIdentifiers,
-  rcompareIdentifiers: identifiers.rcompareIdentifiers,
+  re,
+  src,
+  tokens: t,
+  SEMVER_SPEC_VERSION,
+  RELEASE_TYPES,
+  compareIdentifiers,
+  rcompareIdentifiers,
 }

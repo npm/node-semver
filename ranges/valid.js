@@ -1,6 +1,4 @@
-'use strict'
-
-const Range = require('../classes/range')
+import Range from '../classes/range.js'
 const validRange = (range, options) => {
   try {
     // Return '*' instead of '' so that truthiness works.
@@ -10,4 +8,4 @@ const validRange = (range, options) => {
     return null
   }
 }
-module.exports = validRange
+export default validRange

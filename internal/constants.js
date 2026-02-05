@@ -1,5 +1,3 @@
-'use strict'
-
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.
 const SEMVER_SPEC_VERSION = '2.0.0'
@@ -25,13 +23,14 @@ const RELEASE_TYPES = [
   'prerelease',
 ]
 
-module.exports = {
+export {
   MAX_LENGTH,
   MAX_SAFE_COMPONENT_LENGTH,
   MAX_SAFE_BUILD_LENGTH,
   MAX_SAFE_INTEGER,
   RELEASE_TYPES,
   SEMVER_SPEC_VERSION,
-  FLAG_INCLUDE_PRERELEASE: 0b001,
-  FLAG_LOOSE: 0b010,
 }
+
+export const FLAG_INCLUDE_PRERELEASE = 0b001
+export const FLAG_LOOSE = 0b010

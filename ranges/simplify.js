@@ -1,11 +1,10 @@
-'use strict'
-
 // given a set of versions and a range, create a "simplified" range
 // that includes the same versions that the original range does
 // If the original range is shorter than the simplified one, return that.
-const satisfies = require('../functions/satisfies.js')
-const compare = require('../functions/compare.js')
-module.exports = (versions, range, options) => {
+import satisfies from '../functions/satisfies.js'
+import compare from '../functions/compare.js'
+
+export default (versions, range, options) => {
   const set = []
   let first = null
   let prev = null

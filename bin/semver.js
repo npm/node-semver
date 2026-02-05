@@ -3,8 +3,6 @@
 // Exits successfully and prints matching version(s) if
 // any supplied version is valid and passes all tests.
 
-'use strict'
-
 const argv = process.argv.slice(2)
 
 let versions = []
@@ -13,7 +11,7 @@ const range = []
 
 let inc = null
 
-const version = require('../package.json').version
+import version from '../package.json'.version
 
 let loose = false
 
@@ -27,8 +25,8 @@ let identifier
 
 let identifierBase
 
-const semver = require('../')
-const parseOptions = require('../internal/parse-options')
+import semver from '../.js'
+import parseOptions from '../internal/parse-options.js'
 
 let reverse = false
 
