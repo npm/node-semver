@@ -19,7 +19,7 @@ const ROOT_FILES = ['index.js', 'preload.js']
 /**
  * Get the type and structure of an export
  */
-function inspectExport(exported) {
+function inspectExport (exported) {
   const type = typeof exported
 
   if (type === 'function') {
@@ -62,7 +62,7 @@ function inspectExport(exported) {
 /**
  * Discover all .js files in a directory
  */
-function findJsFiles(dir) {
+function findJsFiles (dir) {
   const files = []
   const fullDir = path.join(__dirname, '..', dir)
 
@@ -84,7 +84,7 @@ function findJsFiles(dir) {
 /**
  * Get all module paths to test
  */
-function getAllModules() {
+function getAllModules () {
   const modules = [...ROOT_FILES]
 
   for (const dir of MODULE_DIRS) {
@@ -97,7 +97,7 @@ function getAllModules() {
 /**
  * Inspect a module's exports
  */
-function inspectModule(modulePath) {
+function inspectModule (modulePath) {
   const fullPath = path.join(__dirname, '..', modulePath)
   const exported = require(fullPath)
   const exportType = typeof exported
