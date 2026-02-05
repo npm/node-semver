@@ -1,3 +1,10 @@
+import parseOptions from '../internal/parse-options.js'
+import { safeRe as re, t } from '../internal/re.js'
+import cmp from '../functions/cmp.js'
+import debug from '../internal/debug.js'
+import SemVer from './semver.js'
+import Range from './range.js'
+
 const ANY = Symbol('SemVer ANY')
 // hoisted class for cyclic dependency
 class Comparator {
@@ -132,9 +139,3 @@ class Comparator {
 }
 
 export default Comparator
-import parseOptions from '../internal/parse-options.js'
-import { safeRe as re, t } from '../internal/re.js'
-import cmp from '../functions/cmp.js'
-import debug from '../internal/debug.js'
-import SemVer from './semver.js'
-import Range from './range.js'

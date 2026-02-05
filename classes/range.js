@@ -1,4 +1,19 @@
+import LRU from '../internal/lrucache.js'
+import parseOptions from '../internal/parse-options.js'
+import Comparator from './comparator.js'
+import debug from '../internal/debug.js'
+import SemVer from './semver.js'
+import {
+  safeRe as re,
+  t,
+  comparatorTrimReplace,
+  tildeTrimReplace,
+  caretTrimReplace,
+} from '../internal/re.js'
+import { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } from '../internal/constants.js'
+
 const SPACE_CHARACTERS = /\s+/g
+const cache = new LRU()
 
 // hoisted class for cyclic dependency
 class Range {
@@ -211,21 +226,6 @@ class Range {
 }
 
 export default Range
-import LRU from '../internal/lrucache.js'
-const cache = new LRU()
-
-import parseOptions from '../internal/parse-options.js'
-import Comparator from './comparator.js'
-import debug from '../internal/debug.js'
-import SemVer from './semver.js'
-import {
-  safeRe as re,
-  t,
-  comparatorTrimReplace,
-  tildeTrimReplace,
-  caretTrimReplace,
-} from '../internal/re.js'
-import { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } from '../internal/constants.js'
 
 const isNullSet = c => c.value === '<0.0.0-0'
 const isAny = c => c.value === ''
