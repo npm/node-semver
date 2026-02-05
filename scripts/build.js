@@ -7,6 +7,16 @@
  * 1. Cleans the dist/ directory
  * 2. Copies ESM source files to dist/esm/
  * 3. Transpiles ESM to CJS in dist/cjs/ using Babel
+ *
+ * Why dual-format build?
+ * - Source is ESM for modern module support
+ * - Build outputs both ESM and CJS for broad ecosystem compatibility
+ * - Uses package.json "exports" for conditional module resolution
+ *
+ * Note: template-oss-check is disabled because dual-format build structure
+ * (shipping dist/) differs from @npmcli template expectations (shipping raw
+ * source). This is intentional - dual-format distribution is standard for
+ * modern packages requiring both ESM and CJS support.
  */
 
 import fs from 'fs'

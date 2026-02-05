@@ -39,7 +39,6 @@
     "test": "tap",
     "snap": "tap",
     "lint": "npm run eslint",
-    "postlint": "template-oss-check",
     "lintfix": "npm run eslint -- --fix",
     "posttest": "npm run lint",
     "template-oss-apply": "template-oss-apply --force",
