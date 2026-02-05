@@ -39,6 +39,4 @@
 !/tap-snapshots/
 !/test/
 !/tsconfig.json
-!/ESM_MIGRATION.md
-!/ESM_MIGRATION_SUCCESS_CRITERIA.md
 tap-testdir*/
