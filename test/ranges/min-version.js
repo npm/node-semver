@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const minVersion = require('../../ranges/min-version')
+const minVersion = require('semver/ranges/min-version')
 
 test('minimum version in range tests', (t) => {
   // [range, minimum, loose]

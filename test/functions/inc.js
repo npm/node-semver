@@ -1,8 +1,8 @@
 'use strict'
 
 const { test } = require('tap')
-const inc = require('../../functions/inc')
-const parse = require('../../functions/parse')
+const inc = require('semver/functions/inc')
+const parse = require('semver/functions/parse')
 const increments = require('../fixtures/increments.js')
 
 test('increment versions test', (t) => {

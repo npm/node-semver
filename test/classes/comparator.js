@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const Comparator = require('../../classes/comparator')
+const Comparator = require('semver/classes/comparator')
 const comparatorIntersection = require('../fixtures/comparator-intersection.js')
 
 test('comparator testing', t => {

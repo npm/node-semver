@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const gt = require('../../functions/gt')
+const gt = require('semver/functions/gt')
 const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')
 

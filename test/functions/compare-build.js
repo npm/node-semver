@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const compareBuild = require('../../functions/compare-build')
+const compareBuild = require('semver/functions/compare-build')
 
 test('compareBuild', (t) => {
   const noBuild = '1.0.0'

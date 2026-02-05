@@ -1,7 +1,7 @@
 'use strict'
 
 const t = require('tap')
-const parseOptions = require('../../internal/parse-options.js')
+const parseOptions = require('semver/internal/parse-options.js')
 
 t.test('falsey values always empty options object', t => {
   t.strictSame(parseOptions(null), {})

@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const gtr = require('../../ranges/gtr')
+const gtr = require('semver/ranges/gtr')
 const versionGtr = require('../fixtures/version-gt-range')
 const versionNotGtr = require('../fixtures/version-not-gt-range')
 

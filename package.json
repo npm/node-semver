@@ -3,8 +3,39 @@
   "version": "7.7.3",
   "description": "The semantic version parser used by npm.",
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json",
+    "./classes/*": {
+      "import": "./dist/esm/classes/*.js",
+      "require": "./dist/cjs/classes/*.js"
+    },
+    "./functions/*": {
+      "import": "./dist/esm/functions/*.js",
+      "require": "./dist/cjs/functions/*.js"
+    },
+    "./ranges/*": {
+      "import": "./dist/esm/ranges/*.js",
+      "require": "./dist/cjs/ranges/*.js"
+    },
+    "./internal/*": {
+      "import": "./dist/esm/internal/*.js",
+      "require": "./dist/cjs/internal/*.js"
+    },
+    "./preload": {
+      "import": "./dist/esm/preload.js",
+      "require": "./dist/cjs/preload.js"
+    }
+  },
   "scripts": {
+    "build": "node scripts/build.js",
+    "pretest": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "tap",
     "snap": "tap",
     "lint": "npm run eslint",
@@ -15,6 +46,9 @@
     "eslint": "eslint \"**/*.{js,cjs,ts,mjs,jsx,tsx}\""
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
     "@npmcli/eslint-config": "^6.0.0",
     "@npmcli/template-oss": "4.29.0",
     "benchmark": "^2.1.4",
@@ -29,15 +63,7 @@
     "semver": "bin/semver.js"
   },
   "files": [
-    "bin/",
-    "lib/",
-    "classes/",
-    "functions/",
-    "internal/",
-    "ranges/",
-    "index.js",
-    "preload.js",
-    "range.bnf"
+    "dist/"
   ],
   "tap": {
     "timeout": 30,

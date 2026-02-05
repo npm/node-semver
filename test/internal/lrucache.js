@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const LRUCache = require('../../internal/lrucache')
+const LRUCache = require('semver/internal/lrucache')
 
 test('basic cache operation', t => {
   const c = new LRUCache()

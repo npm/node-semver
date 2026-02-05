@@ -4,7 +4,7 @@
 // null result means it's not a valid range
 // '*' is the return value from functions.validRange(), but
 // new Range().range will be '' in those cases
-const { MAX_SAFE_INTEGER } = require('../../internal/constants')
+const { MAX_SAFE_INTEGER } = require('semver/internal/constants')
 module.exports = [
   ['1.0.0 - 2.0.0', '>=1.0.0 <=2.0.0'],
   ['1.0.0 - 2.0.0', '>=1.0.0-0 <2.0.1-0', { includePrerelease: true }],

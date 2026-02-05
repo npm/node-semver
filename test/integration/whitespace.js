@@ -1,13 +1,13 @@
 'use strict'
 
 const { test } = require('tap')
-const Range = require('../../classes/range')
-const SemVer = require('../../classes/semver')
-const Comparator = require('../../classes/comparator')
-const validRange = require('../../ranges/valid')
-const minVersion = require('../../ranges/min-version')
-const minSatisfying = require('../../ranges/min-satisfying')
-const maxSatisfying = require('../../ranges/max-satisfying')
+const Range = require('semver/classes/range')
+const SemVer = require('semver/classes/semver')
+const Comparator = require('semver/classes/comparator')
+const validRange = require('semver/ranges/valid')
+const minVersion = require('semver/ranges/min-version')
+const minSatisfying = require('semver/ranges/min-satisfying')
+const maxSatisfying = require('semver/ranges/max-satisfying')
 
 const wsMedium = ' '.repeat(125)
 const wsLarge = ' '.repeat(500000)

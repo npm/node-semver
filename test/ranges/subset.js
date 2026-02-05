@@ -1,8 +1,8 @@
 'use strict'
 
 const t = require('tap')
-const subset = require('../../ranges/subset.js')
-const Range = require('../../classes/range')
+const subset = require('semver/ranges/subset.js')
+const Range = require('semver/classes/range')
 
 // sub, dom, expect, [options]
 const cases = [

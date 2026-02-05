@@ -3,6 +3,13 @@
 // Exits successfully and prints matching version(s) if
 // any supplied version is valid and passes all tests.
 
+import { createRequire } from 'module'
+import semver from '../index.js'
+import parseOptions from '../internal/parse-options.js'
+
+const require = createRequire(import.meta.url)
+const { version } = require('../package.json')
+
 const argv = process.argv.slice(2)
 
 let versions = []
@@ -10,8 +17,6 @@ let versions = []
 const range = []
 
 let inc = null
-
-import version from '../package.json'.version
 
 let loose = false
 
@@ -24,9 +29,6 @@ let rtl = false
 let identifier
 
 let identifierBase
-
-import semver from '../.js'
-import parseOptions from '../internal/parse-options.js'
 
 let reverse = false
 

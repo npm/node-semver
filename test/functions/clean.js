@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const clean = require('../../functions/clean')
+const clean = require('semver/functions/clean')
 
 test('clean tests', (t) => {
   // [range, version]

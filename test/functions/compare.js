@@ -1,10 +1,10 @@
 'use strict'
 
 const { test } = require('tap')
-const compare = require('../../functions/compare.js')
+const compare = require('semver/functions/compare.js')
 const comparisons = require('../fixtures/comparisons.js')
 const equality = require('../fixtures/equality.js')
-const SemVer = require('../../classes/semver.js')
+const SemVer = require('semver/classes/semver.js')
 
 test('comparison tests', t => {
   t.plan(comparisons.length)

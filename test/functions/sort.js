@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const sort = require('../../functions/sort')
+const sort = require('semver/functions/sort')
 
 test('sorting', (t) => {
   const list = [

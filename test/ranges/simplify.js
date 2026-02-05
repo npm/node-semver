@@ -1,7 +1,7 @@
 'use strict'
 
-const simplify = require('../../ranges/simplify.js')
-const Range = require('../../classes/range.js')
+const simplify = require('semver/ranges/simplify.js')
+const Range = require('semver/classes/range.js')
 const t = require('tap')
 const versions = [
   '1.0.0',

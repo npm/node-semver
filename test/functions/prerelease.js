@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const prerelease = require('../../functions/prerelease')
+const prerelease = require('semver/functions/prerelease')
 
 test('prerelease', (t) => {
   // [prereleaseParts, version, loose]

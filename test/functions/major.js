@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const major = require('../../functions/major')
+const major = require('semver/functions/major')
 
 test('major tests', (t) => {
   // [range, version]
