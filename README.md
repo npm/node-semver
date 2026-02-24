@@ -399,11 +399,18 @@ nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
 tilde      ::= '~' partial
 caret      ::= '^' partial
 qualifier  ::= ( '-' pre )? ( '+' build )?
-pre        ::= parts
-build      ::= parts
-parts      ::= part ( '.' part ) *
-part       ::= nr | [-0-9A-Za-z]+
+pre        ::= prepart ( '.' prepart ) *
+prepart    ::= nr | alphanumid
+build      ::= buildid ( '.' buildid ) *
+alphanumid ::= ( ['0'-'9'] ) * [-A-Za-z] [-0-9A-Za-z] *
+buildid    ::= [-0-9A-Za-z]+
 ```
+
+Note: Prerelease identifiers (`pre`) use `nr` for numeric parts, which
+disallows leading zeros (e.g., `1.2.3-00` is invalid). Build metadata
+identifiers (`build`) allow any alphanumeric string including leading
+zeros (e.g., `1.2.3+00` is valid). This matches the
+[SemVer 2.0.0 specification](https://semver.org/#spec-item-9).
 
 ## Functions
 
