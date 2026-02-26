@@ -5,7 +5,7 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
-    schedule:
+    schedule:  
       interval: daily
     target-branch: "main"
     allow:
