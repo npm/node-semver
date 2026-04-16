@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.7.5](https://github.com/npm/node-semver/compare/v7.7.4...v7.7.5) (2026-03-20)
+### Documentation
+* [`37776c3`](https://github.com/npm/node-semver/commit/37776c31e2f3448fd852c975888e37b03efe9afe) [#846](https://github.com/npm/node-semver/pull/846) fix BNF grammar to distinguish prerelease from build identifiers (#846) (@abhu85, @claude)
+### Chores
+* [`6946fef`](https://github.com/npm/node-semver/commit/6946fefa57bd5e191871a4738b28ca673e003527) [#852](https://github.com/npm/node-semver/pull/852) bump @npmcli/template-oss from 4.29.0 to 4.30.0 (#852) (@dependabot[bot], @npm-cli-bot)
+
 ## [7.7.4](https://github.com/npm/node-semver/compare/v7.7.3...v7.7.4) (2026-01-16)
 ### Bug Fixes
 * [`a29faa5`](https://github.com/npm/node-semver/commit/a29faa5f3309a01c8e5aeb965fb5c02c4c4e80e2) [#835](https://github.com/npm/node-semver/pull/835) cli: pass options to semver.valid() for loose version validation (#835) (@mldangelo)
