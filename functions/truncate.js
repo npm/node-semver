@@ -1,36 +1,28 @@
 'use strict'
 
-const SemVer = require('../classes/semver')
+const parse = require('./parse')
 const constants = require('../internal/constants')
 
-const truncate = (version, releaseType, options) => {
-  // if (typeof (options) === 'string') {
-  //   options = undefined
-  // }
+const _truncate = (version, releaseType) => {
+  version.prerelease = []
 
+  switch (releaseType) {
+    case 'major':
+      version.minor = 0
+    // eslint-disable-next-line no-fallthrough -- this is intentional fallthrough
+    case 'minor':
+      version.patch = 0
+  }
+
+  return version.format()
+}
+
+const truncate = (version, releaseType, options) => {
   if (!constants.RELEASE_TYPES.includes(releaseType)) {
     return null
   }
 
-  try {
-    const currentVersion = new SemVer(
-      version instanceof SemVer ? version.version : version,
-      options
-    )
-
-    currentVersion.prerelease = []
-
-    switch (releaseType) {
-      case 'major':
-        currentVersion.minor = 0
-      // eslint-disable-next-line no-fallthrough -- this is intentional fallthrough
-      case 'minor':
-        currentVersion.patch = 0
-    }
-
-    return currentVersion.format()
-  } catch (er) {
-    return null
-  }
+  const parsed = parse(version, options)
+  return parsed && _truncate(parsed, releaseType)
 }
 module.exports = truncate
