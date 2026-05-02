@@ -13,7 +13,7 @@ test('truncate fixture versions test', (t) => {
     t.equal(actual, expected, `${cmd} === ${expected}`)
 
     const parsed = parse(pre, options)
-    const semverTruncated = truncate(parsed, what, options)
+    const semverTruncated = truncate(parsed, truncation, options)
     t.equal(semverTruncated, expected, `${cmd} works on Semver objects`)
   })
 

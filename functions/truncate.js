@@ -3,8 +3,17 @@
 const parse = require('./parse')
 const constants = require('../internal/constants')
 
-const _truncate = (version, truncation) => {
-  if (truncation.startsWith('pre')) {
+const truncate = (version, truncation, options) => {
+  if (!constants.RELEASE_TYPES.includes(truncation)) {
+    return null
+  }
+
+  const parsed = parse(version, options)
+  return parsed && doTruncation(parsed, truncation)
+}
+
+const doTruncation = (version, truncation) => {
+  if (isPrerelease(truncation)) {
     return version.version
   }
 
@@ -23,15 +32,8 @@ const _truncate = (version, truncation) => {
   return version.format()
 }
 
-const truncate = (version, truncation, options) => {
-  if (!constants.RELEASE_TYPES.includes(truncation)) {
-    return null
-  }
-
-  const parsed = parse(version, options)
-  return parsed && _truncate(parsed, truncation)
+const isPrerelease = (type) => {
+  return type.startsWith('pre')
 }
+
 module.exports = truncate
-
-
-// 1. Should truncate _always_ strip off build info?
