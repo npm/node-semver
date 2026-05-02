@@ -7,13 +7,13 @@ const truncations = require('../fixtures/truncations.js')
 const validVersions = require('../fixtures/valid-versions.js')
 
 test('truncate fixture versions test', (t) => {
-  truncations.forEach(([pre, truncation, expected, options, id, base]) => {
-    const actual = truncate(pre, truncation, options, id, base)
-    const cmd = `truncate(${pre}, ${truncation}, ${options}, ${id}, ${base})`
+  truncations.forEach(([pre, truncation, expected]) => {
+    const actual = truncate(pre, truncation)
+    const cmd = `truncate(${pre}, ${truncation})`
     t.equal(actual, expected, `${cmd} === ${expected}`)
 
-    const parsed = parse(pre, options)
-    const semverTruncated = truncate(parsed, truncation, options)
+    const parsed = parse(pre)
+    const semverTruncated = truncate(parsed, truncation)
     t.equal(semverTruncated, expected, `${cmd} works on Semver objects`)
   })
 
@@ -30,7 +30,7 @@ test('truncate pre* only removes build info', (t) => {
 
       const cmd = `truncate(${versionToTruncate}, ${what})`
       t.equal(actual, expected, `${cmd} === ${expected}`)
-      t.same(parse(actual).build, [], `${cmd} strips build info `)
+      t.same(parse(actual).build, [], `${cmd} build info should be removed`)
     })
   })
   t.end()
