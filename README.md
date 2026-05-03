@@ -56,6 +56,7 @@ const semverCompareLoose = require('semver/functions/compare-loose')
 const semverCompareBuild = require('semver/functions/compare-build')
 const semverSort = require('semver/functions/sort')
 const semverRsort = require('semver/functions/rsort')
+const semverTruncate = require('semver/functions/truncate')
 
 // low-level comparators between versions
 const semverGt = require('semver/functions/gt')
@@ -456,6 +457,12 @@ strings that they parse.
   or comparators intersect.
 * `parse(v)`: Attempt to parse a string as a semantic version, returning either
   a `SemVer` object or `null`.
+* `truncate(v, releaseType)`: Return the version with components _lower_
+  than `releaseType` dropped off, e.g.:
+  * `major` removes build & prerelease info and sets minor & patch to 0.
+  * `minor` removes build & prerelease info, and sets patch to 0
+  * `patch` removes build & prerelease info
+  * All prerelease types remove build info only
 
 ### Comparison
 
@@ -657,6 +664,7 @@ The following modules are available:
 * `require('semver/functions/rsort')`
 * `require('semver/functions/satisfies')`
 * `require('semver/functions/sort')`
+* `require('semver/functions.truncate')`
 * `require('semver/functions/valid')`
 * `require('semver/ranges/gtr')`
 * `require('semver/ranges/intersects')`
