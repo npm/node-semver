@@ -664,7 +664,7 @@ The following modules are available:
 * `require('semver/functions/rsort')`
 * `require('semver/functions/satisfies')`
 * `require('semver/functions/sort')`
-* `require('semver/functions.truncate')`
+* `require('semver/functions/truncate')`
 * `require('semver/functions/valid')`
 * `require('semver/ranges/gtr')`
 * `require('semver/ranges/intersects')`
