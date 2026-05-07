@@ -34,6 +34,8 @@ t.test('inc tests', t => Promise.all([
   ['-i', 'premajor', '1.0.0', '--preid=beta', '-n', 'false'],
   ['-i', '1.2.3'],
   ['-i', 'release', '1.0.0-pre'],
+  ['-i', 'major', '-i', 'minor', '1.0.0'], // last -i "wins"
+  ['-i', 'invalid', '1.0.0'], // invalid -i value, should warn
 ].map(args => t.resolveMatchSnapshot(run(args), args.join(' ')))))
 
 t.test('help output', t => Promise.all([

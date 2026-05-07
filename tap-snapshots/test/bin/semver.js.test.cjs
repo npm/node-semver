@@ -303,6 +303,24 @@ Object {
 }
 `
 
+exports[`test/bin/semver.js TAP inc tests > -i invalid 1.0.0 1`] = `
+Object {
+  "code": 0,
+  "err": "Invalid value for -i; defaulting to 'patch'. This may become a failure in future major versions.\\n",
+  "out": "1.0.1\\n",
+  "signal": null,
+}
+`
+
+exports[`test/bin/semver.js TAP inc tests > -i major -i minor 1.0.0 1`] = `
+Object {
+  "code": 0,
+  "err": "",
+  "out": "1.1.0\\n",
+  "signal": null,
+}
+`
+
 exports[`test/bin/semver.js TAP inc tests > -i major 1.0.0 1`] = `
 Object {
   "code": 0,
