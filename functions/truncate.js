@@ -2,14 +2,23 @@
 
 const parse = require('./parse')
 const constants = require('../internal/constants')
+const SemVer = require('../classes/semver')
 
 const truncate = (version, truncation, options) => {
   if (!constants.RELEASE_TYPES.includes(truncation)) {
     return null
   }
 
-  const parsed = parse(version, options)
-  return parsed && doTruncation(parsed, truncation)
+  const clonedVersion = cloneInputVersion(version, options)
+  return clonedVersion && doTruncation(clonedVersion, truncation)
+}
+
+const cloneInputVersion = (version, options) => {
+  const versionStringToParse = (
+    version instanceof SemVer ? version.version : version
+  )
+
+  return parse(versionStringToParse, options)
 }
 
 const doTruncation = (version, truncation) => {
