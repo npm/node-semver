@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.8.0](https://github.com/npm/node-semver/compare/v7.7.4...v7.8.0) (2026-05-08)
+### Features
+* [`0d0a0a2`](https://github.com/npm/node-semver/commit/0d0a0a2582fb1486bc6cd255ba18819c441ed149) [#855](https://github.com/npm/node-semver/pull/855) Add `truncate` function (#855) (@pjohnmeyer, @owlstronaut)
+### Bug Fixes
+* [`3905343`](https://github.com/npm/node-semver/commit/3905343045dc293c3694d5e46170b1bb1fb5cf58) [#859](https://github.com/npm/node-semver/pull/859) Warn when defaulting to --inc=patch in CLI (@pjohnmeyer)
+### Documentation
+* [`c368af6`](https://github.com/npm/node-semver/commit/c368af612e521767e960419e6388c5129c857984) [#853](https://github.com/npm/node-semver/pull/853) fix typos in documentation (#853) (@ankitkumar572005)
+* [`37776c3`](https://github.com/npm/node-semver/commit/37776c31e2f3448fd852c975888e37b03efe9afe) [#846](https://github.com/npm/node-semver/pull/846) fix BNF grammar to distinguish prerelease from build identifiers (#846) (@abhu85, @claude)
+### Chores
+* [`9542e09`](https://github.com/npm/node-semver/commit/9542e09ebcd89e916777d35eba868061dad9ed7d) [#860](https://github.com/npm/node-semver/pull/860) template-oss-apply (@owlstronaut)
+* [`937bc2c`](https://github.com/npm/node-semver/commit/937bc2cd8721db14745c9be123078c44e77a86ef) [#860](https://github.com/npm/node-semver/pull/860) `template-oss-apply@5.0.0` (@owlstronaut)
+* [`6946fef`](https://github.com/npm/node-semver/commit/6946fefa57bd5e191871a4738b28ca673e003527) [#852](https://github.com/npm/node-semver/pull/852) bump @npmcli/template-oss from 4.29.0 to 4.30.0 (#852) (@dependabot[bot], @npm-cli-bot)
+
 ## [7.7.4](https://github.com/npm/node-semver/compare/v7.7.3...v7.7.4) (2026-01-16)
 ### Bug Fixes
 * [`a29faa5`](https://github.com/npm/node-semver/commit/a29faa5f3309a01c8e5aeb965fb5c02c4c4e80e2) [#835](https://github.com/npm/node-semver/pull/835) cli: pass options to semver.valid() for loose version validation (#835) (@mldangelo)
