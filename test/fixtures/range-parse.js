@@ -116,4 +116,18 @@ module.exports = [
   ['>1.x.x-alpha+build', '>=2.0.0', null],
   ['>=1.x.x-alpha+build <2.x.x+build', '>=1.0.0 <2.0.0-0', null],
   ['1.x.x-alpha+build || 2.x.x+build', '>=1.0.0 <2.0.0-0||>=2.0.0 <3.0.0-0', null],
+  // long build metadata must be stripped, not bled into the version
+  ['4.17.0+' + 'a'.repeat(250) + '3', '4.17.0', { loose: true }],
+  ['4.17.0+' + 'a'.repeat(251), '4.17.0', { loose: true }],
+  ['v1.0+' + 'a'.repeat(249) + 'x6', '>=1.0.0 <1.1.0-0', null],
+  ['1.2.3+' + 'a'.repeat(251) + ' - 2.0.0', '>=1.2.3 <=2.0.0', null],
+  ['1.2.3+' + 'a'.repeat(251) + ' - 2.0.0', '>=1.2.3 <=2.0.0', { loose: true }],
+  ['> 1.2.3+' + 'a'.repeat(251), '>1.2.3', null],
+  ['>= 1.2.3+' + 'a'.repeat(251), '>=1.2.3', { loose: true }],
+  ['~1.2.3+' + 'a'.repeat(251), '>=1.2.3 <1.3.0-0', null],
+  ['^1.2.3+' + 'a'.repeat(251), '>=1.2.3 <2.0.0-0', null],
+  ['1.2.3+sha512.' + 'a'.repeat(251), '1.2.3', { loose: true }],
+  ['1.2.3+sha256.' + 'a'.repeat(200) + '.' + 'b'.repeat(200), '1.2.3', { loose: true }],
+  ['1.2.3+' + 'a'.repeat(251) + ' || 2.0.0+' + 'b'.repeat(251),
+    '1.2.3||2.0.0', { loose: true }],
 ]
