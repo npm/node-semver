@@ -29,6 +29,7 @@ const cases = [
   ['^1.2.3-pre.0', '>=1.0.0', true, { includePrerelease: true }],
   ['^1.2.3-pre.0', '>=1.2.3-pre.0', true],
   ['^1.2.3-pre.0', '>=1.2.3-pre.0', true, { includePrerelease: true }],
+  ['^10.2.0-beta.2', '^10.2.0-beta.1', true],
   ['>1.2.3-pre.0', '>=1.2.3-pre.0', true],
   ['>1.2.3-pre.0', '>1.2.3-pre.0 || 2', true],
   ['1 >1.2.3-pre.0', '>1.2.3-pre.0', true],
