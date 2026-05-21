@@ -1,5 +1,10 @@
 # Changelog
 
+## [7.8.1](https://github.com/npm/node-semver/compare/v7.8.0...v7.8.1) (2026-05-21)
+### Bug Fixes
+* [`17aa702`](https://github.com/npm/node-semver/commit/17aa702d91166472b197a2ea768f085083bee2e4) [#869](https://github.com/npm/node-semver/pull/869) strip build metadata before comparator trimming (#869) (@owlstronaut)
+* [`5f3ca13`](https://github.com/npm/node-semver/commit/5f3ca133e040210b6ea80c350a1d61d9da02e722) [#867](https://github.com/npm/node-semver/pull/867) handle prerelease bounds in subset (#867) (@puneetdixit200, Puneet Dixit)
+
 ## [7.8.0](https://github.com/npm/node-semver/compare/v7.7.4...v7.8.0) (2026-05-08)
 ### Features
 * [`0d0a0a2`](https://github.com/npm/node-semver/commit/0d0a0a2582fb1486bc6cd255ba18819c441ed149) [#855](https://github.com/npm/node-semver/pull/855) Add `truncate` function (#855) (@pjohnmeyer, @owlstronaut)
