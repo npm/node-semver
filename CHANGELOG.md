@@ -1,5 +1,9 @@
 # Changelog
 
+## [7.8.2](https://github.com/npm/node-semver/compare/v7.8.1...v7.8.2) (2026-06-04)
+### Bug Fixes
+* [`bea6028`](https://github.com/npm/node-semver/commit/bea6028694a75e840f48b288ac019e9644cfe6e8) [#870](https://github.com/npm/node-semver/pull/870) increment dotted prerelease identifiers (#870) (@liuzemei, @SheldonNeo)
+
 ## [7.8.1](https://github.com/npm/node-semver/compare/v7.8.0...v7.8.1) (2026-05-21)
 ### Bug Fixes
 * [`17aa702`](https://github.com/npm/node-semver/commit/17aa702d91166472b197a2ea768f085083bee2e4) [#869](https://github.com/npm/node-semver/pull/869) strip build metadata before comparator trimming (#869) (@owlstronaut)
