@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.8.3](https://github.com/npm/node-semver/compare/v7.8.2...v7.8.3) (2026-06-08)
+### Bug Fixes
+* [`046da7f`](https://github.com/npm/node-semver/commit/046da7f527cc72a482b5dea8cb59392be65bf186) [#872](https://github.com/npm/node-semver/pull/872) align caret includePrerelease lower bounds (#872) (@wayyoungboy)
+### Chores
+* [`3485dda`](https://github.com/npm/node-semver/commit/3485ddadb2ca0d0691392ee5ce620072e1b1e040) [#866](https://github.com/npm/node-semver/pull/866) bump @npmcli/eslint-config from 6.0.1 to 7.0.0 (#866) (@dependabot[bot])
+
 ## [7.8.2](https://github.com/npm/node-semver/compare/v7.8.1...v7.8.2) (2026-06-04)
 ### Bug Fixes
 * [`bea6028`](https://github.com/npm/node-semver/commit/bea6028694a75e840f48b288ac019e9644cfe6e8) [#870](https://github.com/npm/node-semver/pull/870) increment dotted prerelease identifiers (#870) (@liuzemei, @SheldonNeo)
