@@ -1,5 +1,9 @@
 # Changelog
 
+## [7.8.4](https://github.com/npm/node-semver/compare/v7.8.3...v7.8.4) (2026-06-09)
+### Bug Fixes
+* [`e583226`](https://github.com/npm/node-semver/commit/e583226b165edd6530502cf731eda334527af6fe) [#874](https://github.com/npm/node-semver/pull/874) reject numeric segments after x-ranges (@pupuking723)
+
 ## [7.8.3](https://github.com/npm/node-semver/compare/v7.8.2...v7.8.3) (2026-06-08)
 ### Bug Fixes
 * [`046da7f`](https://github.com/npm/node-semver/commit/046da7f527cc72a482b5dea8cb59392be65bf186) [#872](https://github.com/npm/node-semver/pull/872) align caret includePrerelease lower bounds (#872) (@wayyoungboy)
