@@ -112,6 +112,13 @@ module.exports = [
   ['2.x', '2.1.0-pre.0', { includePrerelease: true }],
   ['1.1.x', '1.1.0-a', { includePrerelease: true }],
   ['1.1.x', '1.1.1-a', { includePrerelease: true }],
+  // tilde ranges are documented as equivalent to the matching x-range,
+  // so with includePrerelease they must accept the same prereleases. #512
+  ['~1.1', '1.1.0-a', { includePrerelease: true }],
+  ['~1.1.x', '1.1.0-a', { includePrerelease: true }],
+  ['~1.1', '1.1.1-a', { includePrerelease: true }],
+  ['~2', '2.0.0-pre.0', { includePrerelease: true }],
+  ['~2.x', '2.0.0-pre.0', { includePrerelease: true }],
   ['*', '1.0.0-rc1', { includePrerelease: true }],
   ['^1.0.0-0', '1.0.1-rc1', { includePrerelease: true }],
   ['^1.0.0-rc2', '1.0.1-rc1', { includePrerelease: true }],

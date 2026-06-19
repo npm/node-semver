@@ -57,6 +57,18 @@ module.exports = [
   ['~> 1', '>=1.0.0 <2.0.0-0'],
   ['~1.0', '>=1.0.0 <1.1.0-0'],
   ['~ 1.0', '>=1.0.0 <1.1.0-0'],
+  // tilde with includePrerelease must lower-bound at -0 just like the
+  // equivalent x-range (e.g. ~1.2 is documented as the same as 1.2.x),
+  // so that prereleases such as 1.2.0-rc match. See #512.
+  ['~1', '>=1.0.0-0 <2.0.0-0', { includePrerelease: true }],
+  ['~1.x', '>=1.0.0-0 <2.0.0-0', { includePrerelease: true }],
+  ['~1.2', '>=1.2.0-0 <1.3.0-0', { includePrerelease: true }],
+  ['~1.2.x', '>=1.2.0-0 <1.3.0-0', { includePrerelease: true }],
+  ['~0.0', '<0.1.0-0', { includePrerelease: true }],
+  // a fully-specified tilde keeps its exact lower bound (matches caret),
+  // and an explicit prerelease is preserved as-is
+  ['~1.2.3', '>=1.2.3 <1.3.0-0', { includePrerelease: true }],
+  ['~1.2.3-beta.4', '>=1.2.3-beta.4 <1.3.0-0', { includePrerelease: true }],
   ['^0', '<1.0.0-0'],
   ['^ 1', '>=1.0.0 <2.0.0-0'],
   ['^0.1', '>=0.1.0 <0.2.0-0'],
