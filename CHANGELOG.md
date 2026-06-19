@@ -1,5 +1,9 @@
 # Changelog
 
+## [7.8.5](https://github.com/npm/node-semver/compare/v7.8.4...v7.8.5) (2026-06-19)
+### Bug Fixes
+* [`9c8692a`](https://github.com/npm/node-semver/commit/9c8692ae05416e9dbe88d95ffe2b80e6964550fe) [#878](https://github.com/npm/node-semver/pull/878) include prereleases in tilde range lower bound with includePrerelease (#878) (@chatman-media)
+
 ## [7.8.4](https://github.com/npm/node-semver/compare/v7.8.3...v7.8.4) (2026-06-09)
 ### Bug Fixes
 * [`e583226`](https://github.com/npm/node-semver/commit/e583226b165edd6530502cf731eda334527af6fe) [#874](https://github.com/npm/node-semver/pull/874) reject numeric segments after x-ranges (@pupuking723)
