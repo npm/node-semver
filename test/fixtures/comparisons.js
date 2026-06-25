@@ -35,4 +35,7 @@ module.exports = [
   ['1.2.3-a.b.c.10.d.5', '1.2.3-a.b.c.5.d.100'],
   ['1.2.3-r2', '1.2.3-r100'],
   ['1.2.3-r100', '1.2.3-R2'],
+  // numeric prerelease ids beyond MAX_SAFE_INTEGER (2^53) must keep
+  // full integer precision; Number coercion would collapse them to equal
+  ['1.0.0-9007199254740993', '1.0.0-9007199254740992'],
 ]
