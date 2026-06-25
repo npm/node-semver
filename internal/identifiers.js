@@ -1,5 +1,7 @@
 'use strict'
 
+/* global BigInt */
+
 const numeric = /^[0-9]+$/
 const compareIdentifiers = (a, b) => {
   if (typeof a === 'number' && typeof b === 'number') {
@@ -10,8 +12,10 @@ const compareIdentifiers = (a, b) => {
   const bnum = numeric.test(b)
 
   if (anum && bnum) {
-    a = +a
-    b = +b
+    // compare as BigInt so numeric ids >= MAX_SAFE_INTEGER (kept as strings
+    // to avoid precision loss) are not collapsed by Number coercion
+    a = BigInt(a)
+    b = BigInt(b)
   }
 
   return a === b ? 0
