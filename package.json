@@ -74,5 +74,9 @@
       "/benchmarks"
     ],
     "publish": "true"
+  },
+  "homepage": "https://github.com/npm/node-semver",
+  "bugs": {
+    "url": "https://github.com/npm/node-semver/issues"
   }
 }
