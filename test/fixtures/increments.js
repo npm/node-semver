@@ -34,6 +34,10 @@ module.exports = [
   ['3.0.0-alpha.beta.5.4', 'prerelease', '3.0.0-alpha.beta.5.5', false, 'alpha.beta'],
   ['3.0.0-alpha.beta.5.4', 'prerelease', '3.0.0-alpha.beta.5.5', false, 'alpha.beta.5'],
   ['3.0.0-alpha.beta.gamma', 'prerelease', '3.0.0-alpha.beta.0', false, 'alpha.beta'],
+  // dotted prerelease identifiers must be split into one element per id
+  ['1.2.3', 'prerelease', '1.2.4-x.y.0', undefined, 'x.y'],
+  ['1.2.3', 'prerelease', '1.2.4-1.2.0', undefined, '1.2'],
+  ['1.2.3', 'prerelease', '1.2.4-9007199254740993.0', undefined, '9007199254740993'],
   ['1.2.3-alpha.9.beta', 'prerelease', '1.2.3-alpha.10.beta'],
   ['1.2.3-alpha.10.beta', 'prerelease', '1.2.3-alpha.11.beta'],
   ['1.2.3-alpha.11.beta', 'prerelease', '1.2.3-alpha.12.beta'],

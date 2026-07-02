@@ -321,9 +321,21 @@ class SemVer {
         if (identifier) {
           // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
           // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
-          let prerelease = [identifier, base]
+          // Split dotted identifiers (e.g. 'x.y') into one element each and
+          // numberify numeric ids, matching how the constructor parses them, so
+          // comparePre() sees exactly one identifier per array element.
+          const identifiers = identifier.split('.').map((id) => {
+            if (/^[0-9]+$/.test(id)) {
+              const num = +id
+              if (num >= 0 && num < MAX_SAFE_INTEGER) {
+                return num
+              }
+            }
+            return id
+          })
+          let prerelease = [...identifiers, base]
           if (identifierBase === false) {
-            prerelease = [identifier]
+            prerelease = identifiers
           }
           if (isPrereleaseIdentifier(this.prerelease, identifier)) {
             const prereleaseBase = this.prerelease[identifier.split('.').length]
