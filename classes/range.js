@@ -181,11 +181,7 @@ class Range {
         range.set.some((rangeComparators) => {
           return (
             isSatisfiable(rangeComparators, options) &&
-            thisComparators.every((thisComparator) => {
-              return rangeComparators.every((rangeComparator) => {
-                return thisComparator.intersects(rangeComparator, options)
-              })
-            })
+            comparatorSetsIntersect(thisComparators, rangeComparators, options)
           )
         })
       )
@@ -574,4 +570,45 @@ const testSet = (set, version, options) => {
   }
 
   return true
+}
+
+// The single version pinned by a bare `=x.y.z` comparator in a set, or null.
+const exactVersion = (comparators) => {
+  const exact = comparators.find((c) => c.operator === '' && c.value !== '')
+  return exact ? exact.semver : null
+}
+
+// Do two satisfiable comparator sets share a version?
+// When one set pins an exact version, the sets intersect iff that version
+// satisfies the *whole* other set. Testing the version against the entire set
+// with testSet() (rather than one comparator at a time) preserves prerelease
+// licensing: `1.2.3-alpha` is allowed by `>=1.2.3-alpha <2.0.0-0` because the
+// `>=` sibling licenses it, even though `<2.0.0-0` alone rejects the prerelease.
+// Without an exact pin, fall back to pairwise comparator intersection.
+const comparatorSetsIntersect = (a, b, options) => {
+  options = parseOptions(options)
+
+  // The pairwise check is sufficient but not necessary: it decomposes the sets
+  // into independent comparator pairs and so can miss set-level prerelease
+  // licensing. It only ever under-reports, so a `true` here is authoritative.
+  if (a.every((ac) => b.every((bc) => ac.intersects(bc, options)))) {
+    return true
+  }
+
+  // Recover those missed intersections: when one set pins an exact version, the
+  // two sets share a version iff that version satisfies the *whole* other set.
+  // Testing against the entire set (via testSet) restores prerelease licensing,
+  // e.g. `=1.2.3-alpha` intersects `>=1.2.3-alpha <2.0.0-0` because the `>=`
+  // sibling licenses the prerelease that `<2.0.0-0` alone rejects.
+  const aExact = exactVersion(a)
+  if (aExact) {
+    return testSet(b, aExact, options)
+  }
+
+  const bExact = exactVersion(b)
+  if (bExact) {
+    return testSet(a, bExact, options)
+  }
+
+  return false
 }
