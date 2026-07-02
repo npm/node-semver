@@ -58,4 +58,13 @@ module.exports = [
   ['1.x', '1.3.0 || <1.0.0 >2.0.0', true],
   ['*', '*', true],
   ['x', '', true],
+  // an exact prerelease intersects a caret/tilde range that pins the same
+  // version: the range's `>=` lower bound licenses the prerelease that its
+  // upper bound alone would reject
+  ['^1.2.3-alpha', '=1.2.3-alpha', true],
+  ['~1.2.3-alpha', '1.2.3-alpha', true],
+  ['>=1.2.3-alpha <2.0.0-0', '1.2.3-alpha', true],
+  // but an exact prerelease does NOT intersect a range that never licenses it
+  ['=1.2.3-alpha', '<2.0.0', false],
+  ['=1.2.3-alpha', '=1.2.3-beta', false],
 ]
