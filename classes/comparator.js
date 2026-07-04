@@ -100,8 +100,9 @@ class Comparator {
       (this.value === '<0.0.0-0' || comp.value === '<0.0.0-0')) {
       return false
     }
+    const isNullSet = v => v === '<0.0.0' || v === '<0.0.0-0'
     if (!options.includePrerelease &&
-      (this.value.startsWith('<0.0.0') || comp.value.startsWith('<0.0.0'))) {
+      (isNullSet(this.value) || isNullSet(comp.value))) {
       return false
     }
 
