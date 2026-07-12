@@ -304,6 +304,11 @@ provided tuple parts.
 * `1.2.3 - 2.3` := `>=1.2.3 <2.4.0-0`
 * `1.2.3 - 2` := `>=1.2.3 <3.0.0-0`
 
+When `includePrerelease` is set, partial versions in hyphen ranges
+include prereleases at the expanded lower bound. For example,
+`1 - 2` is treated as `>=1.0.0-0 <3.0.0-0`, so `1.0.0-pre`
+satisfies the range with `includePrerelease`.
+
 #### X-Ranges `1.2.x` `1.X` `1.2.*` `*`
 
 Any of `X`, `x`, or `*` may be used to "stand in" for one of the
@@ -677,4 +682,3 @@ The following modules are available:
 * `require('semver/ranges/subset')`
 * `require('semver/ranges/to-comparators')`
 * `require('semver/ranges/valid')`
-
