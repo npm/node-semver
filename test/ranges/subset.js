@@ -13,6 +13,11 @@ const cases = [
   ['1.2.3', '>1.2.0', true],
   ['1.2.3 2.3.4 || 2.3.4', '3', false],
   ['^1.2.3-pre.0', '1.x', false],
+  // a prerelease `=` comparator combined with a bound of a different tuple must
+  // not be treated as a null set (subset false-positive): 1.1.2-alpha is in sub
+  // but not in dom, so sub is not a subset of dom
+  ['=1.1.2-alpha <3.1.0', '<1.0.0', false],
+  ['<3.1.0-0 1.1.2-alpha', '~2.0', false],
   ['^1.2.3-pre.0', '1.x', true, { includePrerelease: true }],
   ['>2 <1', '3', true],
   ['1 || 2 || 3', '>=1.0.0', true],
