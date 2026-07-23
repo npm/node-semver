@@ -64,6 +64,11 @@ test('minimum version in range tests', (t) => {
     ['>2 || >1.0.0-0', '1.0.0-0.0'],
     ['>2 || >1.0.0-beta', '1.0.0-beta.0'],
 
+    // includePrerelease: the lowest prerelease of the next version is the true
+    // minimum for a `>` bound (and lower than the plain next version)
+    ['>1.0.0', '1.0.1-0', { includePrerelease: true }],
+    ['>2 || >1.0.0', '1.0.1-0', { includePrerelease: true }],
+
     // Impossible range
     ['>4 <3', null],
   ].forEach((tuple) => {
