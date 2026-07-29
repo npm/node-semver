@@ -223,23 +223,14 @@ class SemVer {
 
     switch (release) {
       case 'premajor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor = 0
-        this.major++
+        this.inc('major', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor++
+        this.inc('minor', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
-        // If this is already a prerelease, it will bump to the next version
-        // drop any prereleases that might already exist, since they are not
-        // relevant at this point.
-        this.prerelease.length = 0
         this.inc('patch', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
