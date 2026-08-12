@@ -64,8 +64,15 @@ test('minimum version in range tests', (t) => {
     ['>2 || >1.0.0-0', '1.0.0-0.0'],
     ['>2 || >1.0.0-beta', '1.0.0-beta.0'],
 
+    // A null set in a union must not mask the minimum of the other sets
+    ['^1 ^2 || >=3', '3.0.0'],
+    ['>=2 <1 || >=3', '3.0.0'],
+    ['1.x 2.x || >=3', '3.0.0'],
+    ['>=3 || ^1 ^2', '3.0.0'],
+
     // Impossible range
     ['>4 <3', null],
+    ['^1 ^2 || >4 <3', null],
   ].forEach((tuple) => {
     const range = tuple[0]
     const version = tuple[1]
