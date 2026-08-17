@@ -1,4 +1,7 @@
-semver(1) -- The semantic versioner for npm
+semver(- uses: github/codeql-action/init@v4
+  with:
+    config-file: ./.github/codeql/codeql-config.yml
+) -- The semantic versioner for npm
 ===========================================
 
 ## Install
