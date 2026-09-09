@@ -126,3 +126,22 @@ test('cache', (t) => {
   t.equal(r2.set[0][cached], true) // Will be true, showing it's cached.
   t.end()
 })
+
+test('intersections preserve prerelease options and parsed comparators', t => {
+  for (const includePrerelease of [false, true]) {
+    const options = { includePrerelease }
+    const left = new Range('>1.0.0 <2.0.0', options)
+    const right = new Range('^2.0.0-0', options)
+    const before = JSON.stringify([left.set, right.set])
+    t.equal(left.intersects(right, options), includePrerelease)
+    t.equal(right.intersects(left, options), includePrerelease)
+    t.equal(left.test('2.0.0-0'), includePrerelease)
+    t.ok(right.test('2.0.0-0'))
+    t.equal(JSON.stringify([left.set, right.set]), before)
+  }
+  const left = new Range('>01.0.0 <02.0.0', true)
+  const right = new Range('^02.0.0-0', true)
+  t.notOk(left.intersects(right, true))
+  t.notOk(right.intersects(left, { loose: true }))
+  t.end()
+})

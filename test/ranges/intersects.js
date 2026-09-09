@@ -58,3 +58,16 @@ test('missing comparator parameter in intersect comparators', (t) => {
   'throws type error')
   t.end()
 })
+
+test('intersections honor prerelease options', t => {
+  for (const loose of [false, true]) {
+    for (const includePrerelease of [false, true]) {
+      const options = { loose, includePrerelease }
+      t.equal(intersects('>1.0.0 <2.0.0', '^2.0.0-0', options), includePrerelease)
+      t.equal(intersects('^2.0.0-0', '>1.0.0 <2.0.0', options), includePrerelease)
+    }
+  }
+  t.notOk(intersects('>01.0.0 <02.0.0', '^02.0.0-0', true))
+  t.notOk(intersects('^02.0.0-0', '>01.0.0 <02.0.0', { loose: true }))
+  t.end()
+})
