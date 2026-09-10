@@ -8,6 +8,7 @@ const {
   t: tokens,
   comparatorTrimReplace,
 } = require('../../internal/re')
+const { MAX_LENGTH } = require('../../internal/constants')
 
 const whitespace = [
   '\t',
@@ -38,7 +39,11 @@ const whitespace = [
 ]
 
 const operators = ['', '=', '==', '<', '<=', '>', '>=']
-const versions = ['0', '1', '1.2', '1.2.3', 'x', 'X', '*']
+const versions = [
+  '0', '1', '1.2', '1.2.3', 'x', 'X', '*',
+  '0.0.0-928490632884417731e7af463c92b034d6a78268fc993bcb88a57944',
+  `1.2.3-${'9'.repeat(MAX_LENGTH - '1.2.3-a'.length)}a`,
+]
 
 test('matches comparator trim behavior', t => {
   const mismatches = []
