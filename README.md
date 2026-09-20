@@ -440,6 +440,8 @@ strings that they parse.
   * `premajor` in one call will bump the version up to the next major
     version and down to a prerelease of that major version.
     `preminor`, and `prepatch` work the same way.
+    If the version is already a prerelease of that release type, the
+    numeric version is not incremented again (same as `major`/`minor`/`patch`).
   * If called from a non-prerelease version, `prerelease` will work the
     same as `prepatch`. It increments the patch version and then makes a
     prerelease. If the input version is already a prerelease it simply

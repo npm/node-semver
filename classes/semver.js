@@ -207,6 +207,8 @@ class SemVer {
 
   // preminor will bump the version up to the next minor release, and immediately
   // down to pre-release. premajor and prepatch work the same way.
+  // These compose as major/minor/patch (which already skip a numeric bump when
+  // the version is a prerelease of that release type) followed by pre.
   inc (release, identifier, identifierBase) {
     if (release.startsWith('pre')) {
       if (!identifier && identifierBase === false) {
@@ -223,23 +225,14 @@ class SemVer {
 
     switch (release) {
       case 'premajor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor = 0
-        this.major++
+        this.inc('major', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
-        this.prerelease.length = 0
-        this.patch = 0
-        this.minor++
+        this.inc('minor', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
-        // If this is already a prerelease, it will bump to the next version
-        // drop any prereleases that might already exist, since they are not
-        // relevant at this point.
-        this.prerelease.length = 0
         this.inc('patch', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
