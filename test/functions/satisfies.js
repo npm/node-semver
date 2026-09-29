@@ -2,6 +2,7 @@
 
 const { test } = require('tap')
 const satisfies = require('../../functions/satisfies')
+const Comparator = require('../../classes/comparator')
 const rangeInclude = require('../fixtures/range-include.js')
 const rangeExclude = require('../fixtures/range-exclude.js')
 test('range tests', t => {
@@ -27,4 +28,13 @@ test('invalid ranges never satisfied (but do not throw)', t => {
   t.plan(cases.length)
   cases.forEach(([range, ver]) =>
     t.notOk(satisfies(ver, range), `${range} not satisfied because invalid`))
+})
+
+test('Comparator range argument can test a prerelease version', t => {
+  t.equal(
+    satisfies('1.0.0-beta', new Comparator('>=1.0.0-alpha')),
+    true,
+    'does not throw when the range is a Comparator'
+  )
+  t.end()
 })
