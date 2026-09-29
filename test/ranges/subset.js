@@ -41,6 +41,15 @@ const cases = [
   ['<1.2.3-pre.0', '<1.2.3-pre.0 || 2', true],
   ['1 <1.2.3-pre.0', '<1.2.3-pre.0', true],
 
+  // regression: an eq comparator sharing a prerelease tuple with a gt/lt
+  // comparator in the same simple range must not leak that tuple match
+  // into an isolated satisfies() check against the gt/lt comparator alone,
+  // or the sub range gets misclassified as a null set (returning true when
+  // it should be false)
+  ['>1.0.0 1.2.3-0', '1.2.3', false],
+  ['<2.0.0 1.2.3-0', '1.2.3', false],
+  ['<2.0.0 1.2.3-0', '>1.2.3-0 <=1.0.0', false],
+
   ['*', '*', true],
   ['', '*', true],
   ['*', '', true],
