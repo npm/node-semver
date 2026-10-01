@@ -157,6 +157,28 @@ const cases = [
     true], // sort with mixed compare results
   ['>=2.0.0 <4.0.0', '>2.0.0 <4.0.0 || >=2.0.0 <3.0.0', true], // sort tiebreak >/>=
   ['*', '<2.0.0 || >=1.0.0', true, { includePrerelease: true }],
+
+  // a prerelease bound admits prereleases in its tuple, which a union of
+  // branches without a prerelease in that tuple does not cover
+  ['>=1.0.0-pre', '<2.0.0 || >=1.0.0', false], // 1.0.0-pre is not in dom
+  ['>1.0.0-pre <3.0.0', '<2.0.0 || >=1.0.0', false],
+  ['<2.0.0-pre', '<1.0.0 || >=0.5.0 <3.0.0', false], // 2.0.0-0 is not in dom
+  ['<=2.0.0-pre', '<1.0.0 || >=0.5.0 <3.0.0', false],
+  ['>=1.0.0-pre <2.0.0', '>=1.0.0-0 <2.0.0 || >=2.0.0', true], // one branch covers it
+  ['<2.0.0-0', '<1.0.0 || >=0.5.0 <3.0.0', true], // <2.0.0-0 is <2.0.0
+  ['>=1.0.0-pre', '<2.0.0 || >=1.0.0', true, { includePrerelease: true }],
+  ['>=2.5.0-alpha.1', '<1.5.0-alpha.1 || >=1.5.0 <2.5.0 || >=2.5.0', true,
+    { includePrerelease: true }], // leading branch ends before sub starts
+
+  // an = branch is the single version it names, so it can close a gap
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <2.0.0 || 2.0.0 || >2.0.0 <=3.0.0', true],
+  ['>=1.0.0', '<2.0.0 || 2.0.0 || >2.0.0', true],
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <2.0.0 || 2.5.0 || >2.0.0 <=3.0.0', false],
+  ['>=1.5.0', '<1.0.0 || >=1.0.0 <2.0.0 || >=2.0.0', true],
+  ['>=1.0.0 <=3.0.0', '1.0.0 || 1.0.0 2.0.0 || >=1.0.0 <=3.0.0', true], // = mixed in a branch
+  ['>=1.0.0 <=3.0.0', '1.0.0 2.0.0 || 1.5.0 || 2.5.0', false], // only = and null branches
+  ['>=1.0.0 <3.0.0', '1.0.0 >0.5.0 || 2.0.0 <3.0.0', false], // no branch is an interval
+  ['1.5.0 >=1.0.0', '<1.5.0 || >1.5.0', false], // = sub with a bound is not an interval
 ]
 
 t.plan(cases.length + 1)

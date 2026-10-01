@@ -240,6 +240,22 @@ const unionSubset = (simpleSub, dom, options) => {
     return false
   }
 
+  // Outside of includePrerelease mode, a dom branch only matches the
+  // prereleases of a [major, minor, patch] tuple that one of its own
+  // comparators names, so the branches are not contiguous intervals
+  // around prereleases and the sweep below cannot reason about them.
+  // Eg, >=1.0.0-pre includes 1.0.0-pre, which neither branch of
+  // <2.0.0 || >=1.0.0 matches.  Leave such ranges to simpleSubset, which
+  // applies the prerelease admission rule per branch.
+  // (<1.2.3-0 admits no prerelease, so it is the same as <1.2.3.)
+  if (!options.includePrerelease &&
+      ((sub.gt && sub.gt.semver.prerelease.length) ||
+       (sub.lt && sub.lt.semver.prerelease.length &&
+        !(sub.lt.operator === '<' && sub.lt.semver.prerelease.length === 1 &&
+          sub.lt.semver.prerelease[0] === 0)))) {
+    return false
+  }
+
   const domIntervals = []
   for (const simpleDom of dom.set) {
     const b = extractBounds(simpleDom, options)
@@ -281,6 +297,12 @@ const unionSubset = (simpleSub, dom, options) => {
     // Check that d overlaps or is adjacent to the current coverage.
     // On the first iteration, check that d covers the sub lower bound.
     if (!coveredUpper) {
+      // Skip intervals that end before sub starts, they cannot cover any
+      // part of it.  Eg, <1.0.0 in <1.0.0 || >=1.0.0 <2.0.0 || >=2.0.0
+      // for a sub of >=1.5.0.
+      if (d.lt && sub.gt && !boundsOverlapOrAdjacent(d.lt, sub.gt, options)) {
+        continue
+      }
       // First interval – must cover sub's lower bound.
       if (!domCoversSubLower(d, sub, options)) {
         // If d starts above the sub lower bound, it can't help.
@@ -339,8 +361,15 @@ const extractBounds = (comps, options) => {
       gt = higherGT(gt, c, options)
     } else if (c.operator === '<' || c.operator === '<=') {
       lt = lowerLT(lt, c, options)
+    } else if (sub.length === 1) {
+      // A lone = comparator is the closed interval [V, V], which can
+      // bridge a gap such as <V || V || >V.
+      return {
+        gt: new Comparator(`>=${c.semver.version}`, options),
+        lt: new Comparator(`<=${c.semver.version}`, options),
+      }
     } else {
-      // eq comparator – skip union check for eq-sets
+      // eq combined with other comparators – skip union check
       return null
     }
   }
