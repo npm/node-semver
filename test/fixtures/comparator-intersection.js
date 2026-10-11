@@ -41,4 +41,16 @@ module.exports = [
   ['<0.1.0', '<0.0.0-0', false],
   ['<0.0.0-0', '<0.1.0', false, true],
   ['<0.1.0', '<0.0.0-0', false, true],
+  // No version lies strictly between a prerelease and its extension by .0.
+  ['>1.0.0-alpha', '<1.0.0-alpha.0', false],
+  ['>1.0.0-alpha', '<1.0.0-alpha.0', false, true],
+  ['>1.0.0-0', '<1.0.0-0.0', false],
+  ['>1.0.0-alpha.1', '<1.0.0-alpha.1.0', false],
+  ['>1.0.0-alpha+left', '<1.0.0-alpha.0+right', false],
+  ['>1.0.0-9007199254740992', '<1.0.0-9007199254740992.0', false],
+  ['>=1.0.0-alpha', '<1.0.0-alpha.0', true],
+  ['>1.0.0-alpha', '<=1.0.0-alpha.0', true],
+  ['>1.0.0-alpha', '<1.0.0-alpha.1', true],
+  ['>1.0.0-alpha', '<1.0.0-alpha.0.0', true],
+  ['>1.0.0-alpha', '<1.0.0-beta.0', true],
 ]

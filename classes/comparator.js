@@ -95,6 +95,15 @@ class Comparator {
 
     options = parseOptions(options)
 
+    // Appending .0 to a prerelease gives its immediate successor, so two
+    // exclusive bounds around that pair cannot contain any version.
+    if ((this.operator === '>' && comp.operator === '<' &&
+      comp.semver.version === `${this.semver.version}.0`) ||
+      (this.operator === '<' && comp.operator === '>' &&
+      this.semver.version === `${comp.semver.version}.0`)) {
+      return false
+    }
+
     // Special cases where nothing can possibly be lower
     if (options.includePrerelease &&
       (this.value === '<0.0.0-0' || comp.value === '<0.0.0-0')) {
