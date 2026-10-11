@@ -44,6 +44,21 @@ test('intersect demands another comparator', t => {
   t.end()
 })
 
+test('adjacent prereleases with loose numeric identifiers', t => {
+  const options = { loose: true, includePrerelease: true }
+  for (const [lower, upper] of [
+    ['1.0.0-01', '1.0.0-1.00'],
+    ['1.0.0-0009007199254740992', '1.0.0-9007199254740992.0'],
+    ['1.0.0-9007199254740992', '1.0.0-0009007199254740992.0'],
+  ]) {
+    const a = new Comparator(`>${lower}`, options)
+    const b = new Comparator(`<${upper}`, options)
+    t.notOk(a.intersects(b, options))
+    t.notOk(b.intersects(a, options))
+  }
+  t.end()
+})
+
 test('ANY matches anything', t => {
   const c = new Comparator('')
   t.ok(c.test('1.2.3'), 'ANY matches anything')
