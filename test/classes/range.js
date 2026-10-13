@@ -18,20 +18,21 @@ test('range tests', t => {
 })
 
 test('range parsing', t => {
-  t.plan(rangeParse.length)
-  rangeParse.forEach(([range, expect, options]) =>
-    t.test(`${range} ${expect} ${JSON.stringify(options)}`, t => {
-      if (expect === null) {
-        t.throws(() => new Range(range, options), TypeError, `invalid range: ${range}`)
-      } else {
-        const parsed = new Range(range, options)
-        t.equal(parsed.range || '*', expect, `${range} => ${expect}`)
-        t.equal(parsed.range,
-          new Range(expect, { includePrerelease: parsed.includePrerelease }).range,
-          'parsing both yields same result')
-      }
-      t.end()
-    }))
+  const assertions = rangeParse.reduce((count, [, expect]) =>
+    count + (expect === null ? 1 : 2), 0)
+  t.plan(assertions)
+  rangeParse.forEach(([range, expect, options]) => {
+    const description = `${range} ${JSON.stringify(options)}`
+    if (expect === null) {
+      t.throws(() => new Range(range, options), TypeError, `invalid range: ${description}`)
+    } else {
+      const parsed = new Range(range, options)
+      t.equal(parsed.range || '*', expect, `${description} => ${expect}`)
+      t.equal(parsed.range,
+        new Range(expect, { includePrerelease: parsed.includePrerelease }).range,
+        `parsing both yields same result: ${description}`)
+    }
+  })
 })
 
 test('range parsing covers every option combination', t => {
