@@ -546,9 +546,13 @@ const optionVariants = [
   [{ loose: true, includePrerelease: true }, combinedOverrides],
 ]
 
-module.exports = optionVariants.flatMap(([options, overrides]) =>
-  ranges.map(([range, expected]) => [
-    range,
-    overrides.has(range) ? overrides.get(range) : expected,
-    options,
-  ]))
+module.exports = []
+for (const [options, overrides] of optionVariants) {
+  for (const [range, expected] of ranges) {
+    module.exports.push([
+      range,
+      overrides.has(range) ? overrides.get(range) : expected,
+      options,
+    ])
+  }
+}
