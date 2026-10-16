@@ -8,10 +8,12 @@ const validRange = require('../../ranges/valid')
 const minVersion = require('../../ranges/min-version')
 const minSatisfying = require('../../ranges/min-satisfying')
 const maxSatisfying = require('../../ranges/max-satisfying')
+const satisfies = require('../../functions/satisfies')
 
 const wsMedium = ' '.repeat(125)
 const wsLarge = ' '.repeat(500000)
 const zeroLarge = '0'.repeat(500000)
+const versionPrefixLarge = 'v'.repeat(500000)
 
 test('range with whitespace', (t) => {
   // a range with these extra characters would take a few minutes to process if
@@ -23,6 +25,7 @@ test('range with whitespace', (t) => {
   t.equal(minVersion(r).version, '1.2.3')
   t.equal(minSatisfying(['1.2.3'], r), '1.2.3')
   t.equal(maxSatisfying(['1.2.3'], r), '1.2.3')
+  t.throws(() => new Range('> invalid'))
   t.end()
 })
 
@@ -33,6 +36,24 @@ test('range with 0', (t) => {
   t.throws(() => minVersion(r).version)
   t.equal(minSatisfying(['1.2.3'], r), null)
   t.equal(maxSatisfying(['1.2.3'], r), null)
+  t.end()
+})
+
+test('range with repeated version prefix', (t) => {
+  t.throws(() => new Range(versionPrefixLarge))
+  t.equal(validRange(versionPrefixLarge), null)
+  t.equal(satisfies('1.2.3', versionPrefixLarge), false)
+  t.throws(() => minVersion(versionPrefixLarge))
+  t.equal(minSatisfying(['1.2.3'], versionPrefixLarge), null)
+  t.equal(maxSatisfying(['1.2.3'], versionPrefixLarge), null)
+
+  const r = `>= ${versionPrefixLarge}1`
+  t.equal(new Range(r).range, '>=1.0.0')
+  t.equal(validRange(r), '>=1.0.0')
+  t.equal(satisfies('1.2.3', r), true)
+  t.equal(minVersion(r).version, '1.0.0')
+  t.equal(minSatisfying(['1.2.3'], r), '1.2.3')
+  t.equal(maxSatisfying(['1.2.3'], r), '1.2.3')
   t.end()
 })
 
