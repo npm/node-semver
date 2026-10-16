@@ -241,7 +241,6 @@ src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
 // this one has to use the /g flag
 re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g')
 safeRe[COMPARATORTRIM] = new RegExp(makeSafeRe(src[COMPARATORTRIM]), 'g')
-var comparatorTrimReplace = '$1$2$3'
 
 // Something like `1.2.3 - 1.2.4`
 // Note that these all use the loose form, because they'll be
@@ -935,6 +934,212 @@ Range.prototype.toString = function () {
   return this.range
 }
 
+function isWhitespace (char) {
+  var code = char && char.charCodeAt(0)
+  return (code >= 0x0009 && code <= 0x000d) ||
+    code === 0x0020 || code === 0x00a0 || code === 0x1680 ||
+    (code >= 0x2000 && code <= 0x200a) ||
+    code === 0x2028 || code === 0x2029 || code === 0x202f ||
+    code === 0x205f || code === 0x3000 || code === 0xfeff
+}
+
+function isVersionPrefix (char) {
+  return char === 'v' || char === '=' || isWhitespace(char)
+}
+
+function isDigit (char) {
+  return char !== undefined && char >= '0' && char <= '9'
+}
+
+function isLetter (char) {
+  return char !== undefined &&
+    ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z'))
+}
+
+function isIdentifierCharacter (char) {
+  return isDigit(char) || isLetter(char) || char === '-'
+}
+
+function isVersionStart (char) {
+  return isDigit(char) || char === 'x' || char === 'X' || char === '*'
+}
+
+function findDigitsEndIndex (range, start, limit, digitRuns) {
+  if (!isDigit(range[start])) {
+    return start
+  }
+  if (start >= digitRuns.start && start < digitRuns.end) {
+    return Math.min(start + limit, digitRuns.end)
+  }
+  if (start >= digitRuns.previousStart && start < digitRuns.previousEnd) {
+    return Math.min(start + limit, digitRuns.previousEnd)
+  }
+  var end = start + 1
+  while (isDigit(range[end])) {
+    end++
+  }
+  // A failed full version can rewind from its second digit run to its first.
+  digitRuns.previousStart = digitRuns.start
+  digitRuns.previousEnd = digitRuns.end
+  digitRuns.start = start
+  digitRuns.end = end
+  return Math.min(start + limit, end)
+}
+
+function findVersionNumberEndIndex (range, start, loose, digitRuns) {
+  if (!loose && range[start] === '0') {
+    return start + 1
+  }
+  return findDigitsEndIndex(range, start, loose ? MAX_LENGTH : MAX_LENGTH + 1, digitRuns)
+}
+
+function findPrereleaseIdentifierEndIndex (range, start, loose, digitRuns) {
+  // Unlike v7, the legacy regex tries numeric identifiers before nonnumeric ones.
+  if (isDigit(range[start])) {
+    return findVersionNumberEndIndex(range, start, loose, digitRuns)
+  }
+  if (!isLetter(range[start]) && range[start] !== '-') {
+    return start
+  }
+  var end = start + 1
+  var limit = end + MAX_SAFE_BUILD_LENGTH
+  while (end < limit && isIdentifierCharacter(range[end])) {
+    end++
+  }
+  return end
+}
+
+function findPrereleaseEndIndex (range, start, loose, digitRuns) {
+  var hyphen = range[start] === '-'
+  if (!loose && !hyphen) {
+    return start
+  }
+  var identifierStart = start + (hyphen ? 1 : 0)
+  var end = findPrereleaseIdentifierEndIndex(range, identifierStart, loose, digitRuns)
+  if (end === identifierStart) {
+    if (!loose || !hyphen) {
+      return start
+    }
+    end = findPrereleaseIdentifierEndIndex(range, start, loose, digitRuns)
+  }
+  while (range[end] === '.') {
+    var next = findPrereleaseIdentifierEndIndex(range, end + 1, loose, digitRuns)
+    if (next === end + 1) {
+      break
+    }
+    end = next
+  }
+  return end
+}
+
+function findBuildEndIndex (range, start) {
+  if (range[start] !== '+') {
+    return start
+  }
+  var end = start + 1
+  do {
+    var identifierStart = end
+    while (end - identifierStart < MAX_SAFE_BUILD_LENGTH &&
+        isIdentifierCharacter(range[end])) {
+      end++
+    }
+    if (end === identifierStart) {
+      return identifierStart === start + 1 ? start : end - 1
+    }
+    if (range[end] !== '.') {
+      return end
+    }
+    end++
+  } while (true)
+}
+
+function findLooseFullVersionEndIndex (range, start, digitRuns) {
+  var end = start
+  for (var component = 0; component < 3; component++) {
+    var next = findVersionNumberEndIndex(range, end, true, digitRuns)
+    if (next === end) {
+      return start
+    }
+    end = next
+    if (component < 2) {
+      if (range[end] !== '.') {
+        return start
+      }
+      end++
+    }
+  }
+  return findBuildEndIndex(range, findPrereleaseEndIndex(range, end, true, digitRuns))
+}
+
+function findPartialVersionComponentEndIndex (range, start, digitRuns) {
+  if (isDigit(range[start])) {
+    return findVersionNumberEndIndex(range, start, false, digitRuns)
+  }
+  return isVersionStart(range[start]) ? start + 1 : start
+}
+
+function findVersionEndIndex (range, start, digitRuns) {
+  var end = findLooseFullVersionEndIndex(range, start, digitRuns)
+  if (end !== start) {
+    return end
+  }
+  end = findPartialVersionComponentEndIndex(range, start, digitRuns)
+  for (var component = 0; component < 2; component++) {
+    if (range[end] !== '.') {
+      return end
+    }
+    var next = findPartialVersionComponentEndIndex(range, end + 1, digitRuns)
+    if (next === end + 1) {
+      return end
+    }
+    end = next
+  }
+  return findBuildEndIndex(range, findPrereleaseEndIndex(range, end, false, digitRuns))
+}
+
+function findRemovableWhitespaceIndex (range, position) {
+  if (isWhitespace(range[position])) {
+    position++
+  }
+  if (range[position] === '<' || range[position] === '>') {
+    position++
+  }
+  if (range[position] === '=') {
+    position++
+  }
+  return isWhitespace(range[position]) ? position : -1
+}
+
+function trimComparatorWhitespace (range) {
+  var result = ''
+  var copyFrom = 0
+  var cursor = 0
+  var digitRuns = { start: -1, end: -1, previousStart: -1, previousEnd: -1 }
+  while (cursor < range.length) {
+    var matchStart = cursor
+    if (range[cursor] === '<' || range[cursor] === '>') {
+      cursor++
+    } else if (!isVersionPrefix(range[cursor]) && !isVersionStart(range[cursor])) {
+      cursor++
+      continue
+    }
+    while (cursor < range.length && isVersionPrefix(range[cursor])) {
+      cursor++
+    }
+    if (!isVersionStart(range[cursor])) {
+      continue
+    }
+    var whitespacePosition = findRemovableWhitespaceIndex(range, matchStart)
+    if (whitespacePosition !== -1) {
+      result += range.slice(copyFrom, whitespacePosition)
+      copyFrom = whitespacePosition + 1
+    }
+    // Preserve match boundaries inside prerelease and build identifiers.
+    cursor = findVersionEndIndex(range, cursor, digitRuns)
+  }
+  return result + range.slice(copyFrom)
+}
+
 Range.prototype.parseRange = function (range) {
   var loose = this.options.loose
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
@@ -942,8 +1147,8 @@ Range.prototype.parseRange = function (range) {
   range = range.replace(hr, hyphenReplace)
   debug('hyphen replace', range)
   // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
-  range = range.replace(safeRe[COMPARATORTRIM], comparatorTrimReplace)
-  debug('comparator trim', range, safeRe[COMPARATORTRIM])
+  range = trimComparatorWhitespace(range)
+  debug('comparator trim', range)
 
   // `~ 1.2.3` => `~1.2.3`
   range = range.replace(safeRe[TILDETRIM], tildeTrimReplace)
