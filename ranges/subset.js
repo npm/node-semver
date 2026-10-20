@@ -124,11 +124,15 @@ const simpleSubset = (sub, dom, options) => {
 
   // will iterate one or zero times
   for (const eq of eqSet) {
-    if (gt && !satisfies(eq, String(gt), options)) {
+    // test the eq version against the raw bound comparator; going through
+    // satisfies() rebuilds a full Range and re-applies prerelease gating, which
+    // wrongly rejects a prerelease eq against a plain bound of another tuple
+    // (the same fix PR #867 applied to the dom-side checks below)
+    if (gt && !gt.test(eq)) {
       return null
     }
 
-    if (lt && !satisfies(eq, String(lt), options)) {
+    if (lt && !lt.test(eq)) {
       return null
     }
 
