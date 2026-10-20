@@ -89,6 +89,17 @@ test('convert comparator to range', t => {
   t.end()
 })
 
+test('range from comparator can test a prerelease version', t => {
+  const fromString = new Range('>=1.0.0-alpha')
+  t.equal(fromString.test('1.0.0-beta'), true, 'string range allows later prerelease')
+
+  const fromComp = new Range(new Comparator('>=1.0.0-alpha'))
+  t.same(fromComp.options, fromString.options, 'comparator range keeps parsed options')
+  t.equal(fromComp.test('1.0.0-beta'), true,
+    'same result as the equivalent string range, without throwing')
+  t.end()
+})
+
 test('range as argument to range ctor', t => {
   const loose = new Range('1.2.3', { loose: true })
   t.equal(new Range(loose, { loose: true }), loose, 'loose option')
