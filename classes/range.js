@@ -175,6 +175,8 @@ class Range {
       throw new TypeError('a Range is required')
     }
 
+    options = parseOptions(options)
+
     return this.set.some((thisComparators) => {
       return (
         isSatisfiable(thisComparators, options) &&
@@ -185,7 +187,9 @@ class Range {
               return rangeComparators.every((rangeComparator) => {
                 return thisComparator.intersects(rangeComparator, options)
               })
-            })
+            }) &&
+            (options.includePrerelease ||
+              hasStableOrSharedPrerelease(thisComparators, rangeComparators, options))
           )
         })
       )
@@ -232,7 +236,7 @@ const {
   tildeTrimReplace,
   caretTrimReplace,
 } = require('../internal/re')
-const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants')
+const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE, MAX_SAFE_INTEGER } = require('../internal/constants')
 
 // unbounded global build-metadata stripper used by parseRange
 const BUILDSTRIPRE = new RegExp(src[t.BUILD], 'g')
@@ -256,6 +260,61 @@ const isSatisfiable = (comparators, options) => {
   }
 
   return result
+}
+
+const minimumStableVersion = new SemVer('0.0.0')
+
+// When the two sets do not opt into any common prerelease tuple, a
+// nonempty intersection must contain a stable version. Keep shared-prerelease
+// intersections on the existing path; this check only removes false positives.
+const hasStableOrSharedPrerelease = (left, right, options) => {
+  for (const a of left) {
+    if (a.semver === Comparator.ANY || !a.semver.prerelease.length) {
+      continue
+    }
+    for (const b of right) {
+      if (b.semver !== Comparator.ANY && b.semver.prerelease.length &&
+          a.semver.compareMain(b.semver) === 0) {
+        return true
+      }
+    }
+  }
+
+  let lower
+  let exclusive = false
+  for (const comparator of [...left, ...right]) {
+    const version = comparator.semver
+    if (version === Comparator.ANY || comparator.operator.startsWith('<')) {
+      continue
+    }
+    const order = lower ? version.compareMain(lower) : 1
+    const strict = comparator.operator === '>' && !version.prerelease.length
+    if (order > 0) {
+      lower = version
+      exclusive = strict
+    } else if (order === 0) {
+      exclusive = exclusive || strict
+    }
+  }
+  let minimum = lower || minimumStableVersion
+  if (lower && (lower.prerelease.length || exclusive)) {
+    let { major, minor, patch } = lower
+    if (exclusive) {
+      if (patch < MAX_SAFE_INTEGER) {
+        patch++
+      } else if (minor < MAX_SAFE_INTEGER) {
+        minor++
+        patch = 0
+      } else if (major < MAX_SAFE_INTEGER) {
+        major++
+        minor = patch = 0
+      } else {
+        return false
+      }
+    }
+    minimum = new SemVer(`${major}.${minor}.${patch}`)
+  }
+  return testSet(left, minimum, options) && testSet(right, minimum, options)
 }
 
 // comprised of xranges, tildes, stars, and gtlt's at this point.
