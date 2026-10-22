@@ -250,10 +250,9 @@ $ semver 1.2.4-beta.1 -i release
 
 #### Prerelease Identifier Base
 
-The method `.inc` takes an optional parameter 'identifierBase' string
-that will let you let your prerelease number as zero-based or one-based.
-Set to `false` to omit the prerelease number altogether.
-If you do not specify this parameter, it will default to zero-based.
+The `.inc` method accepts an optional `identifierBase` argument. It can
+start prerelease numbering at zero or one; set it to `false` to omit the
+number. If omitted, it defaults to zero-based numbering.
 
 ```javascript
 semver.inc('1.2.3', 'prerelease', 'beta', '1')
