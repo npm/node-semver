@@ -81,15 +81,9 @@ class Comparator {
       throw new TypeError('a Comparator is required')
     }
 
-    if (this.operator === '') {
-      if (this.value === '') {
-        return true
-      }
+    if (this.operator === '' && this.value !== '') {
       return new Range(comp.value, options).test(this.value)
-    } else if (comp.operator === '') {
-      if (comp.value === '') {
-        return true
-      }
+    } else if (comp.operator === '' && comp.value !== '') {
       return new Range(this.value, options).test(comp.semver)
     }
 
@@ -103,6 +97,11 @@ class Comparator {
     if (!options.includePrerelease &&
       (this.value.startsWith('<0.0.0') || comp.value.startsWith('<0.0.0'))) {
       return false
+    }
+
+    // A wildcard intersects every non-empty range.
+    if (this.value === '' || comp.value === '') {
+      return true
     }
 
     // Same direction increasing (> or >=)
