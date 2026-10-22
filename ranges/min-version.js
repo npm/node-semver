@@ -49,15 +49,15 @@ const minVersion = (range, loose) => {
           throw new Error(`Unexpected operation: ${comparator.operator}`)
       }
     })
-    if (setMin && (!minver || gt(minver, setMin))) {
+    // Maximum versions are ignored above, so a comparator set that is a null
+    // set (eg `^1 ^2`) still yields a candidate. Check the candidate against
+    // the range here rather than once at the end, so that such a set cannot
+    // mask the minimum of another set in the union.
+    if (setMin && (!minver || gt(minver, setMin)) && range.test(setMin)) {
       minver = setMin
     }
   }
 
-  if (minver && range.test(minver)) {
-    return minver
-  }
-
-  return null
+  return minver
 }
 module.exports = minVersion
