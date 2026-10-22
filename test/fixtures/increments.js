@@ -1,5 +1,7 @@
 'use strict'
 
+const max = Number.MAX_SAFE_INTEGER
+
 //  [version, inc, result, options, identifier, identifierBase]
 //  inc(version, inc, options, identifier, identifierBase) -> result
 module.exports = [
@@ -141,4 +143,34 @@ module.exports = [
   ['1.2.0', 'prerelease', null, false, 'invalid/preid'],
   ['1.2.0', 'prerelease', null, false, 'invalid+build'],
   ['1.2.0beta', 'prerelease', null, { loose: true }, 'invalid/preid'],
+
+  // Main-version components must stay within the constructor's numeric limit.
+  [`${max}.0.0`, 'major', null],
+  [`1.${max}.0`, 'minor', null],
+  [`1.2.${max}`, 'patch', null],
+  [`${max}.0.0`, 'premajor', null],
+  [`1.${max}.0`, 'preminor', null],
+  [`1.2.${max}`, 'prepatch', null],
+  [`1.2.${max}`, 'prerelease', null],
+  [`${max}.1.0-alpha`, 'major', null],
+  [`1.${max}.1-alpha`, 'minor', null],
+  [`${max}.0.0-alpha`, 'premajor', null],
+  [`1.${max}.0-alpha`, 'preminor', null],
+  [`1.2.${max}-alpha`, 'prepatch', null],
+
+  [`${max - 1}.0.0`, 'major', `${max}.0.0`],
+  [`1.${max - 1}.0`, 'minor', `1.${max}.0`],
+  [`1.2.${max - 1}`, 'patch', `1.2.${max}`],
+  [`${max - 1}.0.0`, 'premajor', `${max}.0.0-0`],
+  [`1.${max - 1}.0`, 'preminor', `1.${max}.0-0`],
+  [`1.2.${max - 1}`, 'prepatch', `1.2.${max}-0`],
+  [`1.2.${max - 1}`, 'prerelease', `1.2.${max}-0`],
+
+  // Promotion does not increment an already-prerelease component.
+  [`${max}.0.0-alpha`, 'major', `${max}.0.0`],
+  [`1.${max}.0-alpha`, 'minor', `1.${max}.0`],
+  [`1.2.${max}-alpha`, 'patch', `1.2.${max}`],
+  [`1.2.${max}-alpha.0`, 'prerelease', `1.2.${max}-alpha.1`],
+  [`1.${max}.${max}`, 'major', '2.0.0'],
+  [`1.2.${max}`, 'minor', '1.3.0'],
 ]
