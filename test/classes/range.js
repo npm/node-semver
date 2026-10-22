@@ -8,6 +8,7 @@ const rangeIntersection = require('../fixtures/range-intersection.js')
 const rangeInclude = require('../fixtures/range-include.js')
 const rangeExclude = require('../fixtures/range-exclude.js')
 const rangeParse = require('../fixtures/range-parse.js')
+const validRange = require('../../ranges/valid.js')
 
 test('range tests', t => {
   t.plan(rangeInclude.length)
@@ -50,8 +51,8 @@ test('range parsing covers every option combination', t => {
   const combinations = ['false:false', 'true:false', 'false:true', 'true:true']
   t.strictSame([...inputsByOptions.keys()], combinations, 'all four modes are present')
   const defaultInputs = inputsByOptions.get('false:false')
-  t.equal(defaultInputs.length, 348, 'retains every source fixture row')
-  t.equal(new Set(defaultInputs).size, 335, 'retains every distinct source input')
+  t.equal(defaultInputs.length, 354, 'retains every source fixture row')
+  t.equal(new Set(defaultInputs).size, 341, 'retains every distinct source input')
   for (const key of combinations.slice(1)) {
     t.strictSame(inputsByOptions.get(key), defaultInputs, `${key} covers the same inputs`)
   }
@@ -79,6 +80,47 @@ test('legacy range parsing options', t => {
 test('throw for empty comparator set, even in loose mode', t => {
   t.throws(() => new Range('sadf||asdf', { loose: true }),
     TypeError('Invalid SemVer Range: sadf||asdf'))
+  t.end()
+})
+
+// Loose mode dropped any token it could not parse and kept the rest, so a
+// range could silently come out weaker than what was written. `(1.2.3)` threw
+// only because nothing survived the drop; one valid comparator anywhere in the
+// range masked the rest. #387
+test('loose mode does not drop input that is not range syntax', t => {
+  for (const range of [
+    '* (4.1.x  4.1.2)', // parsed as '*', which matches every version
+    '>=1.0.0 (foo)', // parsed as '>=1.0.0'
+    '* (bogus)',
+    '>=1.0.0 [foo]',
+    '1.0.0 {x}',
+  ]) {
+    t.throws(() => new Range(range, { loose: true }), TypeError,
+      `loose mode rejects ${range}`)
+    t.equal(validRange(range, { loose: true }), null,
+      `validRange does not call ${range} valid`)
+  }
+  t.end()
+})
+
+// The counterpart: loose mode still tolerates the leftovers of its own
+// normalization. These are what the drop exists for, and they must keep
+// parsing -- a fix that rejected everything unparseable would break them.
+test('loose mode still tolerates its own leftovers', t => {
+  for (const [range, expected] of [
+    ['== 1', '>=1.0.0 <2.0.0-0'],
+    ['== 1.0.0 || foo', '1.0.0'],
+    ['1.2.3 || 1.2.3= x', '1.2.3'],
+    ['1.2.3-dev= 1 || 2.0.0', '2.0.0'],
+    // A comma is tolerated and dropped today, pinned by a test in
+    // test/ranges/valid.js, so it is deliberately left alone here.
+    ['1.2.3, <2.0.0', '<2.0.0'],
+    ['v1.2.3', '1.2.3'],
+    ['=1.2.3', '1.2.3'],
+  ]) {
+    t.equal(new Range(range, { loose: true }).format(), expected,
+      `loose mode still parses ${range}`)
+  }
   t.end()
 })
 
