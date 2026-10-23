@@ -123,6 +123,33 @@ test('incrementing', t => {
   }))
 })
 
+test('repeated prerelease increments at the safe integer boundary', t => {
+  const boundary = Number.MAX_SAFE_INTEGER - 1
+  const versions = [
+    `1.2.3-${boundary}`,
+    `1.2.3-beta.${boundary}`,
+    `1.2.3-beta.${boundary}.gamma`,
+  ]
+
+  for (const version of versions) {
+    const instance = new SemVer(version)
+    let expected = version
+
+    for (let i = 0; i < 4; i++) {
+      const previous = instance.version
+      expected = new SemVer(expected).inc('prerelease').version
+      instance.inc('prerelease')
+
+      t.equal(instance.version, expected, 'matches incrementing a reparsed version')
+      t.strictSame(instance.prerelease, new SemVer(instance.version).prerelease,
+        'keeps the constructor representation of numeric prerelease identifiers')
+      t.equal(instance.compare(previous), 1, 'each increment increases the version')
+    }
+  }
+
+  t.end()
+})
+
 test('invalid increments', (t) => {
   t.throws(
     () => new SemVer('1.2.3').inc('prerelease', '', false),
