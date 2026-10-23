@@ -50,7 +50,7 @@ class Comparator {
     if (!m[2]) {
       this.semver = ANY
     } else {
-      this.semver = new SemVer(m[2], this.options.loose)
+      this.semver = new SemVer(m[2], this.options)
     }
   }
 
