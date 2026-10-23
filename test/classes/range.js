@@ -50,8 +50,8 @@ test('range parsing covers every option combination', t => {
   const combinations = ['false:false', 'true:false', 'false:true', 'true:true']
   t.strictSame([...inputsByOptions.keys()], combinations, 'all four modes are present')
   const defaultInputs = inputsByOptions.get('false:false')
-  t.equal(defaultInputs.length, 348, 'retains every source fixture row')
-  t.equal(new Set(defaultInputs).size, 335, 'retains every distinct source input')
+  t.equal(defaultInputs.length, 354, 'retains every source fixture row')
+  t.equal(new Set(defaultInputs).size, 341, 'retains every distinct source input')
   for (const key of combinations.slice(1)) {
     t.strictSame(inputsByOptions.get(key), defaultInputs, `${key} covers the same inputs`)
   }
