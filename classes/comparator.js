@@ -81,19 +81,20 @@ class Comparator {
       throw new TypeError('a Comparator is required')
     }
 
-    if (this.operator === '') {
-      if (this.value === '') {
-        return true
-      }
-      return new Range(comp.value, options).test(this.value)
-    } else if (comp.operator === '') {
-      if (comp.value === '') {
-        return true
-      }
-      return new Range(this.value, options).test(comp.semver)
+    options = parseOptions(options)
+
+    // ANY intersects every non-empty comparator
+    if (this.value === '' || comp.value === '') {
+      const other = this.value === '' ? comp : this
+      return other.value !== '<0.0.0-0' &&
+        (options.includePrerelease || other.value !== '<0.0.0')
     }
 
-    options = parseOptions(options)
+    if (this.operator === '') {
+      return new Range(comp.value, options).test(this.value)
+    } else if (comp.operator === '') {
+      return new Range(this.value, options).test(comp.semver)
+    }
 
     // Special cases where nothing can possibly be lower
     if (options.includePrerelease &&
