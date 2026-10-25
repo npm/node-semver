@@ -4,6 +4,29 @@ const SemVer = require('../classes/semver')
 const Range = require('../classes/range')
 const gt = require('../functions/gt')
 
+const getPrereleaseTuples = (comparators) => {
+  const tuples = new Set()
+  for (const { semver } of comparators) {
+    if (semver.prerelease.length > 0) {
+      tuples.add(`${semver.major}.${semver.minor}.${semver.patch}`)
+    }
+  }
+  return tuples
+}
+
+const advanceStrictBound = (version, prereleaseTuples) => {
+  if (version.prerelease.length === 0) {
+    version.patch++
+    const tuple = `${version.major}.${version.minor}.${version.patch}`
+    if (prereleaseTuples.has(tuple)) {
+      version.prerelease = [0]
+    }
+  } else {
+    version.prerelease.push(0)
+  }
+  version.raw = version.format()
+}
+
 const minVersion = (range, loose) => {
   range = new Range(range, loose)
 
@@ -20,6 +43,7 @@ const minVersion = (range, loose) => {
   minver = null
   for (let i = 0; i < range.set.length; ++i) {
     const comparators = range.set[i]
+    const prereleaseTuples = getPrereleaseTuples(comparators)
 
     let setMin = null
     comparators.forEach((comparator) => {
@@ -27,12 +51,7 @@ const minVersion = (range, loose) => {
       const compver = new SemVer(comparator.semver.version)
       switch (comparator.operator) {
         case '>':
-          if (compver.prerelease.length === 0) {
-            compver.patch++
-          } else {
-            compver.prerelease.push(0)
-          }
-          compver.raw = compver.format()
+          advanceStrictBound(compver, prereleaseTuples)
           /* fallthrough */
         case '':
         case '>=':
