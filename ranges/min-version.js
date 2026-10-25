@@ -27,6 +27,19 @@ const advanceStrictBound = (version, prereleaseTuples) => {
   version.raw = version.format()
 }
 
+const hasInvalidAdjustedMinimum = (comparators, setMin) => {
+  if (setMin.prerelease.length === 0) {
+    return false
+  }
+  const adjusted = comparators.some(({ operator, semver }) =>
+    operator === '>' &&
+    semver.prerelease.length === 0 &&
+    semver.major === setMin.major &&
+    semver.minor === setMin.minor &&
+    semver.patch + 1 === setMin.patch)
+  return adjusted && !comparators.every(comparator => comparator.test(setMin))
+}
+
 const minVersion = (range, loose) => {
   range = new Range(range, loose)
 
@@ -68,7 +81,8 @@ const minVersion = (range, loose) => {
           throw new Error(`Unexpected operation: ${comparator.operator}`)
       }
     })
-    if (setMin && (!minver || gt(minver, setMin))) {
+    if (setMin && !hasInvalidAdjustedMinimum(comparators, setMin) &&
+        (!minver || gt(minver, setMin))) {
       minver = setMin
     }
   }
