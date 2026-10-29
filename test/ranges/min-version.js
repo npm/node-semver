@@ -70,6 +70,9 @@ test('minimum version in range tests', (t) => {
     ['>0.0.0-alpha', '0.0.0-alpha.0'],
     ['<1 || >=0.0.0-beta', '0.0.0-beta'],
     ['>=0.0.0-beta <0.0.0-alpha || <1', '0.0.0'],
+    // an impossible set in a union does not hide the other set's minimum
+    ['>=0.0.0-alpha <0.0.0-alpha || >=0.0.0-beta', '0.0.0-beta'],
+    ['>=1.0.0 <1.0.0 || >=2.0.0', '2.0.0'],
     ['>=0.0.0', '0.0.0'],
 
     // includePrerelease

@@ -53,7 +53,10 @@ const minVersion = (range, loose) => {
           throw new Error(`Unexpected operation: ${comparator.operator}`)
       }
     })
-    if (setMin && (!minver || gt(minver, setMin))) {
+    // A set whose own lower bound fails its upper bounds (e.g. `>=1.0.0 <1.0.0`) has no minimum; skipping it
+    // keeps it from hiding the minimum of another set in the union.
+    if (setMin && new Range(comparators.join(' '), range.options).test(setMin) &&
+        (!minver || gt(minver, setMin))) {
       minver = setMin
     }
   }
