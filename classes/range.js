@@ -18,6 +18,10 @@ class Range {
       }
     }
 
+    this.options = options
+    this.loose = !!options.loose
+    this.includePrerelease = !!options.includePrerelease
+
     if (range instanceof Comparator) {
       // just put it in the set and return
       this.raw = range.value
@@ -25,10 +29,6 @@ class Range {
       this.formatted = undefined
       return this
     }
-
-    this.options = options
-    this.loose = !!options.loose
-    this.includePrerelease = !!options.includePrerelease
 
     // First reduce all whitespace as much as possible so we do not have to rely
     // on potentially slow regexes like \s*. This is then stored and used for
