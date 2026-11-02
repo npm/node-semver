@@ -15,12 +15,18 @@ module.exports = {
   oldNode: OLD_NODE,
   ciVersions: [OLD_NODE],
   latestCiVersion: 20,
-  backport: 6,
+  backport: 5,
+  defaultPublishTag: 'legacy',
   publish: true,
   allowPaths: [
     '/range.bnf',
     '/semver.js',
   ],
+  rootRepo: {
+    add: {
+      '.github/workflows/release.yml': './release-yml.hbs',
+    },
+  },
   rootModule: {
     add: {
       'package.json': {
