@@ -49,9 +49,8 @@ const subset = (sub, dom, options = {}) => {
 
   sub = new Range(sub, options)
   dom = new Range(dom, options)
-  let sawNonNull = false
-
   OUTER: for (const simpleSub of sub.set) {
+    let sawNonNull = false
     for (const simpleDom of dom.set) {
       const isSub = simpleSubset(simpleSub, simpleDom, options)
       sawNonNull = sawNonNull || isSub !== null
