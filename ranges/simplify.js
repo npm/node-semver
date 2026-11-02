@@ -5,6 +5,7 @@
 // If the original range is shorter than the simplified one, return that.
 const satisfies = require('../functions/satisfies.js')
 const compare = require('../functions/compare.js')
+const prerelease = require('../functions/prerelease.js')
 module.exports = (versions, range, options) => {
   const set = []
   let first = null
@@ -45,5 +46,11 @@ module.exports = (versions, range, options) => {
   }
   const simplified = ranges.join(' || ')
   const original = typeof range.raw === 'string' ? range.raw : String(range)
-  return simplified.length < original.length ? simplified : range
+  // Prerelease eligibility depends on comparator tuples, not just range bounds.
+  if (simplified.length < original.length &&
+      v.every(version => !prerelease(version, options) ||
+        satisfies(version, range, options) === satisfies(version, simplified, options))) {
+    return simplified
+  }
+  return range
 }
