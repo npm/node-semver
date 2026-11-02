@@ -2,6 +2,7 @@
 
 const simplify = require('../../ranges/simplify.js')
 const Range = require('../../classes/range.js')
+const satisfies = require('../../functions/satisfies.js')
 const t = require('tap')
 const versions = [
   '1.0.0',
@@ -42,3 +43,12 @@ t.equal(simplify(versions, '>=3.0.0 <3.1.0'), '3.0.0')
 t.equal(simplify(versions, '3.0.0 || 3.1 || 3.2 || 3.3'), '>=3.0.0')
 t.equal(simplify(versions, '1 || 2 || 3'), '*')
 t.equal(simplify(versions, '2.1 || 2.2 || 2.3'), '2.1.0 - 2.3.1')
+
+t.test('ranges with no matching versions', t => {
+  for (const range of ['^4.0.0', new Range('^4.0.0'), '<0.0.0-0']) {
+    const simplified = simplify(versions, range)
+    t.equal(simplified, range, 'preserves the original range')
+    t.same(versions.filter(v => satisfies(v, simplified)), [], 'still matches no versions')
+  }
+  t.end()
+})

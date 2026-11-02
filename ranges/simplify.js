@@ -29,6 +29,10 @@ module.exports = (versions, range, options) => {
     set.push([first, null])
   }
 
+  if (!set.length) {
+    return range
+  }
+
   const ranges = []
   for (const [min, max] of set) {
     if (min === max) {
