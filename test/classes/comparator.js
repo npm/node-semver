@@ -63,3 +63,11 @@ test('= is ignored', t => {
   t.match(new Comparator('=1.2.3'), new Comparator('1.2.3'))
   t.end()
 })
+
+test('comparator semver carries the comparator options', t => {
+  const c = new Comparator('>=1.2.3-beta', { loose: true, includePrerelease: true })
+  t.equal(c.semver.loose, true)
+  t.equal(c.semver.includePrerelease, true)
+  t.ok(c.test('1.2.3-rc.1'))
+  t.end()
+})
