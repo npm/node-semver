@@ -358,15 +358,15 @@ const replaceCaret = (comp, options) => {
     } else if (isX(m)) {
       ret = `>=${M}.0.0${z} <${+M + 1}.0.0-0`
     } else if (isX(p)) {
-      if (M === '0') {
+      if (+M === 0) {
         ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`
       } else {
         ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`
       }
     } else if (pr) {
       debug('replaceCaret pr', pr)
-      if (M === '0') {
-        if (m === '0') {
+      if (+M === 0) {
+        if (+m === 0) {
           ret = `>=${M}.${m}.${p}-${pr
           } <${M}.${m}.${+p + 1}-0`
         } else {
@@ -379,8 +379,8 @@ const replaceCaret = (comp, options) => {
       }
     } else {
       debug('no pr')
-      if (M === '0') {
-        if (m === '0') {
+      if (+M === 0) {
+        if (+m === 0) {
           ret = `>=${M}.${m}.${p
           } <${M}.${m}.${+p + 1}-0`
         } else {
