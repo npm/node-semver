@@ -7,6 +7,13 @@ const { safeRe: re, t } = require('../internal/re')
 const parseOptions = require('../internal/parse-options')
 const { compareIdentifiers } = require('../internal/identifiers')
 
+const incrementMainVersion = (value, component) => {
+  if (value >= MAX_SAFE_INTEGER) {
+    throw new TypeError(`Invalid ${component} version`)
+  }
+  return value + 1
+}
+
 const isPrereleaseIdentifier = (prerelease, identifier) => {
   const identifiers = identifier.split('.')
   if (identifiers.length > prerelease.length) {
@@ -223,24 +230,24 @@ class SemVer {
 
     switch (release) {
       case 'premajor':
+        this.major = incrementMainVersion(this.major, 'major')
         this.prerelease.length = 0
         this.patch = 0
         this.minor = 0
-        this.major++
         this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
+        this.minor = incrementMainVersion(this.minor, 'minor')
         this.prerelease.length = 0
         this.patch = 0
-        this.minor++
         this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
         // If this is already a prerelease, it will bump to the next version
         // drop any prereleases that might already exist, since they are not
         // relevant at this point.
+        this.patch = incrementMainVersion(this.patch, 'patch')
         this.prerelease.length = 0
-        this.inc('patch', identifier, identifierBase)
         this.inc('pre', identifier, identifierBase)
         break
       // If the input is a non-prerelease version, this acts the same as
@@ -268,7 +275,7 @@ class SemVer {
           this.patch !== 0 ||
           this.prerelease.length === 0
         ) {
-          this.major++
+          this.major = incrementMainVersion(this.major, 'major')
         }
         this.minor = 0
         this.patch = 0
@@ -280,7 +287,7 @@ class SemVer {
         // 1.2.0-5 bumps to 1.2.0
         // 1.2.1 bumps to 1.3.0
         if (this.patch !== 0 || this.prerelease.length === 0) {
-          this.minor++
+          this.minor = incrementMainVersion(this.minor, 'minor')
         }
         this.patch = 0
         this.prerelease = []
@@ -291,7 +298,7 @@ class SemVer {
         // 1.2.0-5 patches to 1.2.0
         // 1.2.0 patches to 1.2.1
         if (this.prerelease.length === 0) {
-          this.patch++
+          this.patch = incrementMainVersion(this.patch, 'patch')
         }
         this.prerelease = []
         break

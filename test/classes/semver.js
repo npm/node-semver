@@ -123,6 +123,28 @@ test('incrementing', t => {
   }))
 })
 
+test('overflowing main-version increments preserve the instance', t => {
+  const max = Number.MAX_SAFE_INTEGER
+  for (const [version, release, component] of [
+    [`${max}.1.2-alpha.0+build.1`, 'major', 'major'],
+    [`1.${max}.2-alpha.0+build.1`, 'minor', 'minor'],
+    [`1.2.${max}+build.1`, 'patch', 'patch'],
+    [`${max}.1.2-alpha.0+build.1`, 'premajor', 'major'],
+    [`1.${max}.2-alpha.0+build.1`, 'preminor', 'minor'],
+    [`1.2.${max}-alpha.0+build.1`, 'prepatch', 'patch'],
+    [`1.2.${max}+build.1`, 'prerelease', 'patch'],
+  ]) {
+    const instance = new SemVer(version)
+    const before = JSON.stringify(instance)
+    t.throws(() => instance.inc(release), {
+      name: 'TypeError',
+      message: `Invalid ${component} version`,
+    }, `${release} refuses overflow`)
+    t.equal(JSON.stringify(instance), before, `${release} leaves the instance unchanged`)
+  }
+  t.end()
+})
+
 test('invalid increments', (t) => {
   t.throws(
     () => new SemVer('1.2.3').inc('prerelease', '', false),
