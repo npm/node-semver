@@ -86,4 +86,12 @@ module.exports = [
   ['~1.0.0-alpha', '1.0.0-beta'],
   ['=0.1.0', '1.0.0'],
   ['>1.2.3', '1.3.0-alpha', { includePrerelease: true }],
+  // redundant bounds on the same side: only the tightest one is the edge
+  ['<3.0.0 <=2.0.0 >1.0.0', '2.5.0'],
+  ['1.2 <1.2.9 || >2.0.0', '1.2.10'],
+  ['<=2.0.0 <2.0.0 >1.0.0', '2.0.0'],
+  ['<2.0.0 <=2.0.0 >1.0.0', '2.0.0'],
+  // no version satisfies these, so none is less than them
+  ['>=2.0.0 <1.0.0', '0.5.0'],
+  ['<=2.0.0 >=2.0.0 >2.0.0', '1.0.0'],
 ]

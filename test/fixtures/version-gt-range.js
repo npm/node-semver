@@ -59,4 +59,11 @@ module.exports = [
   ['=0.7.x', '0.8.2'],
   ['<0.7.x', '0.7.2'],
   ['0.7.x', '0.7.2-beta'],
+  // redundant bounds on the same side: only the tightest one is the edge
+  ['>=0.3.3 <=0.3.3', '3.3.3'],
+  ['<=0.3.3 >=0.3.3', '3.3.3'],
+  // a set no version can satisfy doesn't hide the rest of the range
+  ['>=2.0.0 <1.0.0 || 1.x', '3.0.0'],
+  ['>1.0.0 <=1.0.0 || 0.x', '3.0.0'],
+  ['<2.0.0 <=2.0.0', '2.0.0'],
 ]
