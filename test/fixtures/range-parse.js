@@ -53,6 +53,15 @@ const ranges = [
   ['1.2.3+dev = 1.2.3+build', '1.2.3'],
   ['>= 1 +build < 2', '>=1.0.0 <2.0.0-0'],
   ['1.2.3 +build = 1.2.3', null],
+  // Parentheses and brackets are not range syntax in any mode. Loose mode used
+  // to drop them and keep whatever was left, so these read as something weaker
+  // than what was written -- `* (4.1.x 4.1.2)` as `*`, matching everything.
+  ['(1.2.3)', null],
+  ['* (4.1.x  4.1.2)', null],
+  ['>=1.0.0 (foo)', null],
+  ['* (bogus)', null],
+  ['>=1.0.0 [foo]', null],
+  ['1.0.0 {x}', null],
   ['= 01.2.3', null],
   ['1.2.3 = 1.2.3 || >= 2 < 3', '1.2.3||>=2.0.0 <3.0.0-0'],
   ['1.2.3+build - 2.0.0+build', '>=1.2.3 <=2.0.0'],

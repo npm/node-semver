@@ -145,7 +145,18 @@ class Range {
       // in loose mode, throw out any that are not valid comparators
       rangeList = rangeList.filter(comp => {
         debug('loose invalid filter', comp, this.options)
-        return !!comp.match(re[t.COMPARATORLOOSE])
+        if (comp.match(re[t.COMPARATORLOOSE])) {
+          return true
+        }
+        // Loose mode tolerates the leftovers of its own normalization -- a
+        // stray `==`, a bare `foo` -- and drops them. What it must not drop is
+        // input that is not range syntax at all, because the range then reads
+        // as something weaker than what was written: `* (4.1.x 4.1.2)` parsed
+        // as `*`, matching every version, and `>=1.0.0 (foo)` as `>=1.0.0`.
+        if (NOTRANGESYNTAX.test(comp)) {
+          throw new TypeError(`Invalid SemVer Range: ${this.raw}`)
+        }
+        return false
       })
     }
     debug('range list', rangeList)
@@ -235,6 +246,14 @@ const {
 const { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require('../internal/constants')
 
 // unbounded global build-metadata stripper used by parseRange
+// Characters that appear in no comparator and no version, in loose mode or any
+// other. A token carrying one is not sloppy range syntax, it is not range
+// syntax, and dropping it would change what the range means.
+//
+// The comma is deliberately absent: `1.2.3, <2.0.0` is tolerated today and
+// pinned by a test, so it keeps being dropped. See the pull request for why
+// that one is left alone.
+const NOTRANGESYNTAX = /[^0-9a-zA-Z\s<>=~^|*.+,-]/
 const BUILDSTRIPRE = new RegExp(src[t.BUILD], 'g')
 
 const isNullSet = c => c.value === '<0.0.0-0'
