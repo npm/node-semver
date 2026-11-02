@@ -29,6 +29,12 @@ const minVersion = (range, loose) => {
         case '>':
           if (compver.prerelease.length === 0) {
             compver.patch++
+            // in includePrerelease mode the next patch's lowest prerelease
+            // (e.g. 1.0.1-0) also satisfies `>1.0.0` and is lower than 1.0.1,
+            // so it is the true minimum -- matching the prerelease `>` case below
+            if (range.includePrerelease) {
+              compver.prerelease.push(0)
+            }
           } else {
             compver.prerelease.push(0)
           }
