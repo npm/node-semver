@@ -57,12 +57,13 @@ class Range {
       if (this.set.length === 0) {
         this.set = [first]
       } else if (this.set.length > 1) {
-        // if we have any that are *, then the range is just *
-        for (const c of this.set) {
-          if (c.length === 1 && isAny(c[0])) {
-            this.set = [c]
-            break
-          }
+        // A wildcard covers stable versions, but other sets may admit prereleases.
+        const any = this.set.findIndex(c => c.length === 1 && isAny(c[0]))
+        if (any !== -1) {
+          this.set = this.set.filter((c, i) => i === any || (
+            !this.includePrerelease && c.some(comp =>
+              !isAny(comp) && comp.semver.prerelease.length > 0)
+          ))
         }
       }
     }

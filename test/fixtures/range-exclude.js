@@ -3,6 +3,10 @@
 // [range, version, options]
 // version should not be included by range
 module.exports = [
+  ['* || 1.2.3-alpha', '1.2.3-beta'],
+  ['* || 1.2.3-alpha', '1.2.4-alpha'],
+  ['* || >=1.2.3-alpha <1.2.3', '1.2.3-0'],
+  ['* || >=1.2.3-alpha <1.2.3', '1.2.4-alpha'],
   ['1.0.0 - 2.0.0', '2.2.3'],
   ['1.2.3+asdf - 2.4.3+asdf', '1.2.3-pre.2'],
   ['1.2.3+asdf - 2.4.3+asdf', '2.4.3-alpha'],
