@@ -86,6 +86,30 @@ test('convert comparator to range', t => {
   const c = new Comparator('>=1.2.3')
   const r = new Range(c)
   t.equal(r.raw, c.value, 'created range from comparator')
+  t.equal(r.toString(), c.value, 'formats the comparator')
+  t.notOk(r.test('1.2.4-beta'), 'excludes prereleases by default')
+  t.end()
+})
+
+test('test a range created from a prerelease comparator', t => {
+  const r = new Range(new Comparator('>=1.2.3-alpha'))
+  t.ok(r.test('1.2.3-beta'), 'accepts a prerelease with the same version tuple')
+  t.ok(r.test('1.2.3'), 'accepts a stable version')
+  t.notOk(r.test('1.2.4-beta'), 'excludes prereleases with a different version tuple')
+  t.notOk(r.test('1.2.2'), 'rejects versions below the comparator')
+  t.notOk(r.test('not a version'), 'rejects invalid versions without throwing')
+  t.end()
+})
+
+test('options for a range created from a comparator', t => {
+  const c = new Comparator('>=1.2.3')
+  const options = { loose: true, includePrerelease: true }
+  const r = new Range(c, options)
+  t.ok(r.test('1.2.4-beta'), 'includes prereleases when requested')
+  t.ok(r.test('01.02.04'), 'uses loose version parsing when requested')
+  t.notOk(new Range(c).test('01.02.04'), 'uses strict version parsing by default')
+  t.ok(new Range(c, true).test('01.02.04'), 'accepts the legacy loose boolean')
+  t.equal(new Range(r, options), r, 'reuses a range with matching options')
   t.end()
 })
 
