@@ -64,6 +64,11 @@ const subset = (sub, dom, options = {}) => {
     // then we know this isn't a subset, but if EVERY simple range was null,
     // then it is a subset.
     if (sawNonNull) {
+      // When the dom has multiple OR-branches, check if their union covers
+      // the sub range even though no single branch does.
+      if (dom.set.length > 1 && unionCovers(simpleSub, dom.set, options)) {
+        continue OUTER
+      }
       return false
     }
   }
@@ -244,6 +249,276 @@ const lowerLT = (a, b, options) => {
     : comp > 0 ? b
     : b.operator === '<' && a.operator === '<=' ? b
     : a
+}
+
+// Extract the [gt, lt] bounds from a simple comparator set.
+// Returns { gt, lt } where gt/lt are comparators or null.
+// Returns null if the set is a null set (inconsistent bounds or multi-eq).
+const extractBounds = (set, options) => {
+  if (set.length === 1 && set[0].semver === ANY) {
+    if (options.includePrerelease) {
+      return { gt: null, lt: null }
+    }
+    set = minimumVersion
+  }
+
+  const eqSet = new Set()
+  let gt = null
+  let lt = null
+  for (const c of set) {
+    if (c.operator === '>' || c.operator === '>=') {
+      gt = higherGT(gt, c, options)
+    } else if (c.operator === '<' || c.operator === '<=') {
+      lt = lowerLT(lt, c, options)
+    } else {
+      eqSet.add(c.semver)
+    }
+  }
+
+  if (gt && lt) {
+    const cmp = compare(gt.semver, lt.semver, options)
+    if (cmp > 0) {
+      return null
+    }
+    if (cmp === 0 && (gt.operator !== '>=' || lt.operator !== '<=')) {
+      return null
+    }
+  }
+
+  // eq-pinned sets without gt/lt bounds are skipped (treated as null) since
+  // they're point intervals handled separately for sub ranges.
+  // eq sets with inconsistent gt/lt are also null sets.
+  if (eqSet.size > 0) {
+    return null
+  }
+
+  return { gt, lt }
+}
+
+// Check if two intervals are adjacent: the upper bound of interval a touches
+// the lower bound of interval b with no gap (in terms of release versions).
+// In non-prerelease mode, <X.Y.Z-0 and >=X.Y.Z are adjacent because
+// no release version exists between them.
+const boundsAdjacent = (aLt, bGt, options) => {
+  if (!bGt) {
+    return true // dom has no lower bound → always overlaps
+  }
+
+  const cmp = compare(aLt.semver, bGt.semver, options)
+
+  if (cmp > 0) {
+    return true // overlap
+  }
+  if (cmp < 0) {
+    return false // gap
+  }
+
+  // Same version: only < and > leaves a gap (exactly one version)
+  if (aLt.operator === '<' && bGt.operator === '>') {
+    return false
+  }
+  return true
+}
+
+// In non-prerelease mode, <X.Y.Z-0 and >=X.Y.Z are adjacent
+// because no release version can exist between them.
+const isAdjacentPrerelease = (aLt, bGt, options) => {
+  if (options.includePrerelease) {
+    return false
+  }
+  // aLt is <V-0 and bGt is >=V (same major.minor.patch)
+  if (aLt.operator === '<' &&
+      aLt.semver.prerelease.length === 1 &&
+      aLt.semver.prerelease[0] === 0 &&
+      bGt.operator === '>=' &&
+      bGt.semver.prerelease.length === 0 &&
+      aLt.semver.major === bGt.semver.major &&
+      aLt.semver.minor === bGt.semver.minor &&
+      aLt.semver.patch === bGt.semver.patch) {
+    return true
+  }
+  return false
+}
+
+// Check whether the sub comparator set's lower bound is covered by a dom
+// interval's lower bound (i.e., domGt <= subGt).
+const gtCovers = (subGt, domGt, options) => {
+  if (!domGt) {
+    return true // dom unbounded below
+  }
+  if (!subGt) {
+    return false // sub unbounded below, dom is not
+  }
+  const cmp = compare(subGt.semver, domGt.semver, options)
+  if (cmp > 0) {
+    return true
+  }
+  if (cmp < 0) {
+    return false
+  }
+  // Same version: >= is wider than >
+  if (domGt.operator === '>=' || subGt.operator === '>') {
+    return true
+  }
+  return subGt.operator === domGt.operator
+}
+
+// Check whether the sub comparator set's upper bound is covered by a dom
+// interval's upper bound (i.e., domLt >= subLt).
+// Note: in the sweep, domLt (coverage) is never null since we return early
+// when dom.lt is null.
+const ltCovers = (subLt, domLt, options) => {
+  if (!subLt) {
+    return false // sub unbounded above, dom is not
+  }
+  const cmp = compare(subLt.semver, domLt.semver, options)
+  if (cmp < 0) {
+    return true
+  }
+  if (cmp > 0) {
+    // In non-prerelease mode, <X.Y.Z and <X.Y.Z-0 are equivalent
+    if (!options.includePrerelease &&
+        subLt.operator === '<' && domLt.operator === '<' &&
+        subLt.semver.prerelease.length === 0 &&
+        domLt.semver.prerelease.length === 1 &&
+        domLt.semver.prerelease[0] === 0 &&
+        subLt.semver.major === domLt.semver.major &&
+        subLt.semver.minor === domLt.semver.minor &&
+        subLt.semver.patch === domLt.semver.patch) {
+      return true
+    }
+    return false
+  }
+  // Same version: <= is wider than <
+  if (domLt.operator === '<=' || subLt.operator === '<') {
+    return true
+  }
+  return subLt.operator === domLt.operator
+}
+
+// Check if the union of dom comparator sets covers a single sub comparator set
+// using an interval-sweep algorithm.
+const unionCovers = (simpleSub, domSets, options) => {
+  // Check for eq-pinned sub (e.g., "2.0.0" as a simple range).
+  // If the eq version doesn't satisfy any single dom set (checked by
+  // simpleSubset), it won't satisfy the union either.
+  const subEqs = simpleSub.filter(c => c.operator === '' && c.semver !== ANY)
+  if (subEqs.length > 0) {
+    return false
+  }
+
+  const subBounds = extractBounds(simpleSub, options)
+
+  // Check prerelease admission: if sub has prerelease bounds and we're not in
+  // includePrerelease mode, verify that dom has matching prerelease tuples
+  if (!options.includePrerelease) {
+    if (subBounds.gt && subBounds.gt.semver &&
+        subBounds.gt.semver !== ANY &&
+        subBounds.gt.semver.prerelease && subBounds.gt.semver.prerelease.length) {
+      return false
+    }
+    if (subBounds.lt && subBounds.lt.semver &&
+        subBounds.lt.semver !== ANY &&
+        subBounds.lt.semver.prerelease && subBounds.lt.semver.prerelease.length) {
+      // exception: <X.Y.Z-0 is equivalent to <X.Y.Z for releases
+      if (!(subBounds.lt.semver.prerelease.length === 1 &&
+            subBounds.lt.semver.prerelease[0] === 0 &&
+            subBounds.lt.operator === '<')) {
+        return false
+      }
+    }
+  }
+
+  // Extract and filter dom intervals (skip null sets)
+  const domIntervals = []
+  for (const domSet of domSets) {
+    const bounds = extractBounds(domSet, options)
+    if (bounds) {
+      domIntervals.push(bounds)
+    }
+  }
+
+  if (domIntervals.length === 0) {
+    return false
+  }
+
+  // Sort dom intervals by lower bound
+  domIntervals.sort((a, b) => {
+    const aVer = a.gt ? a.gt.semver : null
+    const bVer = b.gt ? b.gt.semver : null
+    if (!aVer && !bVer) {
+      return 0
+    }
+    if (!aVer) {
+      return -1
+    }
+    if (!bVer) {
+      return 1
+    }
+    const cmp = compare(aVer, bVer, options)
+    // If same version, >= sorts before >
+    if (cmp !== 0) {
+      return cmp
+    }
+    if (a.gt.operator === '>=' && b.gt.operator === '>') {
+      return -1
+    }
+    /* istanbul ignore next */
+    if (a.gt.operator === '>' && b.gt.operator === '>=') {
+      return 1
+    }
+    /* istanbul ignore next */
+    return 0
+  })
+
+  // Sweep: start at sub's lower bound, greedily extend coverage
+  let coverage = subBounds.gt // current coverage ends here (as a gt bound)
+  let coverageIsStart = true
+
+  for (const dom of domIntervals) {
+    // Check if this dom interval's lower bound is within current coverage
+    if (coverageIsStart) {
+      // First interval must cover sub's lower bound
+      if (!gtCovers(subBounds.gt, dom.gt, options)) {
+        continue
+      }
+    } else {
+      // Subsequent intervals must be adjacent to or overlap with coverage
+      const adjacent = boundsAdjacent(coverage, dom.gt, options) ||
+        isAdjacentPrerelease(coverage, dom.gt, options)
+      if (!adjacent) {
+        // Check if there's a gap
+        continue
+      }
+    }
+
+    // Extend coverage to this dom interval's upper bound
+    if (!dom.lt) {
+      // Dom extends to +∞, we're done
+      return true
+    }
+
+    if (coverageIsStart) {
+      coverage = dom.lt
+      coverageIsStart = false
+    } else {
+      // Take the higher upper bound, <= is wider than <
+      const cmp = compare(dom.lt.semver, coverage.semver, options)
+      /* istanbul ignore next */
+      if (cmp > 0 ||
+        (cmp === 0 && dom.lt.operator === '<=' && coverage.operator === '<')) {
+        coverage = dom.lt
+      }
+    }
+
+    // Check if coverage already covers sub's upper bound
+    if (ltCovers(subBounds.lt, coverage, options)) {
+      return true
+    }
+  }
+
+  // Check final coverage is handled in the sweep's mid-check
+  return false
 }
 
 module.exports = subset

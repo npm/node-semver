@@ -104,6 +104,159 @@ const cases = [
   ['>=3 >=2 >=1', '>0', true],
   ['>=3 >=2 >=1', '>=3 >=2 >=1', true],
   ['>2.0.0', '>=2.0.0', true],
+
+  // Union subset: sub spans multiple dom OR-branches (#703)
+  ['>=17.2.0', '^17.2.0 || >17', true],
+  ['>=17.2.0', '^17.2.0 || >=18', true],
+  ['>=2.0.0', '^2 || ^3 || ^4 || >=5', true],
+  ['>=2.0.0', '^2 || >=3', true],
+  ['>=2.0.0 <5.0.0', '^2 || ^3 || ^4', true],
+
+  // Union subset with gap → false
+  ['>=2.0.0', '^2 || ^4', false],
+  ['>=2.0.0 <6.0.0', '^2 || ^4 || ^5', false],
+
+  // Union: sub unbounded above, dom union unbounded
+  ['>=1.0.0', '^1 || >=2.0.0', true],
+
+  // Union: sub bounded, dom union overlapping
+  ['>=1.0.0 <4.0.0', '^1 || ^2 || ^3', true],
+
+  // Union: dom branches overlap
+  ['>=1.0.0 <3.0.0', '>=1.0.0 <2.5.0 || >=2.0.0 <3.0.0', true],
+
+  // Union: eq-pinned sub in union dom
+  ['2.0.0', '^1 || ^2', true],
+
+  // Union: eq-pinned sub NOT in any dom branch
+  ['5.0.0', '^1 || ^2', false],
+
+  // Union: single dom branch (no union benefit)
+  ['>=1.0.0', '^1', false],
+
+  // Union: * dom with sub
+  ['>=1.0.0', '^1 || *', true],
+
+  // Union: sub has prerelease in non-prerelease mode → no union fallback
+  ['^1.2.3-pre.0', '^1 || ^2', false],
+
+  // Union: sub with lt prerelease -0 (equivalent to plain lt)
+  ['>=1.0.0 <2.0.0-0', '^1 || ^2', true],
+
+  // Union: includePrerelease mode — gap at 2.0.0 prereleases
+  ['>=1.0.0', '^1 || >=2.0.0', false, { includePrerelease: true }],
+  // Union: includePrerelease mode — contiguous
+  ['>=1.0.0', '^1 || >=2.0.0-0', true, { includePrerelease: true }],
+
+  // Union: null-set dom branches are skipped
+  ['>=2.0.0', '>5.0.0 <3.0.0 || >=1.0.0', true],
+
+  // Union: sub is null set → subset of everything
+  ['>=5.0.0 <3.0.0', '^1 || ^2', true],
+
+  // Union: dom has <= and >= that bridge
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <=2.0.0 || >=2.0.0 <=3.0.0', true],
+
+  // Union: sub gt prerelease in non-prerelease mode → no union
+  ['>=1.0.0-beta', '^1 || >=2.0.0', false],
+
+  // Union: sub lt prerelease (non -0) in non-prerelease mode → no union
+  ['>=1.0.0 <2.0.0-beta', '^1 || ^2', false],
+
+  // Union: dom overlapping intervals
+  ['>=1.0.0 <5.0.0', '>=1.0.0 <3.0.0 || >=2.0.0 <5.0.0', true],
+
+  // Union: dom intervals in wrong order get sorted
+  ['>=1.0.0', '>=3.0.0 || ^1 || ^2', true],
+
+  // Union: > and >= at same version sort correctly
+  ['>=1.0.0 <=3.0.0', '>1.0.0 <3.0.0-0 || >=3.0.0 <=3.0.0', false],
+
+  // Union: eq-pinned sub cannot match via union if simpleSubset failed
+  ['3.0.0', '^2 || ^4', false],
+
+  // Union: all dom branches are null sets
+  ['>=1.0.0', '>5.0.0 <3.0.0 || >8.0.0 <6.0.0', false],
+
+  // Union: dom intervals with <= upper bounds
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <=2.0.0 || >2.0.0 <=3.0.0', true],
+
+  // Union: eq-pinned sub, not satisfying dom
+  ['1.5.0', '>2.0.0 || >5.0.0', false],
+
+  // Union: sub null set with eq+gt inconsistency
+  ['5.0.0 >6.0.0', '^1 || ^2', true],
+
+  // Union: sub with lt that is <= vs dom lt that is <
+  ['>=1.0.0 <=3.0.0', '^1 || >=2.0.0 <3.0.0', false],
+
+  // Union: final coverage check at end of sweep
+  ['>=1.0.0 <4.0.0', '^1 || ^2', false],
+
+  // Union: dom with no lower bound (covers gtCovers null path)
+  ['<4.0.0', '<3.0.0 || >=2.0.0', true],
+
+  // Union: sub with no lower bound, dom intervals have lower bounds
+  ['<4.0.0', '>=2.0.0 <3.0.0 || >=3.0.0', false],
+
+  // Union: dom intervals with same lower bound version, different operators
+  ['>=2.0.0 <4.0.0', '>=2.0.0 <3.0.0 || >2.0.0', true],
+
+  // Union: coverage extension with <= at same version as current <
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <3.0.0 || >=2.0.0 <=3.0.0', true],
+
+  // Union: sub <=X not covered by dom <X
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <3.0.0-0 || >=4.0.0', false],
+
+  // Union: sub unbounded, dom first interval covers lower
+  ['>=1.0.0', '<3.0.0 || >=2.0.0', true],
+
+  // Union: two dom intervals with no lower bound (covers compareBound both-null)
+  ['<6.0.0', '<3.0.0 || <5.0.0', false],
+
+  // Union: dom set with eq comparator (skipped as point interval)
+  ['>=1.0.0 <5.0.0', '^1 || 3.0.0 || ^4', false],
+
+  // Union: dom set with gt=lt=0 inconsistency (cmp=0, wrong operators)
+  ['>=1.0.0', '>2.0.0 <=2.0.0 || >=1.0.0', true],
+
+  // Union: isAdjacentPrerelease called in includePrerelease mode
+  ['>=1.0.0', '>=1.0.0 <2.0.0-0 || >=2.0.0', false, { includePrerelease: true }],
+
+  // Union: sub gtCovers same version
+  ['>=2.0.0', '>=2.0.0 <3.0.0-0 || >=3.0.0', true],
+
+  // Union: * sub in includePrerelease mode (covers extractBounds ANY path)
+  ['*', '^1 || ^2', false, { includePrerelease: true }],
+
+  // Union: * sub in non-includePrerelease mode (0.x not covered)
+  ['*', '^1 || >=2.0.0', false],
+
+  // Union: dom with cmp===0 inconsistency (>X <=X is null set, gap remains)
+  ['>=1.0.0', '>2.0.0 <=2.0.0 || ^1 || >=3.0.0', false],
+
+  // Union: isAdjacentPrerelease in includePrerelease (should not bridge gap)
+  ['>=1.0.0 <4.0.0', '>=1.0.0 <2.0.0-0 || >=2.0.0 <4.0.0', false, { includePrerelease: true }],
+
+  // Union: gap at exact version with < and > operators
+  ['>=1.0.0 <5.0.0', '>=1.0.0 <3.0.0 || >3.0.0 <5.0.0', false],
+
+  // Union: dom coverage exceeds sub upper bound (ltCovers cmp < 0)
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <=2.0.0 || >=2.0.0 <=4.0.0', true],
+
+  // Union: sort with null-gt dom interval and non-null-gt dom interval
+  ['<5.0.0', '<4.0.0 || >=3.0.0', true],
+  // same but reversed dom order — forces sort to encounter null-gt
+  ['<5.0.0', '>=3.0.0 || <4.0.0', true],
+  // Union: two dom branches with identical lower bound triggers sort return-0
+  ['>=2.0.0 <4.0.0', '>=2.0.0 <3.0.0 || >=2.0.0', true],
+  // Union: sort tiebreaker where > must sort after >= at same version
+  ['>2.0.0 <4.0.0', '>2.0.0 <3.0.0 || >=2.0.0', true],
+  // Union: coverage extension with <= wider than < at same version
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <3.0.0 || >=2.0.0 <=3.0.0', true],
+
+  // Union: sort tiebreaker >= before > (reversed dom order)
+  ['>=2.0.0 <4.0.0', '>2.0.0 || >=2.0.0 <3.0.0', true],
 ]
 
 t.plan(cases.length + 1)
