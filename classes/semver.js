@@ -307,6 +307,10 @@ class SemVer {
           while (--i >= 0) {
             if (typeof this.prerelease[i] === 'number') {
               this.prerelease[i]++
+              // Keep large numeric ids as strings, just like the constructor.
+              if (this.prerelease[i] >= MAX_SAFE_INTEGER) {
+                this.prerelease[i] = String(this.prerelease[i])
+              }
               i = -2
             }
           }
