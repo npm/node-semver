@@ -72,6 +72,30 @@ test('return SemVer arg to ctor if options match', t => {
   t.end()
 })
 
+test('preserve build metadata when constructor options change', t => {
+  const version = '1.2.3-beta.1+build.7'
+  for (const [originalOptions, options] of [
+    [{}, { loose: true }],
+    [{ loose: true }, {}],
+    [{}, { includePrerelease: true }],
+    [{ includePrerelease: true }, {}],
+  ]) {
+    const original = new SemVer(version, originalOptions)
+    const result = new SemVer(original, options)
+    t.not(result, original)
+    t.strictSame(result.build, ['build', '7'])
+    t.equal(result.raw, version)
+    t.equal(result.version, original.version)
+    t.equal(result.loose, !!options.loose)
+    t.equal(result.includePrerelease, !!options.includePrerelease)
+    t.strictSame(original.build, ['build', '7'])
+  }
+  const loose = new SemVer('01.02.03-beta+build.7', { loose: true })
+  t.equal(new SemVer(loose).raw, '1.2.3-beta+build.7',
+    'reparse the normalized version rather than its loose raw input')
+  t.end()
+})
+
 test('really big numeric prerelease value', (t) => {
   const r = new SemVer(`1.2.3-beta.${Number.MAX_SAFE_INTEGER}0`)
   t.strictSame(r.prerelease, ['beta', '90071992547409910'])

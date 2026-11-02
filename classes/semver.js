@@ -31,7 +31,8 @@ class SemVer {
         version.includePrerelease === !!options.includePrerelease) {
         return version
       } else {
-        version = version.version
+        const build = version.build.length ? `+${version.build.join('.')}` : ''
+        version = version.version + build
       }
     } else if (typeof version !== 'string') {
       throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`)
