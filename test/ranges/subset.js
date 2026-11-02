@@ -104,9 +104,85 @@ const cases = [
   ['>=3 >=2 >=1', '>0', true],
   ['>=3 >=2 >=1', '>=3 >=2 >=1', true],
   ['>2.0.0', '>=2.0.0', true],
+
+  // OR-branch union coverage (#703)
+  // The union of multiple dom branches covers the sub range even though
+  // no single branch does.
+  ['>=17.2.0', '^17.2.0 || >17', true],
+  ['>17.2.0', '^17.2.0 || >17', true],
+  ['>=1.0.0', '^1.0.0 || >=2.0.0', true],
+  ['>=1.0.0', '^1.0.0 || >=3.0.0', false], // gap at 2.x
+  ['>=1.0.0 <5.0.0', '^1.0.0 || ^2.0.0 || ^3.0.0 || ^4.0.0', true],
+  ['>=1.0.0 <3.0.0', '>=1.0.0 <2.0.0 || >=2.0.0', true],
+  ['>=1.0.0 <=5.0.0', '>=1.0.0 <=3.0.0 || >3.0.0 <=5.0.0', true],
+  ['>=1.0.0 <=5.0.0', '>=1.0.0 <=3.0.0 || >3.0.0 <=4.0.0', false],
+  ['<5.0.0', '<3.0.0 || >=2.0.0', true], // union covers all <5.0.0
+  ['<5.0.0', '<3.0.0 || >=2.0.0 <5.0.0', true],
+  ['*', '<2.0.0 || >=1.0.0', true], // union covers everything
+  ['>=1.0.0', '^1.0.0 || ^3.0.0', false], // gap at 2.x and no upper-bound coverage
+  ['>1.0.0', '>1.0.0 <3.0.0 || >=2.0.0', true], // > operator at lower bound
+  ['>=1.0.0 <3.0.0', '1.0.0 || 2.0.0', false], // dom is all eq-sets
+  ['>=0.0.0', '<2.0.0 || >=1.0.0', true], // dom branch with -infinity lower
+  ['>=1.0.0 <10.0.0', '>=1.0.0 <3.0.0 || >=5.0.0 <7.0.0 || >=9.0.0', false], // gap
+  ['>=0.0.0-0', '* || >=1.0.0', true, { includePrerelease: true }],
+  ['>=1.0.0 <=5.0.0', '>=1.0.0 <3.0.0 || >=2.0.0 <=5.0.0', true], // overlap
+  ['>=1.0.0 <3.0.0', '>=1.0.0 <2.0.0 || >=1.5.0 <4.0.0', true], // covered > sub
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <2.0.0 || >=1.5.0 <3.0.0', false], // < can't cover <=
+  ['>=1.0.0', '<5.0.0 || <3.0.0 || >=4.0.0', true], // sort: two -inf lower bounds
+  ['>=1.0.0 <5.0.0', '>=1.0.0 <3.0.0 || >3.0.0', false], // <V and >V gap at V
+  ['>=1.0.0 <=5.0.0', '>=1.0.0 <=5.0.0 || >=2.0.0 <=3.0.0', true], // overlap, a > b
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <=3.0.0 || >=2.0.0 <3.0.0', true], // same ver, a <=
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <3.0.0 || >=2.0.0 <=3.0.0', true], // same ver, b <=
+  ['>=1.0.0 <5.0.0', '>=1.0.0 <3.0.0 || >3.0.0 <=3.0.0 || >=2.0.0', true], // null set branch
+  ['>=1.0.0', '>5.0.0 <3.0.0 || >=1.0.0', true], // dom null set (gt > lt)
+  ['5.0.0', '>=1.0.0 <3.0.0 || >=6.0.0', false], // eq sub falls in gap
+  ['>=0.0.0 <5.0.0', '>=1.0.0 <5.0.0 || <3.0.0', true], // sort: b has -inf lower
+  ['>=1.0.0 <5.0.0', '>5.0.0 <3.0.0 || ^1.0.0', false], // dom null set + non-covering
+  ['>=1.0.0 <5.0.0', '>3.0.0 <=3.0.0 || >=1.0.0', true], // dom null set comp=0
+  ['>=1.0.0 <=4.0.0',
+    '>=1.0.0 <=3.0.0 || >=2.0.0 <=3.0.0 || >=3.0.0 <=4.0.0', true], // dup upper
+  ['>=3.0.0 <=5.0.0', '>=3.0.0 <4.0.0 || >3.0.0 <=5.0.0', true], // sort tiebreak
+  ['>=1.0.0', '>=1.0.0 || >=2.0.0 <5.0.0', true], // +inf then bounded
+  ['>=1.0.0', '>=3.0.0 <3.0.0 || >=1.0.0', true], // >=V <V null set
+  ['>=1.0.0 <=5.0.0',
+    '>=1.0.0 <=4.0.0 || >=2.0.0 <=3.0.0 || >=4.0.0 <=5.0.0', true], // a > b upper
+  ['>=2.0.0 <=5.0.0',
+    '>=2.0.0 <=2.0.0 || >=2.0.0 <4.0.0 || >=3.0.0 <=5.0.0', true], // >=V <=V branch
+  ['>=1.0.0 <=4.0.0',
+    '>=1.0.0 <3.0.0 || >=2.0.0 <=3.0.0 || >=3.0.0 <=4.0.0', true], // < then <= merge
+  ['>=1.0.0 <=4.0.0',
+    '>=1.0.0 <3.0.0 || >=2.0.0 <3.0.0 || >=2.0.0 <=4.0.0', true], // both < same ver
+  ['>=1.0.0 <=5.0.0',
+    '>=1.0.0 <2.0.0 || >=2.0.0 <3.0.0 || >2.0.0 <4.0.0 || >=4.0.0 <=5.0.0',
+    true], // sort with mixed compare results
+  ['>=2.0.0 <4.0.0', '>2.0.0 <4.0.0 || >=2.0.0 <3.0.0', true], // sort tiebreak >/>=
+  ['*', '<2.0.0 || >=1.0.0', true, { includePrerelease: true }],
+
+  // a prerelease bound admits prereleases in its tuple, which a union of
+  // branches without a prerelease in that tuple does not cover
+  ['>=1.0.0-pre', '<2.0.0 || >=1.0.0', false], // 1.0.0-pre is not in dom
+  ['>1.0.0-pre <3.0.0', '<2.0.0 || >=1.0.0', false],
+  ['<2.0.0-pre', '<1.0.0 || >=0.5.0 <3.0.0', false], // 2.0.0-0 is not in dom
+  ['<=2.0.0-pre', '<1.0.0 || >=0.5.0 <3.0.0', false],
+  ['>=1.0.0-pre <2.0.0', '>=1.0.0-0 <2.0.0 || >=2.0.0', true], // one branch covers it
+  ['<2.0.0-0', '<1.0.0 || >=0.5.0 <3.0.0', true], // <2.0.0-0 is <2.0.0
+  ['>=1.0.0-pre', '<2.0.0 || >=1.0.0', true, { includePrerelease: true }],
+  ['>=2.5.0-alpha.1', '<1.5.0-alpha.1 || >=1.5.0 <2.5.0 || >=2.5.0', true,
+    { includePrerelease: true }], // leading branch ends before sub starts
+
+  // an = branch is the single version it names, so it can close a gap
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <2.0.0 || 2.0.0 || >2.0.0 <=3.0.0', true],
+  ['>=1.0.0', '<2.0.0 || 2.0.0 || >2.0.0', true],
+  ['>=1.0.0 <=3.0.0', '>=1.0.0 <2.0.0 || 2.5.0 || >2.0.0 <=3.0.0', false],
+  ['>=1.5.0', '<1.0.0 || >=1.0.0 <2.0.0 || >=2.0.0', true],
+  ['>=1.0.0 <=3.0.0', '1.0.0 || 1.0.0 2.0.0 || >=1.0.0 <=3.0.0', true], // = mixed in a branch
+  ['>=1.0.0 <=3.0.0', '1.0.0 2.0.0 || 1.5.0 || 2.5.0', false], // only = and null branches
+  ['>=1.0.0 <3.0.0', '1.0.0 >0.5.0 || 2.0.0 <3.0.0', false], // no branch is an interval
+  ['1.5.0 >=1.0.0', '<1.5.0 || >1.5.0', false], // = sub with a bound is not an interval
 ]
 
 t.plan(cases.length + 1)
+
 cases.forEach(([sub, dom, expect, options]) => {
   const msg = `${sub || "''"} ⊂ ${dom || "''"} = ${expect}` +
     (options ? ' ' + Object.keys(options).join(',') : '')
