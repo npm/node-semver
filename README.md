@@ -389,15 +389,15 @@ for the benefit of parser authors:
 
 ```bnf
 range-set  ::= range ( logical-or range ) *
-logical-or ::= ( ' ' ) * '||' ( ' ' ) *
-range      ::= hyphen | simple ( ' ' simple ) * | ''
+logical-or ::= wsp '||' wsp
+range      ::= hyphen | simple ( wsp1 simple ) * | ''
 hyphen     ::= partial ' - ' partial
 simple     ::= primitive | partial | tilde | caret
 primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' ) partial
-partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
+partial    ::= wsp xr ( '.' xr ( '.' xr qualifier ? )? )?
 xr         ::= 'x' | 'X' | '*' | nr
 nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
-tilde      ::= '~' partial
+tilde      ::= '~' wsp ( '>' ) ? partial
 caret      ::= '^' partial
 qualifier  ::= ( '-' pre )? ( '+' build )?
 pre        ::= prepart ( '.' prepart ) *
@@ -405,6 +405,8 @@ prepart    ::= nr | alphanumid
 build      ::= buildid ( '.' buildid ) *
 alphanumid ::= ( ['0'-'9'] ) * [-A-Za-z] [-0-9A-Za-z] *
 buildid    ::= [-0-9A-Za-z]+
+wsp        ::= ( ' ' ) *
+wsp1       ::= ' ' wsp
 ```
 
 Note: Prerelease identifiers (`pre`) use `nr` for numeric parts, which
@@ -677,4 +679,3 @@ The following modules are available:
 * `require('semver/ranges/subset')`
 * `require('semver/ranges/to-comparators')`
 * `require('semver/ranges/valid')`
-
