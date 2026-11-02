@@ -2,6 +2,7 @@
 
 const t = require('tap')
 const subset = require('../../ranges/subset.js')
+const satisfies = require('../../functions/satisfies.js')
 const Range = require('../../classes/range')
 
 // sub, dom, expect, [options]
@@ -13,6 +14,11 @@ const cases = [
   ['1.2.3', '>1.2.0', true],
   ['1.2.3 2.3.4 || 2.3.4', '3', false],
   ['^1.2.3-pre.0', '1.x', false],
+  // a prerelease `=` comparator combined with a bound of a different tuple must
+  // not be treated as a null set (subset false-positive): 1.1.2-alpha is in sub
+  // but not in dom, so sub is not a subset of dom
+  ['=1.1.2-alpha <3.1.0', '<1.0.0', false],
+  ['<3.1.0-0 1.1.2-alpha', '~2.0', false],
   ['^1.2.3-pre.0', '1.x', true, { includePrerelease: true }],
   ['>2 <1', '3', true],
   ['1 || 2 || 3', '>=1.0.0', true],
@@ -106,7 +112,7 @@ const cases = [
   ['>2.0.0', '>=2.0.0', true],
 ]
 
-t.plan(cases.length + 1)
+t.plan(cases.length + 2)
 cases.forEach(([sub, dom, expect, options]) => {
   const msg = `${sub || "''"} ⊂ ${dom || "''"} = ${expect}` +
     (options ? ' ' + Object.keys(options).join(',') : '')
@@ -141,5 +147,70 @@ t.test('range should be subset of itself in obj or string mode', t => {
   r4.set = r.set.map(s => [...s])
   t.equal(subset(r4, r), true)
   t.equal(subset(r, r4), true)
+  t.end()
+})
+
+// Property: a true subset(a, b) must never admit a version that satisfies a but
+// not b. The table cases above cannot catch this class - the suite is green with
+// and without the fix - so assert the invariant over generated ranges, in the
+// false-positive direction only (a finite universe cannot refute a `false`).
+// Independently rediscovered and proposed by @mrvonkalus (differential fuzzing).
+t.test('a true subset() result never admits a version outside the superset', t => {
+  // seeded xorshift32, so any failure reproduces exactly and CI cannot flake
+  let seed = 0x1a2b3c4d
+  const rand = () => {
+    seed ^= seed << 13
+    seed ^= seed >>> 17
+    seed ^= seed << 5
+    return (seed >>> 0) / 0x100000000
+  }
+  const pick = arr => arr[Math.floor(rand() * arr.length)]
+
+  const universe = []
+  for (const major of [0, 1, 2, 3]) {
+    for (const minor of [0, 1, 2]) {
+      for (const patch of [0, 1, 2]) {
+        universe.push(`${major}.${minor}.${patch}`)
+        for (const pre of ['alpha.0', 'alpha.1', 'beta', '0']) {
+          universe.push(`${major}.${minor}.${patch}-${pre}`)
+        }
+      }
+    }
+  }
+
+  const ops = ['>', '>=', '<', '<=']
+  const simple = () => {
+    const parts = []
+    for (let i = 1 + Math.floor(rand() * 3); i > 0; i--) {
+      parts.push(rand() < 0.5 ? `${pick(ops)}${pick(universe)}` : pick(universe))
+    }
+    return parts.join(' ')
+  }
+  const range = () => {
+    const parts = []
+    for (let i = 1 + Math.floor(rand() * 2); i > 0; i--) {
+      parts.push(simple())
+    }
+    return parts.join(' || ')
+  }
+
+  let unsound = null
+  for (let i = 0; i < 10000 && !unsound; i++) {
+    const options = rand() < 0.5 ? {} : { includePrerelease: true }
+    const a = range()
+    const b = range()
+    if (!subset(a, b, options)) {
+      continue
+    }
+    for (const v of universe) {
+      if (satisfies(v, a, options) && !satisfies(v, b, options)) {
+        unsound = `subset(${JSON.stringify(a)}, ${JSON.stringify(b)}, ${
+          JSON.stringify(options)}) === true, but ${v} satisfies the sub-range and not the super-range`
+        break
+      }
+    }
+  }
+
+  t.equal(unsound, null, 'no unsound subset() result over generated ranges')
   t.end()
 })
