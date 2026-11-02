@@ -86,6 +86,34 @@ test('convert comparator to range', t => {
   const c = new Comparator('>=1.2.3')
   const r = new Range(c)
   t.equal(r.raw, c.value, 'created range from comparator')
+  t.equal(r.range, c.value, 'range formats the comparator')
+  t.equal(r.loose, false, 'strict by default')
+  t.equal(r.includePrerelease, false, 'no prereleases by default')
+  t.end()
+})
+
+test('range from a comparator can test versions', t => {
+  const r = new Range(new Comparator('>=1.0.0-alpha'))
+  t.equal(r.test('1.0.0-beta'), true, 'prerelease in the comparator tuple passes')
+  t.equal(r.test('1.0.0'), true, 'release above the comparator passes')
+  t.equal(r.test('1.1.0-alpha'), false, 'prerelease of another tuple does not pass')
+  t.equal(r.test('0.9.0'), false, 'lower version does not pass')
+  t.end()
+})
+
+test('range from a comparator keeps the comparator options', t => {
+  const incPre = new Comparator('>=1.2.3', { includePrerelease: true })
+  const inherited = new Range(incPre)
+  t.equal(inherited.options, incPre.options, 'reuses the comparator options')
+  t.equal(inherited.includePrerelease, true, 'inherits includePrerelease')
+  t.equal(inherited.test('1.2.4-alpha'), true, 'inherited option is used by test')
+
+  const explicit = new Range(new Comparator('>=1.2.3'), { includePrerelease: true })
+  t.equal(explicit.includePrerelease, true, 'explicit option is kept')
+  t.equal(explicit.test('1.2.4-alpha'), true, 'explicit option is used by test')
+
+  const loose = new Range(incPre, true)
+  t.equal(loose.loose, true, 'boolean options are parsed')
   t.end()
 })
 

@@ -5,6 +5,8 @@ const SPACE_CHARACTERS = /\s+/g
 // hoisted class for cyclic dependency
 class Range {
   constructor (range, options) {
+    const hasOptions = options !== undefined && options !== null
+
     options = parseOptions(options)
 
     if (range instanceof Range) {
@@ -20,6 +22,14 @@ class Range {
 
     if (range instanceof Comparator) {
       // just put it in the set and return
+      // a comparator carries the options it was parsed with, so keep them
+      // when the caller did not ask for anything else
+      if (!hasOptions) {
+        options = range.options
+      }
+      this.options = options
+      this.loose = !!options.loose
+      this.includePrerelease = !!options.includePrerelease
       this.raw = range.value
       this.set = [[range]]
       this.formatted = undefined
