@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.8.6](https://github.com/npm/node-semver/compare/v7.8.5...v7.8.6) (2026-11-02)
+### Bug Fixes
+* [`69b305d`](https://github.com/npm/node-semver/commit/69b305d8a243c1ae9e0982dbe67217ab2bb9474b) [#918](https://github.com/npm/node-semver/pull/918) improve range parsing performance (#918) (@reggi, @Copilot)
+### Chores
+* [`7257c14`](https://github.com/npm/node-semver/commit/7257c14239476205b4b0bf7e47b07b3e7a517be6) [#917](https://github.com/npm/node-semver/pull/917) cover comparator normalization (#917) (@reggi, @Copilot)
+
 ## [7.8.5](https://github.com/npm/node-semver/compare/v7.8.4...v7.8.5) (2026-06-19)
 ### Bug Fixes
 * [`9c8692a`](https://github.com/npm/node-semver/commit/9c8692ae05416e9dbe88d95ffe2b80e6964550fe) [#878](https://github.com/npm/node-semver/pull/878) include prereleases in tilde range lower bound with includePrerelease (#878) (@chatman-media)
