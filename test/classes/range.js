@@ -83,9 +83,10 @@ test('throw for empty comparator set, even in loose mode', t => {
 })
 
 test('convert comparator to range', t => {
-  const c = new Comparator('>=1.2.3')
+  const c = new Comparator('>=1.2.3-alpha')
   const r = new Range(c)
   t.equal(r.raw, c.value, 'created range from comparator')
+  t.equal(r.test('1.2.3-beta'), true, 'tests prerelease without throwing')
   t.end()
 })
 
