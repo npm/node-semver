@@ -309,6 +309,12 @@ const ranges = [
   ['^0.0.x', '<0.1.0-0'],
   ['^0.0.0', '<0.0.1-0'],
   ['^0.1.2-beta.1', '>=0.1.2-beta.1 <0.2.0-0'],
+  // Caret zero special cases are numeric, so loose-mode leading zeros
+  // (e.g. '00') must cap at the same next minor/patch as a plain '0'.
+  ['^00.2.3', null],
+  ['^00.2.x', null],
+  ['^0.00.3', null],
+  ['^00.00.3-beta.1', null],
   // Open hyphen bounds and asymmetric partial/prerelease endpoints.
   ['* - *', '*'],
   ['* - 2.3.4', '<=2.3.4'],
@@ -412,6 +418,10 @@ const looseOverrides = new Map([
   ['~01.02.03', '>=1.2.3 <1.3.0-0'],
   ['^01.02.03', '>=1.2.3 <2.0.0-0'],
   ['>=01.02 <02', '>=1.2.0 <2.0.0-0'],
+  ['^00.2.3', '>=0.2.3 <0.3.0-0'],
+  ['^00.2.x', '>=0.2.0 <0.3.0-0'],
+  ['^0.00.3', '>=0.0.3 <0.0.4-0'],
+  ['^00.00.3-beta.1', '>=0.0.3-beta.1 <0.0.4-0'],
 ])
 
 // Tilde with includePrerelease must lower-bound at -0 just like the
@@ -587,6 +597,7 @@ const combinedOverrides = new Map([
   ['^1.x+build.123 <2.x.x+meta-data', '>=1.0.0-0 <2.0.0-0'],
   ['1.2.3+' + 'a'.repeat(251) + ' - 2.0.0', '>=1.2.3-0 <2.0.1-0'],
   ['>=01.02 <02', '>=1.2.0-0 <2.0.0-0'],
+  ['^00.2.x', '>=0.2.0-0 <0.3.0-0'],
 ])
 
 const optionVariants = [
