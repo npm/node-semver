@@ -41,4 +41,13 @@ module.exports = [
   ['<0.1.0', '<0.0.0-0', false],
   ['<0.0.0-0', '<0.1.0', false, true],
   ['<0.1.0', '<0.0.0-0', false, true],
+  // A `<0.0.0-<id>` comparator (with a non-minimal prerelease) is NOT the empty
+  // set: it matches prereleases below `<id>` such as `0.0.0-0`, so it can
+  // intersect other ranges. Only `<0.0.0` and `<0.0.0-0` match nothing. See #521.
+  ['<0.0.0-rc.1', '>=0.0.0-alpha.0', true],
+  ['<0.0.0-rc.1', '>0.0.0-alpha.0', true],
+  ['<0.0.0-beta', '>=0.0.0-alpha', true],
+  ['<0.0.0-alpha', '<0.0.0-rc.1', true],
+  ['<0.0.0', '>=0.0.0-alpha.0', false],
+  ['<0.0.0', '>0.0.0-alpha.0', false],
 ]

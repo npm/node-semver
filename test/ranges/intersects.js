@@ -2,6 +2,7 @@
 
 const { test } = require('tap')
 const intersects = require('../../ranges/intersects')
+const satisfies = require('../../functions/satisfies')
 const Range = require('../../classes/range')
 const Comparator = require('../../classes/comparator')
 const comparatorIntersection = require('../fixtures/comparator-intersection.js')
@@ -56,5 +57,53 @@ test('missing comparator parameter in intersect comparators', (t) => {
     new Comparator('>1.0.0').intersects()
   }, new TypeError('a Comparator is required'),
   'throws type error')
+  t.end()
+})
+
+// Differential oracle: if a concrete version satisfies BOTH ranges, then the
+// ranges MUST intersect. This densely samples the near-zero / prerelease space
+// where `<0.0.0-<id>` comparators live, guarding against the over-broad
+// `startsWith('<0.0.0')` empty-range check that wrongly treated e.g.
+// `<0.0.0-rc.1` (which matches `0.0.0-0`, `0.0.0-alpha`, ...) as matching
+// nothing, producing false negatives from `intersects`.
+test('intersects agrees with pointwise satisfaction', t => {
+  const nums = [0, 1, 2]
+  const pres = ['', '-0', '-alpha', '-alpha.0', '-alpha.1', '-beta', '-rc.1', '-rc.2']
+  const grid = []
+  for (const a of nums) {
+    for (const b of nums) {
+      for (const c of nums) {
+        for (const p of pres) {
+          grid.push(`${a}.${b}.${c}${p}`)
+        }
+      }
+    }
+  }
+
+  const anchors = ['0.0.0', '0.0.0-0', '0.0.0-alpha', '0.0.0-rc.1',
+    '0.1.0-alpha', '1.0.0-alpha', '1.0.0']
+  const comparators = []
+  for (const op of ['<', '<=', '>', '>=', '']) {
+    for (const v of anchors) {
+      comparators.push(`${op}${v}`)
+    }
+  }
+
+  let witnessBacked = 0
+  for (const opts of [{}, { includePrerelease: true }]) {
+    for (const a of comparators) {
+      for (const b of comparators) {
+        const witness = grid.find(v => satisfies(v, a, opts) && satisfies(v, b, opts))
+        if (witness === undefined) {
+          continue
+        }
+        witnessBacked++
+        const label = `${JSON.stringify(opts)}: ${witness} satisfies both`
+        t.equal(intersects(a, b, opts), true, `${a} ∩ ${b} (${label})`)
+        t.equal(intersects(b, a, opts), true, `${b} ∩ ${a} symmetry (${label})`)
+      }
+    }
+  }
+  t.ok(witnessBacked > 100, `exercised ${witnessBacked} witness-backed pairs`)
   t.end()
 })
