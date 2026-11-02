@@ -15,6 +15,7 @@ module.exports = {
   oldNode: OLD_NODE,
   ciVersions: [OLD_NODE],
   latestCiVersion: 20,
+  publishCiVersions: ['26.x'],
   backport: 5,
   defaultPublishTag: 'legacy',
   publish: true,
@@ -25,6 +26,7 @@ module.exports = {
   rootRepo: {
     add: {
       '.github/workflows/release.yml': './release-yml.hbs',
+      '.github/workflows/release-integration.yml': './release-integration-yml.hbs',
     },
   },
   rootModule: {
