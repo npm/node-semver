@@ -305,6 +305,10 @@ const replaceTilde = (comp, options) => {
   const z = options.includePrerelease ? '-0' : ''
   return comp.replace(r, (_, M, m, p, pr) => {
     debug('tilde', comp, _, M, m, p, pr)
+    if (invalidXRangeOrder(M, m, p)) {
+      return comp
+    }
+
     let ret
 
     if (isX(M)) {
@@ -351,6 +355,10 @@ const replaceCaret = (comp, options) => {
   const z = options.includePrerelease ? '-0' : ''
   return comp.replace(r, (_, M, m, p, pr) => {
     debug('caret', comp, _, M, m, p, pr)
+    if (invalidXRangeOrder(M, m, p)) {
+      return comp
+    }
+
     let ret
 
     if (isX(M)) {
