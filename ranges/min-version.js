@@ -2,20 +2,21 @@
 
 const SemVer = require('../classes/semver')
 const Range = require('../classes/range')
+const Comparator = require('../classes/comparator')
 const gt = require('../functions/gt')
+const lt = require('../functions/lt')
 
 const minVersion = (range, loose) => {
   range = new Range(range, loose)
 
-  let minver = new SemVer('0.0.0')
+  let minver = new SemVer('0.0.0-0')
   if (range.test(minver)) {
     return minver
   }
 
-  minver = new SemVer('0.0.0-0')
-  if (range.test(minver)) {
-    return minver
-  }
+  // 0.0.0 may match, but a 0.0.0 prerelease lower bound can still be lower
+  const zero = new SemVer('0.0.0')
+  const zeroMatches = range.test(zero)
 
   minver = null
   for (let i = 0; i < range.set.length; ++i) {
@@ -23,6 +24,9 @@ const minVersion = (range, loose) => {
 
     let setMin = null
     comparators.forEach((comparator) => {
+      if (comparator.semver === Comparator.ANY) {
+        return
+      }
       // Clone to avoid manipulating the comparator's semver object.
       const compver = new SemVer(comparator.semver.version)
       switch (comparator.operator) {
@@ -54,10 +58,10 @@ const minVersion = (range, loose) => {
     }
   }
 
-  if (minver && range.test(minver)) {
+  if (minver && range.test(minver) && (!zeroMatches || lt(minver, zero))) {
     return minver
   }
 
-  return null
+  return zeroMatches ? zero : null
 }
 module.exports = minVersion

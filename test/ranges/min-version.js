@@ -51,6 +51,11 @@ test('minimum version in range tests', (t) => {
     ['>=4 || <=2', '0.0.0'],
     ['<0.0.0-beta >0.0.0-alpha', '0.0.0-alpha.0'],
     ['>0.0.0-alpha <0.0.0-beta', '0.0.0-alpha.0'],
+    ['>=0.0.0-alpha <1.0.0', '0.0.0-alpha'],
+    ['>0.0.0-alpha <1.0.0', '0.0.0-alpha.0'],
+    ['>=0.0.0-alpha <1.0.0 || <0.5.0', '0.0.0-alpha'],
+    ['<0.5.0 || >=0.0.0-alpha', '0.0.0-alpha'],
+    ['>=0.0.0-0', '0.0.0-0'],
 
     // Greater than or equal
     ['>=1.1.1 <2 || >=2.2.2 <2', '1.1.1'],
@@ -66,6 +71,12 @@ test('minimum version in range tests', (t) => {
 
     // Impossible range
     ['>4 <3', null],
+
+    // includePrerelease
+    ['*', '0.0.0-0', { includePrerelease: true }],
+    ['<2', '0.0.0-0', { includePrerelease: true }],
+    ['>=0.0.0-alpha <1.0.0', '0.0.0-alpha', { includePrerelease: true }],
+    ['>=1.0.0-alpha', '1.0.0-alpha', { includePrerelease: true }],
   ].forEach((tuple) => {
     const range = tuple[0]
     const version = tuple[1]
