@@ -466,6 +466,14 @@ strings that they parse.
 
 ### Comparison
 
+Comparison functions use SemVer precedence, including prerelease identifiers.
+The `includePrerelease` option does not ignore or strip those identifiers when
+comparing versions. For example,
+`lt('0.2.0-1', '0.2.0', { includePrerelease: false })` returns `true` because a
+prerelease version has lower precedence than the corresponding normal version.
+To control whether prerelease versions match a range, use `includePrerelease`
+with range-matching functions such as `satisfies`.
+
 * `gt(v1, v2)`: `v1 > v2`
 * `gte(v1, v2)`: `v1 >= v2`
 * `lt(v1, v2)`: `v1 < v2`
