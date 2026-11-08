@@ -23,6 +23,9 @@ const compare = require('../functions/compare.js')
 // - If EQ is more than one, return true (null set)
 // - Let GT be the highest > or >= comparator in c
 // - Let LT be the lowest < or <= comparator in c
+// - If LT is set without GT or EQ, use the lowest admitted version for GT
+//   - When not in prerelease mode, replace an exclusive stable LT `<X`
+//     with `<X-0` to exclude prereleases of X's tuple
 // - If GT and LT, and GT.semver > LT.semver, return true (null set)
 // - If any C is a = range, and GT or LT are set, return false
 // - If EQ
@@ -49,9 +52,9 @@ const subset = (sub, dom, options = {}) => {
 
   sub = new Range(sub, options)
   dom = new Range(dom, options)
-  let sawNonNull = false
 
   OUTER: for (const simpleSub of sub.set) {
+    let sawNonNull = false
     for (const simpleDom of dom.set) {
       const isSub = simpleSubset(simpleSub, simpleDom, options)
       sawNonNull = sawNonNull || isSub !== null
@@ -112,6 +115,19 @@ const simpleSubset = (sub, dom, options) => {
     return null
   }
 
+  if (lt && !gt && eqSet.size === 0) {
+    // An omitted lower bound still starts at the lowest admitted version.
+    const includesZeroPrerelease = options.includePrerelease ||
+      (lt.semver.prerelease.length && lt.semver.major === 0 &&
+       lt.semver.minor === 0 && lt.semver.patch === 0)
+    gt = (includesZeroPrerelease ? minimumVersionWithPreRelease : minimumVersion)[0]
+
+    // No prereleases of this tuple are admitted by an exclusive stable bound.
+    if (!options.includePrerelease && lt.operator === '<' && !lt.semver.prerelease.length) {
+      lt = new Comparator(`${lt.value}-0`, options)
+    }
+  }
+
   let gtltComp
   if (gt && lt) {
     gtltComp = compare(gt.semver, lt.semver, options)
@@ -142,7 +158,7 @@ const simpleSubset = (sub, dom, options) => {
   }
 
   let higher, lower
-  let hasDomLT, hasDomGT
+  let hasDomLT
   // if the subset has a prerelease, we need a comparator in the superset
   // with the same tuple and a prerelease, or it's not a subset
   let needDomLTPre = lt &&
@@ -157,26 +173,25 @@ const simpleSubset = (sub, dom, options) => {
     needDomLTPre = false
   }
 
+  // EQ cases returned above; ANY and LT-only ranges now have a lower bound,
+  // so gt is always set here.
   for (const c of dom) {
-    hasDomGT = hasDomGT || c.operator === '>' || c.operator === '>='
     hasDomLT = hasDomLT || c.operator === '<' || c.operator === '<='
-    if (gt) {
-      if (needDomGTPre) {
-        if (c.semver.prerelease && c.semver.prerelease.length &&
-            c.semver.major === needDomGTPre.major &&
-            c.semver.minor === needDomGTPre.minor &&
-            c.semver.patch === needDomGTPre.patch) {
-          needDomGTPre = false
-        }
+    if (needDomGTPre) {
+      if (c.semver.prerelease && c.semver.prerelease.length &&
+          c.semver.major === needDomGTPre.major &&
+          c.semver.minor === needDomGTPre.minor &&
+          c.semver.patch === needDomGTPre.patch) {
+        needDomGTPre = false
       }
-      if (c.operator === '>' || c.operator === '>=') {
-        higher = higherGT(gt, c, options)
-        if (higher === c && higher !== gt) {
-          return false
-        }
-      } else if (gt.operator === '>=' && !c.test(gt.semver)) {
+    }
+    if (c.operator === '>' || c.operator === '>=') {
+      higher = higherGT(gt, c, options)
+      if (higher === c && higher !== gt) {
         return false
       }
+    } else if (gt.operator === '>=' && !c.test(gt.semver)) {
+      return false
     }
     if (lt) {
       if (needDomLTPre) {
@@ -205,10 +220,6 @@ const simpleSubset = (sub, dom, options) => {
   // UNLESS it was limited by another range in the other direction.
   // Eg, >1.0.0 <1.0.1 is still a subset of <2.0.0
   if (gt && hasDomLT && !lt && gtltComp !== 0) {
-    return false
-  }
-
-  if (lt && hasDomGT && !gt && gtltComp !== 0) {
     return false
   }
 
