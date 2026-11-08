@@ -24,6 +24,8 @@ const compare = require('../functions/compare.js')
 // - Let GT be the highest > or >= comparator in c
 // - Let LT be the lowest < or <= comparator in c
 // - If LT is set without GT or EQ, use the lowest admitted version for GT
+//   - When not in prerelease mode, replace an exclusive stable LT `<X`
+//     with `<X-0` to exclude prereleases of X's tuple
 // - If GT and LT, and GT.semver > LT.semver, return true (null set)
 // - If any C is a = range, and GT or LT are set, return false
 // - If EQ
@@ -171,6 +173,8 @@ const simpleSubset = (sub, dom, options) => {
     needDomLTPre = false
   }
 
+  // EQ cases returned above; ANY and LT-only ranges now have a lower bound,
+  // so gt is always set here.
   for (const c of dom) {
     hasDomLT = hasDomLT || c.operator === '<' || c.operator === '<='
     if (needDomGTPre) {
