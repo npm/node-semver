@@ -200,7 +200,10 @@ class SemVer {
       } else if (a === b) {
         continue
       } else {
-        return compareIdentifiers(a, b)
+        const comparison = compareIdentifiers(a, b)
+        if (comparison) {
+          return comparison
+        }
       }
     } while (++i)
   }
