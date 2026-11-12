@@ -184,3 +184,17 @@ test('compareBuild', (t) => {
 
   t.end()
 })
+
+test('compareBuild numeric ties preserve the remaining identifiers', t => {
+  const a = new SemVer('1.0.0+1')
+  const b = new SemVer('1.0.0+01')
+  const c = new SemVer('1.0.0+01.0')
+  t.equal(a.compareBuild(b), 0)
+  t.equal(a.compareBuild(c), -1)
+  t.equal(b.compareBuild(c), -1)
+  t.equal(c.compareBuild(a), 1)
+  t.equal(c.compareBuild('1.0.0+001.00'), 0)
+  t.same(a.build, ['1'], 'comparison does not normalize stored identifiers')
+  t.same(b.build, ['01'])
+  t.end()
+})
