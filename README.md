@@ -142,9 +142,20 @@ multiple versions to the utility will just sort them.
 A "version" is described by the `v2.0.0` specification found at
 <https://semver.org/>.
 
-A leading `"="` or `"v"` character is stripped off and ignored.
+A leading `"v"` character is stripped off and ignored.
 Support for stripping a leading "v" is kept for compatibility with `v1.0.0` of the SemVer
 specification but should not be used anymore.
+
+A leading `"="` is not accepted in a version by default. It is an equality
+operator in a range (see [Ranges](#ranges)), and is also accepted in a
+version when the `loose` option is enabled:
+
+```js
+semver.valid('v1.2.3') // '1.2.3'
+semver.valid('=1.2.3') // null
+semver.valid('=1.2.3', { loose: true }) // '1.2.3'
+semver.validRange('=1.2.3') // '1.2.3'
+```
 
 ## Ranges
 
