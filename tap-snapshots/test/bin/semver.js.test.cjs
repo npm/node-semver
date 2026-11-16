@@ -64,6 +64,8 @@ Object {
     Prints valid versions sorted by SemVer precedence
     
     Options:
+    -       Read whitespace-separated versions from stdin until EOF.
+            May be combined with versions supplied as arguments.
     -r --range <range>
             Print versions that match the specified range.
     
@@ -125,6 +127,8 @@ Object {
     Prints valid versions sorted by SemVer precedence
     
     Options:
+    -       Read whitespace-separated versions from stdin until EOF.
+            May be combined with versions supplied as arguments.
     -r --range <range>
             Print versions that match the specified range.
     
@@ -186,6 +190,8 @@ Object {
     Prints valid versions sorted by SemVer precedence
     
     Options:
+    -       Read whitespace-separated versions from stdin until EOF.
+            May be combined with versions supplied as arguments.
     -r --range <range>
             Print versions that match the specified range.
     
@@ -247,6 +253,8 @@ Object {
     Prints valid versions sorted by SemVer precedence
     
     Options:
+    -       Read whitespace-separated versions from stdin until EOF.
+            May be combined with versions supplied as arguments.
     -r --range <range>
             Print versions that match the specified range.
     

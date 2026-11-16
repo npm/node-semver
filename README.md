@@ -95,6 +95,8 @@ Usage: semver [options] <version> [<version> [...]]
 Prints valid versions sorted by SemVer precedence
 
 Options:
+-       Read whitespace-separated versions from stdin until EOF.
+        May be combined with versions supplied as arguments.
 -r --range <range>
         Print versions that match the specified range.
 
@@ -136,6 +138,21 @@ If no satisfying versions are found, then exits failure.
 Versions are printed in ascending order, so supplying
 multiple versions to the utility will just sort them.
 ```
+
+To read versions from a pipe, pass `-` explicitly:
+
+```sh
+node -v | semver -r '^26.0.0' -
+printf '2.0.0\n1.0.0\n' | semver - 3.0.0
+# 1.0.0
+# 2.0.0
+# 3.0.0
+```
+
+Input versions are separated by whitespace (including spaces, tabs, and
+newlines). They are combined with any argument versions and sorted after stdin
+ends. Input is treated as version data, not command-line options. Without `-`,
+stdin is not read, so existing invocations do not wait for input.
 
 ## Versions
 

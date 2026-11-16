@@ -32,6 +32,8 @@ const parseOptions = require('../internal/parse-options')
 
 let reverse = false
 
+let readStdin = false
+
 let options = {}
 
 const main = () => {
@@ -48,6 +50,9 @@ const main = () => {
     }
 
     switch (a) {
+      case '-':
+        readStdin = true
+        break
       case '-rv': case '-rev': case '--rev': case '--reverse':
         reverse = true
         break
@@ -98,6 +103,34 @@ const main = () => {
 
   options = parseOptions({ loose, includePrerelease, rtl })
 
+  if (readStdin) {
+    let pending = ''
+    process.stdin.setEncoding('utf8')
+    process.stdin.on('data', chunk => {
+      const tokens = (pending + chunk).split(/\s+/)
+      pending = tokens.pop()
+      for (const token of tokens) {
+        if (token) {
+          versions.push(token)
+        }
+      }
+    })
+    process.stdin.on('error', err => {
+      console.error(err.message)
+      fail()
+    })
+    process.stdin.on('end', () => {
+      if (pending) {
+        versions.push(pending)
+      }
+      printVersions()
+    })
+  } else {
+    printVersions()
+  }
+}
+
+const printVersions = () => {
   if (
     inc &&
     versions.includes(inc.maybeErrantValue) &&
@@ -150,6 +183,8 @@ Usage: semver [options] <version> [<version> [...]]
 Prints valid versions sorted by SemVer precedence
 
 Options:
+-       Read whitespace-separated versions from stdin until EOF.
+        May be combined with versions supplied as arguments.
 -r --range <range>
         Print versions that match the specified range.
 

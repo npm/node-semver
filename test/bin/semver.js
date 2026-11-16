@@ -7,9 +7,13 @@ t.cleanSnapshot = str => str.split(thisVersion).join('@@VERSION@@')
 
 const spawn = require('child_process').spawn
 const bin = require.resolve('../../bin/semver')
-const run = args => new Promise((resolve, reject) => {
-  const c = spawn(process.execPath, [bin].concat(args))
+const run = (args, input, command = [bin]) => new Promise((resolve, reject) => {
+  const c = spawn(process.execPath, command.concat(args))
+  const timeout = setTimeout(() => c.kill(), 5000)
   c.on('error', reject)
+  if (input !== undefined) {
+    c.stdin.end(input)
+  }
   const out = []
   const err = []
   c.stdout.setEncoding('utf-8')
@@ -17,12 +21,81 @@ const run = args => new Promise((resolve, reject) => {
   c.stderr.setEncoding('utf-8')
   c.stderr.on('data', chunk => err.push(chunk))
   c.on('close', (code, signal) => {
+    clearTimeout(timeout)
     resolve({
       out: out.join(''),
       err: err.join(''),
       code: code,
       signal: signal,
     })
+  })
+})
+
+t.test('stdin versions', t => Promise.all([
+  { args: ['-'], input: '3.0.0 1.0.0\t2.0.0\r\n', out: '1.0.0\n2.0.0\n3.0.0\n' },
+  { args: ['-', '2.0.0'], input: '1.0.0', out: '1.0.0\n2.0.0\n' },
+  { args: ['-', '-'], input: '1.0.0', out: '1.0.0\n' },
+  { args: ['-', '--reverse', '-r', '^2'],
+    input: '2.0.0 1.0.0 2.1.0',
+    out: '2.1.0\n2.0.0\n' },
+  { args: ['-', '-c'], input: 'v2 v1', out: '1.0.0\n2.0.0\n' },
+  { args: ['-', '-l'], input: '1.2.3beta', out: '1.2.3-beta\n' },
+  { args: ['-', '-p', '-r', '1.x'], input: '1.0.0-beta 2.0.0', out: '1.0.0-beta\n' },
+  { args: ['-', '-i', 'minor'], input: '1.2.3', out: '1.3.0\n' },
+  { args: ['-i', '-'], input: '1.2.3', out: '1.2.4\n' },
+  { args: ['-'], input: '--help -r 1.0.0', out: '1.0.0\n' },
+  { args: ['-'], input: '', out: '', code: 1 },
+  { args: ['-'], input: ' \t\r\n', out: '', code: 1 },
+  { args: ['-'], input: 'invalid', out: '', code: 1 },
+  { args: ['-', '-r', '2.x'], input: '1.0.0', out: '', code: 1 },
+  { args: ['-', '-i'],
+    input: '1.0.0 2.0.0',
+    out: '',
+    code: 1,
+    err: '--inc can only be used on a single version with no range\n' },
+].map(async ({ args, input, out, code = 0, err = '' }) => {
+  const label = `${args.join(' ')} with ${JSON.stringify(input)}`
+  t.strictSame(await run(args, input), { out, err, code, signal: null }, label)
+})))
+
+t.test('does not wait for stdin without an explicit operand', async t => {
+  t.strictSame(await run(['1.2.3']), { out: '1.2.3\n', err: '', code: 0, signal: null })
+  t.strictSame(await run(['--version', '-']), { out: '', err: '', code: 1, signal: null })
+  const help = await run(['-', '--help'])
+  t.equal(help.code, 0)
+  t.equal(help.signal, null)
+  t.match(help.out, 'Usage: semver')
+})
+
+t.test('stdin preserves fragmented tokens and waits for EOF before sorting', async t => {
+  const command = ['-e', `
+    const assert = require('assert')
+    process.argv = [process.execPath, ${JSON.stringify(bin)}, '-', '3.0.0']
+    const output = []
+    console.log = version => output.push(version)
+    require(${JSON.stringify(bin)})
+    for (const chunk of ['2.', '0.0\\r', '\\n1.0', '.0']) {
+      process.stdin.emit('data', chunk)
+      assert.deepStrictEqual(output, [])
+    }
+    process.stdin.emit('end')
+    assert.deepStrictEqual(output, ['1.0.0', '2.0.0', '3.0.0'])
+    process.stdin.pause()
+  `]
+  t.strictSame(await run([], undefined, command), { out: '', err: '', code: 0, signal: null })
+})
+
+t.test('stdin read errors fail without printing versions', async t => {
+  const command = ['-e', `
+    process.argv = [process.execPath, ${JSON.stringify(bin)}, '-', '1.2.3']
+    require(${JSON.stringify(bin)})
+    process.stdin.emit('error', new Error('stdin read failed'))
+  `]
+  t.strictSame(await run([], undefined, command), {
+    out: '',
+    err: 'stdin read failed\n',
+    code: 1,
+    signal: null,
   })
 })
 
