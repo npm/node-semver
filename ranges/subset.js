@@ -37,9 +37,13 @@ const compare = require('../functions/compare.js')
 //     - If no C has a prerelease and the GT.semver tuple, return false
 // - If LT
 //   - If LT.semver is greater than any < or <= comp in C, return false
+//     (except that <X-0 admits the same versions as <X when not in
+//     prerelease mode)
 //   - If LT is <=, and LT.semver does not satisfy every C, return false
 //   - If LT.semver has a prerelease, and not in prerelease mode
 //     - If no C has a prerelease and the LT.semver tuple, return false
+//   - If GT is not set, sub is bounded below by the lowest version, so
+//     a > or >= comp in C only excludes sub when it rejects that minimum
 // - Else return true
 
 const subset = (sub, dom, options = {}) => {
@@ -189,7 +193,7 @@ const simpleSubset = (sub, dom, options) => {
       }
       if (c.operator === '<' || c.operator === '<=') {
         lower = lowerLT(lt, c, options)
-        if (lower === c && lower !== lt) {
+        if (lower === c && lower !== lt && !sameUpperBound(lt, c, options)) {
           return false
         }
       } else if (lt.operator === '<=' && !c.test(lt.semver)) {
@@ -208,8 +212,19 @@ const simpleSubset = (sub, dom, options) => {
     return false
   }
 
+  // A missing lower bound in sub is bounded below by the lowest version
+  // (0.0.0, or 0.0.0-0 in prerelease mode), so sub is only excluded when
+  // a lower bound in dom rejects that minimum. Eg, <2.0.0 is a subset of
+  // * (that is, >=0.0.0), but not of >=1.0.0.
   if (lt && hasDomGT && !gt && gtltComp !== 0) {
-    return false
+    const min = options.includePrerelease
+      ? minimumVersionWithPreRelease[0].semver
+      : minimumVersion[0].semver
+    const domAdmitsMin = dom.every(c =>
+      (c.operator !== '>' && c.operator !== '>=') || c.test(min))
+    if (!domAdmitsMin) {
+      return false
+    }
   }
 
   // we needed a prerelease range in a specific tuple, but didn't get one
@@ -221,6 +236,16 @@ const simpleSubset = (sub, dom, options) => {
 
   return true
 }
+
+// without includePrerelease, <1.2.3-0 admits the same versions as <1.2.3
+const sameUpperBound = (lt, c, options) =>
+  !options.includePrerelease &&
+  lt.operator === '<' && c.operator === '<' &&
+  !lt.semver.prerelease.length &&
+  c.semver.prerelease.length === 1 && c.semver.prerelease[0] === 0 &&
+  c.semver.major === lt.semver.major &&
+  c.semver.minor === lt.semver.minor &&
+  c.semver.patch === lt.semver.patch
 
 // >=1.2.3 is lower than >1.2.3
 const higherGT = (a, b, options) => {

@@ -24,6 +24,22 @@ const cases = [
   ['^1.2.3-pre.0', '*', true, { includePrerelease: true }],
   ['1 || 2 || 3', '*', true],
 
+  // an upper-bound-only sub is bounded below by the lowest version (#949)
+  ['<2.0.0', '*', true],
+  ['<2', '*', true],
+  ['<2.0.0', '>=0.0.0', true],
+  ['<2.0.0', '>=0.0.0-0', true],
+  ['<1.0.0', '0.x', true],
+  ['<2.0.0', '>=0.0.0 <3.0.0', true],
+  ['<0.0.0', '*', true],
+  ['<2.0.0', '>=1.0.0', false],
+  ['<2.0.0', '>0.0.0', false],
+  ['<2.0.0', '>0.5.0 <3.0.0', false],
+  // with includePrerelease the lowest version is 0.0.0-0
+  ['<2.0.0', '>=0.0.0', false, { includePrerelease: true }],
+  ['<2.0.0', '>=0.0.0-0', true, { includePrerelease: true }],
+  ['<1.0.0', '0.x', false, { includePrerelease: true }],
+
   // prerelease edge cases
   ['^1.2.3-pre.0', '>=1.0.0', false],
   ['^1.2.3-pre.0', '>=1.0.0', true, { includePrerelease: true }],
