@@ -223,16 +223,32 @@ class SemVer {
 
     switch (release) {
       case 'premajor':
+        // If this is already a prerelease of the next major version, bump
+        // up to that major version only, mirroring the 'major' case below.
+        // 2.0.0-pre premajor -> 2.0.0-0, not 3.0.0-0
+        // 1.2.3-pre premajor -> 2.0.0-0
+        if (
+          this.minor !== 0 ||
+          this.patch !== 0 ||
+          this.prerelease.length === 0
+        ) {
+          this.major++
+        }
         this.prerelease.length = 0
         this.patch = 0
         this.minor = 0
-        this.major++
         this.inc('pre', identifier, identifierBase)
         break
       case 'preminor':
+        // If this is already a prerelease of the next minor version, bump
+        // up to that minor version only, mirroring the 'minor' case below.
+        // 1.2.0-pre preminor -> 1.2.0-0, not 1.3.0-0
+        // 1.2.3-pre preminor -> 1.3.0-0
+        if (this.patch !== 0 || this.prerelease.length === 0) {
+          this.minor++
+        }
         this.prerelease.length = 0
         this.patch = 0
-        this.minor++
         this.inc('pre', identifier, identifierBase)
         break
       case 'prepatch':
