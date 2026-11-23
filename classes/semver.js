@@ -7,6 +7,8 @@ const { safeRe: re, t } = require('../internal/re')
 const parseOptions = require('../internal/parse-options')
 const { compareIdentifiers } = require('../internal/identifiers')
 
+const numeric = /^[0-9]+$/
+
 const isPrereleaseIdentifier = (prerelease, identifier) => {
   const identifiers = identifier.split('.')
   if (identifiers.length > prerelease.length) {
@@ -79,15 +81,17 @@ class SemVer {
     if (!m[4]) {
       this.prerelease = []
     } else {
-      this.prerelease = m[4].split('.').map((id) => {
-        if (/^[0-9]+$/.test(id)) {
+      const prerelease = m[4].split('.')
+      for (let i = 0; i < prerelease.length; i++) {
+        const id = prerelease[i]
+        if (numeric.test(id)) {
           const num = +id
           if (num >= 0 && num < MAX_SAFE_INTEGER) {
-            return num
+            prerelease[i] = num
           }
         }
-        return id
-      })
+      }
+      this.prerelease = prerelease
     }
 
     this.build = m[5] ? m[5].split('.') : []
