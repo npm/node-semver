@@ -63,3 +63,26 @@ test('= is ignored', t => {
   t.match(new Comparator('=1.2.3'), new Comparator('1.2.3'))
   t.end()
 })
+
+test('comparator operators test directly', t => {
+  t.ok(new Comparator('1.2.3').test('1.2.3'))
+  t.notOk(new Comparator('1.2.3').test('1.2.4'))
+  t.ok(new Comparator('>1.2.3').test('1.2.4'))
+  t.ok(new Comparator('>=1.2.3').test('1.2.3'))
+  t.ok(new Comparator('<1.2.3').test('1.2.2'))
+  t.ok(new Comparator('<=1.2.3').test('1.2.3'))
+  t.end()
+})
+
+test('operators outside the parsed set behave like cmp()', t => {
+  const c = new Comparator('1.2.3')
+  c.operator = '!='
+  t.equal(c.test('2.0.0'), true)
+  t.equal(c.test('1.2.3'), false)
+  c.operator = '<='
+  t.equal(c.test('1.2.3'), true)
+  t.equal(c.test('1.2.4'), false)
+  c.operator = 'foo'
+  t.throws(() => c.test('2.0.0'), new TypeError('Invalid operator: foo'))
+  t.end()
+})

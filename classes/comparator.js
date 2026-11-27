@@ -75,7 +75,22 @@ class Comparator {
       }
     }
 
-    return cmp(version, this.operator, this.semver, this.options)
+    switch (this.operator) {
+      case '':
+        return version.compare(this.semver) === 0
+      case '>':
+        return version.compare(this.semver) > 0
+      case '>=':
+        return version.compare(this.semver) >= 0
+      case '<':
+        return version.compare(this.semver) < 0
+      case '<=':
+        return version.compare(this.semver) <= 0
+      default:
+        // keep upstream behavior (including the thrown TypeError) for any
+        // operator the parser would not produce
+        return cmp(version, this.operator, this.semver, this.options)
+    }
   }
 
   intersects (comp, options) {
