@@ -18,7 +18,9 @@ class Comparator {
       }
     }
 
-    comp = comp.trim().split(/\s+/).join(' ')
+    if (hasMaybeWhitespace(comp)) {
+      comp = comp.trim().split(/\s+/).join(' ')
+    }
     debug('comparator', comp, options)
     this.options = options
     this.loose = !!options.loose
@@ -139,5 +141,6 @@ const parseOptions = require('../internal/parse-options')
 const { safeRe: re, t } = require('../internal/re')
 const cmp = require('../functions/cmp')
 const debug = require('../internal/debug')
+const { hasMaybeWhitespace } = require('../internal/maybe-whitespace')
 const SemVer = require('./semver')
 const Range = require('./range')

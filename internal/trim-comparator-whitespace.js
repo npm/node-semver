@@ -11,6 +11,7 @@ const {
   MAX_SAFE_BUILD_LENGTH,
   WHITESPACE_CHARACTERS,
 } = require('./constants')
+const { hasMaybeWhitespace } = require('./maybe-whitespace')
 
 /**
  * Remembers the last two rows of digits so their characters need not be reread.
@@ -399,6 +400,10 @@ const findRemovableWhitespaceIndex = (range, matchStart) => {
  * @example trimComparatorWhitespace('> invalid') // '> invalid'
  */
 const trimComparatorWhitespace = range => {
+  if (typeof range === 'string' && !hasMaybeWhitespace(range)) {
+    return range
+  }
+
   let result = ''
   let copyFrom = 0
   let cursor = 0
