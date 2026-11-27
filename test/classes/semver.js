@@ -79,7 +79,7 @@ test('really big numeric prerelease value', (t) => {
 })
 
 test('invalid version numbers', (t) => {
-  ['1.2.3.4', 'NOT VALID', 1.2, null, 'Infinity.NaN.Infinity'].forEach((v) => {
+  ['1.2.3.4', '01.0.0', '1.02.3', '1.2.03', '12.34', '1.2.', '.1.2', '1..2', '1.2.3.', 'NOT VALID', 1.2, null, 'Infinity.NaN.Infinity'].forEach((v) => {
     t.throws(
       () => {
         new SemVer(v) // eslint-disable-line no-new
@@ -93,6 +93,34 @@ test('invalid version numbers', (t) => {
       }
     )
   })
+  t.equal(new SemVer('1234567890123456.0.0').major, 1234567890123456)
+
+  t.end()
+})
+
+test('plain X.Y.Z parsing agrees with the regular expression', t => {
+  // numbers of up to 9 digits are read by hand, longer ones by the regexp
+  const nines = '999999999'
+  for (const [v, major, minor, patch] of [
+    ['0.0.0', 0, 0, 0],
+    ['1.20.300', 1, 20, 300],
+    ['10.0.0', 10, 0, 0],
+    [`${nines}.${nines}.${nines}`, 999999999, 999999999, 999999999],
+    ['1234567890.0.0', 1234567890, 0, 0],
+    ['0.1234567890.0', 0, 1234567890, 0],
+    ['0.0.1234567890', 0, 0, 1234567890],
+    ['9007199254740991.0.0', 9007199254740991, 0, 0],
+  ]) {
+    for (const opts of [undefined, { loose: true }]) {
+      const s = new SemVer(v, opts)
+      t.same([s.major, s.minor, s.patch, s.version, s.raw, s.prerelease, s.build],
+        [major, minor, patch, v, v, [], []], v)
+    }
+  }
+  t.throws(() => new SemVer('9007199254740992.0.0'), /Invalid major version/)
+  t.equal(new SemVer('01.02.03', { loose: true }).version, '1.2.3')
+  t.equal(new SemVer(' 1.2.3 ').version, '1.2.3')
+  t.equal(new SemVer('v1.2.3').version, '1.2.3')
 
   t.end()
 })
