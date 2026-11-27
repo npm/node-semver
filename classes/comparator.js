@@ -18,7 +18,9 @@ class Comparator {
       }
     }
 
-    comp = comp.trim().split(/\s+/).join(' ')
+    if (hasMaybeWhitespace(comp)) {
+      comp = comp.trim().split(/\s+/).join(' ')
+    }
     debug('comparator', comp, options)
     this.options = options
     this.loose = !!options.loose
@@ -73,7 +75,22 @@ class Comparator {
       }
     }
 
-    return cmp(version, this.operator, this.semver, this.options)
+    switch (this.operator) {
+      case '':
+        return version.compare(this.semver) === 0
+      case '>':
+        return version.compare(this.semver) > 0
+      case '>=':
+        return version.compare(this.semver) >= 0
+      case '<':
+        return version.compare(this.semver) < 0
+      case '<=':
+        return version.compare(this.semver) <= 0
+      default:
+        // keep upstream behavior (including the thrown TypeError) for any
+        // operator the parser would not produce
+        return cmp(version, this.operator, this.semver, this.options)
+    }
   }
 
   intersects (comp, options) {
@@ -139,5 +156,6 @@ const parseOptions = require('../internal/parse-options')
 const { safeRe: re, t } = require('../internal/re')
 const cmp = require('../functions/cmp')
 const debug = require('../internal/debug')
+const { hasMaybeWhitespace } = require('../internal/maybe-whitespace')
 const SemVer = require('./semver')
 const Range = require('./range')

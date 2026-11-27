@@ -22,6 +22,83 @@ const isPrereleaseIdentifier = (prerelease, identifier) => {
   return true
 }
 
+// Value of the decimal digits in version[from, to). Callers guarantee at most
+// 9 digits, so the result stays a small integer.
+const digitsValue = (version, from, to) => {
+  let n = 0
+  for (let i = from; i < to; i++) {
+    n = n * 10 + (version.charCodeAt(i) - 48)
+  }
+  return n
+}
+
+// Fast path for the common plain `X.Y.Z` (decimal digits only, no leading
+// zeros, no `v`, whitespace, prerelease or build). Fills in `self` and returns
+// true on success. Anything else returns false without touching `self`, and the
+// regular expression decides, so the result never differs from the slow path.
+// This is checked on every parse, so rejections have to be cheap: the string is
+// scanned from the end, because prerelease and build tails reject within a few
+// characters, and a leading non-digit (like `v`) is rejected before any scan.
+const fillPlainVersion = (self, version) => {
+  const len = version.length
+  // 3 numbers of up to 9 digits and 2 dots; longer numbers are left to the regexp
+  if (len < 5 || len > 29 || ((version.charCodeAt(0) - 48) >>> 0) > 9) {
+    return false
+  }
+  let dot1 = -1
+  let dot2 = -1
+  for (let i = len - 1; i >= 0; i--) {
+    const code = version.charCodeAt(i)
+    if (code < 48 || code > 57) {
+      if (code !== 46 || dot1 !== -1) {
+        return false
+      }
+      if (dot2 === -1) {
+        dot2 = i
+      } else {
+        dot1 = i
+      }
+    }
+  }
+  const majorLen = dot1
+  const minorLen = dot2 - dot1 - 1
+  const patchLen = len - dot2 - 1
+  // (fewer than two dots leave dot1 at -1, which fails the length checks)
+  if (
+    majorLen < 1 || minorLen < 1 || patchLen < 1 ||
+    majorLen > 9 || minorLen > 9 || patchLen > 9
+  ) {
+    return false
+  }
+  // no leading zeros
+  if (
+    (majorLen > 1 && version.charCodeAt(0) === 48) ||
+    (minorLen > 1 && version.charCodeAt(dot1 + 1) === 48) ||
+    (patchLen > 1 && version.charCodeAt(dot2 + 1) === 48)
+  ) {
+    return false
+  }
+  self.raw = version
+  self.major = digitsValue(version, 0, dot1)
+  self.minor = digitsValue(version, dot1 + 1, dot2)
+  self.patch = digitsValue(version, dot2 + 1, len)
+  self.prerelease = []
+  self.build = []
+  self.version = version
+  return true
+}
+
+// Same as /^[0-9]+$/.test(id), without the regexp call on every identifier.
+const isNumericIdentifier = (id) => {
+  for (let i = 0; i < id.length; i++) {
+    const code = id.charCodeAt(i)
+    if (code < 48 || code > 57) {
+      return false
+    }
+  }
+  return id.length > 0
+}
+
 class SemVer {
   constructor (version, options) {
     options = parseOptions(options)
@@ -50,7 +127,13 @@ class SemVer {
     // don't run into trouble passing this.options around.
     this.includePrerelease = !!options.includePrerelease
 
-    const m = version.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL])
+    if (fillPlainVersion(this, version)) {
+      return
+    }
+
+    // exec() is the same as match() for these non-global regexps, minus a
+    // Symbol.match lookup and dispatch
+    const m = (options.loose ? re[t.LOOSE] : re[t.FULL]).exec(version.trim())
 
     if (!m) {
       throw new TypeError(`Invalid Version: ${version}`)
@@ -80,7 +163,7 @@ class SemVer {
       this.prerelease = []
     } else {
       this.prerelease = m[4].split('.').map((id) => {
-        if (/^[0-9]+$/.test(id)) {
+        if (isNumericIdentifier(id)) {
           const num = +id
           if (num >= 0 && num < MAX_SAFE_INTEGER) {
             return num

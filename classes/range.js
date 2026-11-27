@@ -1,6 +1,35 @@
 'use strict'
 
+const { hasMaybeWhitespace, isMaybeWhitespaceCode } = require('../internal/maybe-whitespace')
+
 const SPACE_CHARACTERS = /\s+/g
+
+const normalizeWhitespace = (str) => {
+  const len = str.length
+  if (len === 0) {
+    return str
+  }
+  if (isMaybeWhitespaceCode(str.charCodeAt(0)) ||
+    isMaybeWhitespaceCode(str.charCodeAt(len - 1))) {
+    return str.trim().replace(SPACE_CHARACTERS, ' ')
+  }
+  // Only single spaces may remain between the (non-whitespace) ends.
+  let prevSpace = false
+  for (let i = 1; i < len - 1; i++) {
+    const code = str.charCodeAt(i)
+    if (code === 32) {
+      if (prevSpace) {
+        return str.trim().replace(SPACE_CHARACTERS, ' ')
+      }
+      prevSpace = true
+    } else if (isMaybeWhitespaceCode(code)) {
+      return str.trim().replace(SPACE_CHARACTERS, ' ')
+    } else {
+      prevSpace = false
+    }
+  }
+  return str
+}
 
 // hoisted class for cyclic dependency
 class Range {
@@ -33,17 +62,22 @@ class Range {
     // First reduce all whitespace as much as possible so we do not have to rely
     // on potentially slow regexes like \s*. This is then stored and used for
     // future error messages as well.
-    this.raw = range.trim().replace(SPACE_CHARACTERS, ' ')
+    this.raw = normalizeWhitespace(range)
 
     // First, split on ||
-    this.set = this.raw
-      .split('||')
-      // map the range to a 2d array of comparators
-      .map(r => this.parseRange(r.trim()))
-      // throw out any comparator lists that are empty
-      // this generally means that it was not a valid range, which is allowed
-      // in loose mode, but will still throw if the WHOLE range is invalid.
-      .filter(c => c.length)
+    if (this.raw.indexOf('||') === -1) {
+      const parsed = this.parseRange(this.raw)
+      this.set = parsed.length ? [parsed] : []
+    } else {
+      this.set = this.raw
+        .split('||')
+        // map the range to a 2d array of comparators
+        .map(r => this.parseRange(r.trim()))
+        // throw out any comparator lists that are empty
+        // this generally means that it was not a valid range, which is allowed
+        // in loose mode, but will still throw if the WHOLE range is invalid.
+        .filter(c => c.length)
+    }
 
     if (!this.set.length) {
       throw new TypeError(`Invalid SemVer Range: ${this.raw}`)
@@ -99,7 +133,9 @@ class Range {
 
   parseRange (range) {
     // strip build metadata so it can't bleed into the version
-    range = range.replace(BUILDSTRIPRE, '')
+    if (range.indexOf('+') !== -1) {
+      range = range.replace(BUILDSTRIPRE, '')
+    }
 
     // memoize range parsing for performance.
     // this is a very hot path, and fully deterministic.
@@ -113,33 +149,64 @@ class Range {
     }
 
     const loose = this.options.loose
+    const hasSpace = hasMaybeWhitespace(range)
     // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
-    const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
-    range = range.replace(hr, hyphenReplace(this.options.includePrerelease))
-    debug('hyphen replace', range)
+    if (hasSpace && range.indexOf('-') !== -1) {
+      const hr = loose ? re[t.HYPHENRANGELOOSE] : re[t.HYPHENRANGE]
+      range = range.replace(hr, hyphenReplace(this.options.includePrerelease))
+      debug('hyphen replace', range)
+    }
 
-    // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
-    range = trimComparatorWhitespace(range)
-    debug('comparator trim', range)
+    if (hasSpace) {
+      // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
+      range = trimComparatorWhitespace(range)
+      debug('comparator trim', range)
 
-    // `~ 1.2.3` => `~1.2.3`
-    range = range.replace(re[t.TILDETRIM], tildeTrimReplace)
-    debug('tilde trim', range)
+      // `~ 1.2.3` => `~1.2.3`
+      if (range.indexOf('~') !== -1) {
+        range = range.replace(re[t.TILDETRIM], tildeTrimReplace)
+        debug('tilde trim', range)
+      }
 
-    // `^ 1.2.3` => `^1.2.3`
-    range = range.replace(re[t.CARETTRIM], caretTrimReplace)
-    debug('caret trim', range)
+      // `^ 1.2.3` => `^1.2.3`
+      if (range.indexOf('^') !== -1) {
+        range = range.replace(re[t.CARETTRIM], caretTrimReplace)
+        debug('caret trim', range)
+      }
+    }
 
     // At this point, the range is completely trimmed and
     // ready to be split into comparators.
 
-    let rangeList = range
-      .split(' ')
-      .map(comp => parseComparator(comp, this.options))
-      .join(' ')
-      .split(/\s+/)
-      // >=0.0.0 is equivalent to *
-      .map(comp => replaceGTE0(comp, this.options))
+    let rangeList
+    if (range.indexOf(' ') === -1 && !hasMaybeWhitespace(range)) {
+      const expanded = parseComparator(range, this.options)
+      if (expanded.indexOf(' ') === -1 && !hasMaybeWhitespace(expanded)) {
+        const single = expanded.indexOf('0.0.0') !== -1
+          ? replaceGTE0(expanded, this.options)
+          : expanded
+        if (!loose || single.match(re[t.COMPARATORLOOSE])) {
+          const comp = new Comparator(single, this.options)
+          if (isNullSet(comp)) {
+            return [comp]
+          }
+          const result = [comp]
+          cache.set(memoKey, result)
+          return result
+        }
+        rangeList = []
+      } else {
+        rangeList = expanded.split(/\s+/).map(comp => replaceGTE0(comp, this.options))
+      }
+    } else {
+      rangeList = range
+        .split(' ')
+        .map(comp => parseComparator(comp, this.options))
+        .join(' ')
+        .split(/\s+/)
+        // >=0.0.0 is equivalent to *
+        .map(comp => replaceGTE0(comp, this.options))
+    }
 
     if (loose) {
       // in loose mode, throw out any that are not valid comparators
@@ -262,16 +329,24 @@ const isSatisfiable = (comparators, options) => {
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
 const parseComparator = (comp, options) => {
-  comp = comp.replace(re[t.BUILD], '')
+  if (comp.indexOf('+') !== -1) {
+    comp = comp.replace(re[t.BUILD], '')
+  }
   debug('comp', comp, options)
-  comp = replaceCarets(comp, options)
-  debug('caret', comp)
-  comp = replaceTildes(comp, options)
-  debug('tildes', comp)
+  if (comp.indexOf('^') !== -1) {
+    comp = replaceCarets(comp, options)
+    debug('caret', comp)
+  }
+  if (comp.indexOf('~') !== -1) {
+    comp = replaceTildes(comp, options)
+    debug('tildes', comp)
+  }
   comp = replaceXRanges(comp, options)
   debug('xrange', comp)
-  comp = replaceStars(comp, options)
-  debug('stars', comp)
+  if (comp.indexOf('*') !== -1) {
+    comp = replaceStars(comp, options)
+    debug('stars', comp)
+  }
   return comp
 }
 
